@@ -1,6 +1,8 @@
 package com.example.localloop;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -32,8 +34,18 @@ public class MainActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.loginButton);
         btnRegister = findViewById(R.id.registerButton);
 
+        btnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MainActivity.this, Registration.class);
+                startActivity(i);
+            }
+        });
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-
-
+            }
+        });
     }
 }
