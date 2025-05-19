@@ -34,8 +34,3 @@ LocalLoop is a mobile Android application that connects users through local even
 - **Registration:** Sign up and log in
 - **Search & Browse:** Filter events by category, date, or location
 - **My Events:** View past and upcoming registered events
-
-## Development Guidelines
-- Use modular design and version control
-- No substantial code should be copied from external sources
-- Follow Android Design Guidelines where applicable

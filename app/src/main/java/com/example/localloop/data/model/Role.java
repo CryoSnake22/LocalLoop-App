@@ -1,4 +1,4 @@
-package com.example.localloop;
+package com.example.localloop.data.model;
 
 public enum Role {
     ADMIN,

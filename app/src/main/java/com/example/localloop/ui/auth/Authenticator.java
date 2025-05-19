@@ -1,9 +1,14 @@
-package com.example.localloop.auth;
-import com.example.localloop.*;
-import com.example.localloop.database.DatabaseOperator;
+package com.example.localloop.ui.auth;
 
 
-import java.lang.reflect.Array;
+import com.example.localloop.data.model.Admin;
+import com.example.localloop.data.model.User;
+
+
+
+/*
+TO BE CONNECTED TO FIREBASE
+ */
 
 
 public class Authenticator {
@@ -18,7 +23,7 @@ public class Authenticator {
        // otherwise it proceeds with auth
 
        String empty = "";
-       User foundUser = new Admin(empty,empty, "admin",empty, "XPI76SZUqyCjVxgnUjm0");
+       User foundUser = new Admin(empty,empty, "com/example/localloop/ui/admin",empty, "XPI76SZUqyCjVxgnUjm0");
 
        if (foundUser.getPassword().equals(user.getPassword()) && foundUser.getUsername().equals(user.getUsername())){
             return true;
