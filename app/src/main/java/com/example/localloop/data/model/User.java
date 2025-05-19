@@ -1,12 +1,19 @@
-package com.example.localloop;
+package com.example.localloop.data.model;
 
-public class User {
+public abstract class User {
+
+    private static int totalUser;
+    private static int nextId;
+    private final int id;
+
     private String firstName;
     private String lastName;
     private String userName;
     private String email;
     private String password;
     private Role role;
+
+
     public User(String firstName,String lastName,String userName,String email,String password, Role role){
         this.firstName = firstName;
         this.lastName = lastName;
@@ -14,6 +21,8 @@ public class User {
         this.email= email;
         this.password=password;
         this.role = role;
+
+        this.id = nextId;
     }
     public Role getRole(){
         return this.role;
