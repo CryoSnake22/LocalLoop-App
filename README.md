@@ -8,7 +8,7 @@ LocalLoop is a mobile Android application that connects users through local even
 ## Team Members
 - Charles-Antoine Pouliot - 300448576
 - Shu Chen - 300405855
-- Member 
+- Mohamed Boustta - 300374033
 - Member
 - Member
 

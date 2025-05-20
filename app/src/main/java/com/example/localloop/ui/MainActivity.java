@@ -1,24 +1,23 @@
-package com.example.localloop.ui;
+package com.example.localloop;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
-import com.example.localloop.R;
-import com.example.localloop.data.model.Registration;
-
+import com.example.localloop.auth.Authenticator;
 public class MainActivity extends AppCompatActivity {
 
     EditText usernameField;
     EditText passwordField;
+    TextView messageField;
     Button btnLogin;
     Button btnRegister;
 
@@ -34,8 +33,11 @@ public class MainActivity extends AppCompatActivity {
         });
         usernameField = findViewById(R.id.loginUsernameField);
         passwordField = findViewById(R.id.loginPasswordField);
+        messageField = findViewById(R.id.wrongUserPassText);
         btnLogin = findViewById(R.id.loginButton);
         btnRegister = findViewById(R.id.registerButton);
+
+        Authenticator auth = new Authenticator();
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,6 +49,15 @@ public class MainActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String username = String.valueOf(usernameField.getText());
+                String password = String.valueOf(passwordField.getText());
+                if (auth.authenticateUser(username,password)) {
+                    Intent i = new Intent(MainActivity.this,Dashboard.class);
+                    startActivity(i);
+                }
+                else{
+                    messageField.setText("wrong username/password");
+                }
 
             }
         });
