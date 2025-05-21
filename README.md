@@ -1,6 +1,17 @@
 Git Repository: https://github.com/CryoSnake22/LocalLoop-App
 
+Deliverable 1 Todo:
+UML Class Diagram (PDF)
+
+
+Admin Account Creation	App accepts login with the given hardcoded admin credentials
+Organizer Account Creation
+Participant Account Creation
+Post-Login Welcome Screen
+Field Validation
+
 # LocalLoop
+Andriod app at: \local loop\app\src\main\java\com\example\localloop
 
 ## Project Overview
 LocalLoop is a mobile Android application that connects users through local events. It supports discovering, creating, and managing events within the community. Users interact with the app in one of three roles: **Admin**, **Organizer**, or **Participant**.
@@ -8,7 +19,7 @@ LocalLoop is a mobile Android application that connects users through local even
 ## Team Members
 - Charles-Antoine Pouliot - 300448576
 - Shu Chen - 300405855
-- Member 
+- Mohamed Boustta - 300374033
 - Member
 - Member
 
@@ -16,7 +27,7 @@ LocalLoop is a mobile Android application that connects users through local even
 - Java
 - Android Studio (Koala)
 - API Level 33
-- Database: SQLite
+- Database: Firebase
 
 ## Features
 
