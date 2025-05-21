@@ -24,7 +24,7 @@ public class Authenticator {
        // Eventually there should be an if statement and if the user is not found it returns false
        // otherwise it proceeds with auth
        String empty = "";
-       User foundUser = new Admin(empty,empty, "com/example/localloop/ui/admin",empty, "XPI76SZUqyCjVxgnUjm0");
+       User foundUser = new Admin(empty,empty, "admin",empty, "XPI76SZUqyCjVxgnUjm0");
 
        if (foundUser.getPassword().equals(password) && foundUser.getUsername().equals(username)){
             return true;
