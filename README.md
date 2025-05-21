@@ -1,14 +1,14 @@
 Git Repository: https://github.com/CryoSnake22/LocalLoop-App
+This app follows a MVVM Architecture https://www.geeksforgeeks.org/mvvm-model-view-viewmodel-architecture-pattern-in-android/
 
-Deliverable 1 Todo:
-UML Class Diagram (PDF)
+# ToDo:
 
+## TASKS
+ - Login/Registration & Database - Shu
+ - Design Paper Prototype of UI
+ - Design the Layouts at com.example.localloop.res.layout
+ - Design UML and save as PDF
 
-Admin Account Creation	App accepts login with the given hardcoded admin credentials
-Organizer Account Creation
-Participant Account Creation
-Post-Login Welcome Screen
-Field Validation
 
 # LocalLoop
 Andriod app at: \local loop\app\src\main\java\com\example\localloop

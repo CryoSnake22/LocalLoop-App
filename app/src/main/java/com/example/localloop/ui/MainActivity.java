@@ -14,6 +14,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.localloop.ui.auth.Authenticator;
+
 public class MainActivity extends AppCompatActivity {
 
     EditText usernameField;
@@ -52,11 +53,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String username = String.valueOf(usernameField.getText());
                 String password = String.valueOf(passwordField.getText());
-                if (auth.authenticateUser(username,password)) {
-                    Intent i = new Intent(MainActivity.this,Dashboard.class);
+                if (auth.authenticateUser(username, password)) {
+                    Intent i = new Intent(MainActivity.this, Dashboard.class);
                     startActivity(i);
-                }
-                else{
+                } else {
                     messageField.setText("wrong username/password");
                 }
 
