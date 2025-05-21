@@ -16,7 +16,7 @@
             android:name=".ui.Dashboard"
             android:exported="false" />
         <activity
-            android:name=".data.model.Registration"
+            android:name=".ui.Registration"
             android:exported="false" />
         <activity
             android:name=".ui.MainActivity"

@@ -1,4 +1,4 @@
-package com.example.localloop.data.model;
+package com.example.localloop.ui;
 
 import android.os.Bundle;
 
