@@ -1,4 +1,4 @@
-package com.example.localloop;
+package com.example.localloop.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +12,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import com.example.localloop.auth.Authenticator;
+
+import com.example.localloop.R;
+import com.example.localloop.ui.auth.Authenticator;
 public class MainActivity extends AppCompatActivity {
 
     EditText usernameField;
