@@ -78,6 +78,7 @@ public class LoginActivity extends AppCompatActivity {
                                             if (document.exists()) {
                                                 Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                                                 role = document.get("role").toString();
+                                                updateUI(user,role); // TO CHANGE TO OUR OWN USER CLASSES
                                             } else {
                                                 Log.d(TAG, "No such document");
                                                 Toast.makeText(LoginActivity.this,"No such user",Toast.LENGTH_SHORT).show();
@@ -87,7 +88,6 @@ public class LoginActivity extends AppCompatActivity {
                                         }
                                     }
                                 });
-                                updateUI(user,role); // TO CHANGE TO OUR OWN USER CLASSES
                             } else {
                                 Log.w(TAG, "signInWithEmail:failure", task.getException());
                                 Toast.makeText(LoginActivity.this, "Authentication failed.",
@@ -123,7 +123,6 @@ public class LoginActivity extends AppCompatActivity {
     private void updateUI(FirebaseUser user, String role) {
         if (user != null) {
             String email = user.getEmail();
-            String uid = user.getUid();
 
             //Basic check
             if (email == null) {
