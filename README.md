@@ -3,12 +3,14 @@ This app follows a MVVM Architecture https://www.geeksforgeeks.org/mvvm-model-vi
 
 
 ## ToDo:
- - Login/Registration & Database - Shu
- - Design Paper Prototype of UI
- - Design the Layouts at com.example.localloop.res.layout
- - Design UML and save as PDF
+- Create UML Diagram and export as PDF
+- Verify fields with more detail (eg. name cant have numbers, etc...)
+- Displays first name in post login page
+- Decaffeinate organizer and participant login/signup
 
- - Remember to change app/src/main/AndroidManifest.xml before build
+# Last step:
+- Correctly named debug APK is included in the ZIP then submit
+
 
 # LocalLoop
 Andriod app at: \local loop\app\src\main\java\com\example\localloop
