@@ -16,6 +16,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 
 //Firebase guide https://firebase.google.com/docs/auth/android/password-auth#java_1
@@ -25,6 +27,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
     private EditText emailField, passwordField;
+
+    private String role;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         passwordField = findViewById(R.id.inputPassword);
         Button loginButton = findViewById(R.id.buttonLogin);
         Button signupButton = findViewById(R.id.buttonSignup);
+
 
         //What happen after click login
         loginButton.setOnClickListener(v -> {
@@ -64,12 +69,30 @@ public class LoginActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 Log.d(TAG, "signInWithEmail:success");
                                 FirebaseUser user = mAuth.getCurrentUser();
-                                updateUI(user);
+                                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                db.collection("user_db").document(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            DocumentSnapshot document = task.getResult();
+                                            if (document.exists()) {
+                                                Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                                                role = document.get("role").toString();
+                                                updateUI(user,role); // TO CHANGE TO OUR OWN USER CLASSES
+                                            } else {
+                                                Log.d(TAG, "No such document");
+                                                Toast.makeText(LoginActivity.this,"No such user",Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else {
+                                            Log.d(TAG, "get failed with ", task.getException());
+                                        }
+                                    }
+                                });
                             } else {
                                 Log.w(TAG, "signInWithEmail:failure", task.getException());
                                 Toast.makeText(LoginActivity.this, "Authentication failed.",
                                         Toast.LENGTH_SHORT).show();
-                                updateUI(null);
+                                updateUI(null,null);
                             }
                         }
                     });
@@ -97,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     //Called after successfully authed
-    private void updateUI(FirebaseUser user) {
+    private void updateUI(FirebaseUser user, String role) {
         if (user != null) {
             String email = user.getEmail();
 
@@ -108,9 +131,9 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             //Hard coded
-            if (1 == 1) {
+            if (role.equals("ORGANIZER")) {
                 setContentView(R.layout.activity_organizer_home);
-            } else if (email.contains("admin")) {
+            } else if (role.equals("PARTICIPANT")) {
                 setContentView(R.layout.activity_participant_home);
             } else {
                 Toast.makeText(this, "Unrecognized user role", Toast.LENGTH_SHORT).show();
