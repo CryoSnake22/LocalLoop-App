@@ -27,7 +27,6 @@
         <activity
             android:name=".ui.auth.RegistrationActivity"
             android:exported="true" />
-        <activity android:name=".ui.user.Welcome" />
 
     </application>
 

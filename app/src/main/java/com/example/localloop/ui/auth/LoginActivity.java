@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.localloop.R;
-import com.example.localloop.ui.user.Welcome;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -47,6 +46,12 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
+            if (email.equals("admin") && password.equals("XPI76SZUqyCjVxgnUjm0")) {
+                setContentView(R.layout.activity_admin_home);
+                Toast.makeText(this, "Admin login successful (bypassed Firebase)", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
@@ -63,6 +68,7 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         }
                     });
+
         });
 
         signupButton.setOnClickListener(v -> {
@@ -82,11 +88,25 @@ public class LoginActivity extends AppCompatActivity {
 
     private void reload() {
     }
+
     private void updateUI(FirebaseUser user) {
         if (user != null) {
-            Intent intent = new Intent(LoginActivity.this, Welcome.class);
-            startActivity(intent);
-            finish();
+            String email = user.getEmail();
+
+            if (email == null) {
+                Toast.makeText(this, "User email not available", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (1 == 1) {
+                setContentView(R.layout.activity_organizer_home);
+            } else if (email.contains("admin")) {
+                setContentView(R.layout.activity_participant_home);
+            } else {
+                Toast.makeText(this, "Unrecognized user role", Toast.LENGTH_SHORT).show();
+            }
         }
     }
+
+
 }
