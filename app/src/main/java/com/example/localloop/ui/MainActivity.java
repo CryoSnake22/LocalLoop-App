@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import com.example.localloop.auth.Authenticator;
+import com.example.localloop.ui.auth.Authenticator;
 public class MainActivity extends AppCompatActivity {
 
     EditText usernameField;
