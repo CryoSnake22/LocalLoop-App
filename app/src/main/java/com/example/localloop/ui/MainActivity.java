@@ -14,6 +14,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.localloop.ui.auth.Authenticator;
+import com.example.localloop.R;
 
 public class MainActivity extends AppCompatActivity {
 
