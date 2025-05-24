@@ -86,7 +86,7 @@ public class RegistrationActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                // Sign in success, update UI with the signed-in user's informati
+                                // Sign in success, update UI with the signed-in user's information
                                 Log.d(TAG, "createUserWithEmail:success");
                                 FirebaseUser firebaseUser = mAuth.getCurrentUser();
                                 if (firebaseUser != null){
@@ -136,7 +136,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private void reload() {
     }
 
-    //IMPORTANT TODO! Differenciate user type then send them into their corespond layout
+
     private void updateUI(User user) {
         if (user != null) {
             String email = user.getEmail();
