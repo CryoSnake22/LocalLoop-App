@@ -44,22 +44,23 @@
                 android:layout_height="wrap_content"
                 android:text="Organizer" />
 
-            <EditText
-                android:id="@+id/inputFirstName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="First Name"
-                android:inputType="text" />
-
-            <EditText
-                android:id="@+id/inputLastName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Last Name"
-                android:inputType="text" />
         </RadioGroup>
+
+        <EditText
+            android:id="@+id/inputFirstName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="First Name"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/inputLastName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Last Name"
+            android:inputType="text" />
 
         <EditText
             android:id="@+id/inputEmail"

@@ -62,7 +62,6 @@ public class LoginActivity extends AppCompatActivity {
             if (email.equals("admin") && password.equals("XPI76SZUqyCjVxgnUjm0")) {
                 Intent intent= new Intent(this,AdminDashboard.class);
                 startActivity(intent);
-
                 Toast.makeText(this, "Admin login successful (bypassed Firebase)", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -100,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
                     });
         });
 
-        // Goes to RegistrationActivity, need to deferenciate participant and organizer
+        // Goes to RegistrationActivity, need to differentiate participant and organizer
         signupButton.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
             startActivity(intent);
@@ -117,7 +116,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    //Can be filled, not nessasary
+    //Can be filled, not necessary
     private void reload() {
     }
 
