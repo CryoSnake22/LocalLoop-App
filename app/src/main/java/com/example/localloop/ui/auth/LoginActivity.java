@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
 
             //Hard code admin login, bypasses firebase auth below
             if (email.equals("admin") && password.equals("XPI76SZUqyCjVxgnUjm0")) {
-                setContentView(R.layout.activity_admin_home); //hardcode, only directo to admin layout thats all
+                setContentView(R.layout.activity_admin_home); //hardcode, only direct to to admin layout that's all
                 Toast.makeText(this, "Admin login successful (bypassed Firebase)", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -98,7 +98,7 @@ public class LoginActivity extends AppCompatActivity {
                     });
         });
 
-        // Goes to RegistrationActivity, need to deferenciate participant and organizer
+        // Goes to RegistrationActivity, need to differentiate participant and organizer
         signupButton.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
             startActivity(intent);
@@ -115,7 +115,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    //Can be filled, not nessasary
+    //Can be filled, not necessary
     private void reload() {
     }
 
