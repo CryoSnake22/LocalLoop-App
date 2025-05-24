@@ -20,7 +20,7 @@ Andriod app at: \local loop\app\src\main\java\com\example\localloop
 - Charles-Antoine Pouliot - 300448576
 - Shu Chen - 300405855
 - Mohamed Boustta - 300374033
-- Member
+- Abdulrahman Alchalabi - 300376911
 - Member
 
 ## Database
