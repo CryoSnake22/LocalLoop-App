@@ -72,9 +72,9 @@ public class LoginActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 Log.d(TAG, "signInWithEmail:success");
                                 FirebaseUser firebaseUser = mAuth.getCurrentUser();
-                                // temp
                                 if (firebaseUser!=null){
                                     String uid = firebaseUser.getUid();
+                                    //LAMBDAAAAAAAAAAAAA
                                     UserUtils.UIDtoUserAsync(uid, user ->{
                                         if (user != null){
                                             updateUI(user); // TO CHANGE TO OUR OWN USER CLASSES
