@@ -11,11 +11,17 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.localloop.R;
+import com.example.localloop.data.model.Participant;
+import com.example.localloop.data.model.Role;
+import com.example.localloop.data.model.User;
+import com.example.localloop.utils.UserUtils;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 
 //Firebase guide https://firebase.google.com/docs/auth/android/password-auth#java_1
@@ -25,6 +31,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
     private EditText emailField, passwordField;
+
+    private String role;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         passwordField = findViewById(R.id.inputPassword);
         Button loginButton = findViewById(R.id.buttonLogin);
         Button signupButton = findViewById(R.id.buttonSignup);
+
 
         //What happen after click login
         loginButton.setOnClickListener(v -> {
@@ -51,7 +60,8 @@ public class LoginActivity extends AppCompatActivity {
 
             //Hard code admin login, bypasses firebase auth below
             if (email.equals("admin") && password.equals("XPI76SZUqyCjVxgnUjm0")) {
-                setContentView(R.layout.activity_admin_home); //hardcode, only directo to admin layout thats all
+                Intent intent= new Intent(this,AdminDashboard.class);
+                startActivity(intent);
                 Toast.makeText(this, "Admin login successful (bypassed Firebase)", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -63,8 +73,22 @@ public class LoginActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 Log.d(TAG, "signInWithEmail:success");
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                updateUI(user);
+                                FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                                if (firebaseUser!=null){
+                                    String uid = firebaseUser.getUid();
+                                    //LAMBDA!
+                                    UserUtils.UIDtoUserAsync(uid, user ->{
+                                        if (user != null){
+                                            updateUI(user); // TO CHANGE TO OUR OWN USER CLASSES
+                                        }
+                                        else{
+                                            Toast.makeText(LoginActivity.this, "User not found in DB",
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    });
+
+                                }
                             } else {
                                 Log.w(TAG, "signInWithEmail:failure", task.getException());
                                 Toast.makeText(LoginActivity.this, "Authentication failed.",
@@ -75,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
                     });
         });
 
-        // Goes to RegistrationActivity, need to deferenciate participant and organizer
+        // Goes to RegistrationActivity, need to differentiate participant and organizer
         signupButton.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
             startActivity(intent);
@@ -92,26 +116,37 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    //Can be filled, not nessasary
+    //Can be filled, not necessary
     private void reload() {
     }
 
     //Called after successfully authed
-    private void updateUI(FirebaseUser user) {
+    private void updateUI(User user) {
         if (user != null) {
             String email = user.getEmail();
+            Role role = user.getRole();
+            String UID = user.getUID();
 
             //Basic check
             if (email == null) {
                 Toast.makeText(this, "User email not available", Toast.LENGTH_SHORT).show();
                 return;
             }
-
+            if (UID == null){
+                Toast.makeText(this, "UID not available", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Intent intent = new Intent();
+            // Make it so you can pass UID between views
+            intent.putExtra("UID", UID);
             //Hard coded
-            if (1 == 1) {
-                setContentView(R.layout.activity_organizer_home);
-            } else if (email.contains("admin")) {
-                setContentView(R.layout.activity_participant_home);
+
+            if (role == Role.ORGANIZER) {
+                intent.setClass(this, OrganizerDashboard.class);
+                startActivity(intent);
+            } else if (role == Role.PARTICIPANT) {
+                intent.setClass(this, ParticipantDashboard.class);
+                startActivity(intent);
             } else {
                 Toast.makeText(this, "Unrecognized user role", Toast.LENGTH_SHORT).show();
             }

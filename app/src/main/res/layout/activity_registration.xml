@@ -28,6 +28,40 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <RadioButton
+                android:id="@+id/inputParticipant"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Participant" />
+
+            <RadioButton
+                android:id="@+id/inputOrganizer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Organizer" />
+
+        </RadioGroup>
+
+        <EditText
+            android:id="@+id/inputFirstName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="First Name"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/inputLastName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Last Name"
+            android:inputType="text" />
+
         <EditText
             android:id="@+id/inputEmail"
             android:layout_width="match_parent"
@@ -39,7 +73,7 @@
             android:id="@+id/inputUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Username / First Name"
+            android:hint="Username"
             android:inputType="textPersonName" />
 
         <EditText
