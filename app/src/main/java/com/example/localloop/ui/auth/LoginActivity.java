@@ -11,6 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.localloop.R;
+import com.example.localloop.data.model.Role;
+import com.example.localloop.data.model.User;
+import com.example.localloop.utils.UserUtils;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -68,31 +71,27 @@ public class LoginActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 Log.d(TAG, "signInWithEmail:success");
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                db.collection("user_db").document(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            DocumentSnapshot document = task.getResult();
-                                            if (document.exists()) {
-                                                Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                                                role = document.get("role").toString();
-                                                updateUI(user,role); // TO CHANGE TO OUR OWN USER CLASSES
-                                            } else {
-                                                Log.d(TAG, "No such document");
-                                                Toast.makeText(LoginActivity.this,"No such user",Toast.LENGTH_SHORT).show();
-                                            }
-                                        } else {
-                                            Log.d(TAG, "get failed with ", task.getException());
+                                FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                                // temp
+                                if (firebaseUser!=null){
+                                    String uid = firebaseUser.getUid();
+                                    UserUtils.UIDtoUserAsync(uid, user ->{
+                                        if (user != null){
+                                            updateUI(user); // TO CHANGE TO OUR OWN USER CLASSES
                                         }
-                                    }
-                                });
+                                        else{
+                                            Toast.makeText(LoginActivity.this, "User not found in DB",
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    });
+
+                                }
                             } else {
                                 Log.w(TAG, "signInWithEmail:failure", task.getException());
                                 Toast.makeText(LoginActivity.this, "Authentication failed.",
                                         Toast.LENGTH_SHORT).show();
-                                updateUI(null,null);
+                                updateUI(null);
                             }
                         }
                     });
@@ -120,9 +119,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     //Called after successfully authed
-    private void updateUI(FirebaseUser user, String role) {
+    private void updateUI(User user) {
         if (user != null) {
             String email = user.getEmail();
+            Role role = user.getRole();
 
             //Basic check
             if (email == null) {
@@ -131,9 +131,11 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             //Hard coded
-            if (role.equals("ORGANIZER")) {
+            if (role == Role.ORGANIZER) {
+
+                Toast.makeText(this, "GOT TO ORGANIZER PAGE", Toast.LENGTH_SHORT).show();
                 setContentView(R.layout.activity_organizer_home);
-            } else if (role.equals("PARTICIPANT")) {
+            } else if (role == Role.PARTICIPANT) {
                 setContentView(R.layout.activity_participant_home);
             } else {
                 Toast.makeText(this, "Unrecognized user role", Toast.LENGTH_SHORT).show();

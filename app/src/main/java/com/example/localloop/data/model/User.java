@@ -10,15 +10,13 @@ public abstract class User {
     private String lastName;
     private String userName;
     private String email;
-    private String password;
     private Role role;
 
-    public User(String firstName, String lastName, String userName, String email, String password, Role role) {
+    public User(String firstName, String lastName, String userName, String email, Role role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.userName = userName;
         this.email = email;
-        this.password = password;
         this.role = role;
 
         this.id = nextId;
@@ -42,11 +40,6 @@ public abstract class User {
 
     public String getEmail() {
         return this.email;
-    }
-
-    public String getPassword() {
-        return this.password;
-        // To be changed later to "getPasswordHash" otherwise this shit gonna blow up
     }
 
     public boolean Equals(Object o) {
