@@ -12,22 +12,27 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LocalLoop"
         tools:targetApi="33">
-
-        <!-- Launches this screen first -->
+        <activity
+            android:name=".ui.auth.ParticipantDashboard"
+            android:exported="false" />
+        <activity
+            android:name=".ui.auth.AdminDashboard"
+            android:exported="false" />
+        <activity
+            android:name=".ui.auth.OrganizerDashboard"
+            android:exported="false" /> <!-- Launches this screen first -->
         <activity
             android:name=".ui.auth.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- Registration activity -->
+        </activity> <!-- Registration activity -->
         <activity
             android:name=".ui.auth.RegistrationActivity"
             android:exported="true" />
-
     </application>
 
 </manifest>

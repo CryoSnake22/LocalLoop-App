@@ -1,5 +1,6 @@
 package com.example.localloop.ui.auth;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -9,6 +10,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.localloop.R;
 import com.example.localloop.data.model.Role;
+import com.example.localloop.data.model.User;
+import com.example.localloop.utils.UserUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.AuthResult;
@@ -85,18 +88,27 @@ public class RegistrationActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in user's informati
                                 Log.d(TAG, "createUserWithEmail:success");
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                if (user != null){
-                                    String uid = user.getUid();
+                                FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                                if (firebaseUser != null){
+                                    String uid = firebaseUser.getUid();
                                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                                     Map<String,String> profile = new HashMap<>();
                                     profile.put("firstName",firstName);
                                     profile.put("lastName",lastName);
                                     profile.put("userName",username);
-                                    profile.put("email",user.getEmail());
+                                    profile.put("email",firebaseUser.getEmail());
                                     profile.put("role",role);
                                     db.collection("user_db").document(uid).set(profile);
-                                    updateUI(user);
+                                    //LAMBDA!
+                                    UserUtils.UIDtoUserAsync(uid, user ->{
+                                        if (user != null){
+                                            updateUI(user); // TO CHANGE TO OUR OWN USER CLASSES
+                                        }
+                                        else{
+                                            Toast.makeText(RegistrationActivity.this, "User not found in DB",
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                                 }
                             } else {
                                 // If sign in fails, display a message to the user.
@@ -125,27 +137,35 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     //IMPORTANT TODO! Differenciate user type then send them into their corespond layout
-    private void updateUI(FirebaseUser user) {
-
+    private void updateUI(User user) {
         if (user != null) {
             String email = user.getEmail();
+            Role role = user.getRole();
+            String UID = user.getUID();
 
             //Basic check
             if (email == null) {
                 Toast.makeText(this, "User email not available", Toast.LENGTH_SHORT).show();
                 return;
             }
-
+            if (UID == null){
+                Toast.makeText(this, "UID not available", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Intent intent = new Intent();
+            // Make it so you can pass UID between views
+            intent.putExtra("UID", UID);
             //Hard coded
-            if (role.equals("ORGANIZER")) {
-                setContentView(R.layout.activity_organizer_home);
-            } else if (role.equals("PARTICIPANT")) {
-                setContentView(R.layout.activity_participant_home);
+
+            if (role == Role.ORGANIZER) {
+                intent.setClass(this, OrganizerDashboard.class);
+                startActivity(intent);
+            } else if (role == Role.PARTICIPANT) {
+                intent.setClass(this, ParticipantDashboard.class);
+                startActivity(intent);
             } else {
                 Toast.makeText(this, "Unrecognized user role", Toast.LENGTH_SHORT).show();
             }
         }
-
-        
     }
 }
