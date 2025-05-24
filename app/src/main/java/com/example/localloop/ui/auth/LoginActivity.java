@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.localloop.R;
+import com.example.localloop.data.model.Participant;
 import com.example.localloop.data.model.Role;
 import com.example.localloop.data.model.User;
 import com.example.localloop.utils.UserUtils;
@@ -59,7 +60,8 @@ public class LoginActivity extends AppCompatActivity {
 
             //Hard code admin login, bypasses firebase auth below
             if (email.equals("admin") && password.equals("XPI76SZUqyCjVxgnUjm0")) {
-                setContentView(R.layout.activity_admin_home); //hardcode, only direct to to admin layout that's all
+                Intent intent= new Intent(this,AdminDashboard.class);
+                startActivity(intent);
                 Toast.makeText(this, "Admin login successful (bypassed Firebase)", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -74,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
                                 FirebaseUser firebaseUser = mAuth.getCurrentUser();
                                 if (firebaseUser!=null){
                                     String uid = firebaseUser.getUid();
-                                    //LAMBDAAAAAAAAAAAAA
+                                    //LAMBDA!
                                     UserUtils.UIDtoUserAsync(uid, user ->{
                                         if (user != null){
                                             updateUI(user); // TO CHANGE TO OUR OWN USER CLASSES
@@ -123,20 +125,28 @@ public class LoginActivity extends AppCompatActivity {
         if (user != null) {
             String email = user.getEmail();
             Role role = user.getRole();
+            String UID = user.getUID();
 
             //Basic check
             if (email == null) {
                 Toast.makeText(this, "User email not available", Toast.LENGTH_SHORT).show();
                 return;
             }
-
+            if (UID == null){
+                Toast.makeText(this, "UID not available", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Intent intent = new Intent();
+            // Make it so you can pass UID between views
+            intent.putExtra("UID", UID);
             //Hard coded
-            if (role == Role.ORGANIZER) {
 
-                Toast.makeText(this, "GOT TO ORGANIZER PAGE", Toast.LENGTH_SHORT).show();
-                setContentView(R.layout.activity_organizer_home);
+            if (role == Role.ORGANIZER) {
+                intent.setClass(this, OrganizerDashboard.class);
+                startActivity(intent);
             } else if (role == Role.PARTICIPANT) {
-                setContentView(R.layout.activity_participant_home);
+                intent.setClass(this, ParticipantDashboard.class);
+                startActivity(intent);
             } else {
                 Toast.makeText(this, "Unrecognized user role", Toast.LENGTH_SHORT).show();
             }
