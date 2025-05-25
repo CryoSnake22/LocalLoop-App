@@ -39,7 +39,7 @@ public abstract class User {
         return this.UID;
     }
 
-    public boolean Equals(Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }

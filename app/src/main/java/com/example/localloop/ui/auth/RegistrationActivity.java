@@ -32,10 +32,9 @@ public class RegistrationActivity extends AppCompatActivity {
     private EditText emailField, usernameField, passwordField, firstNameField,lastNameField;
     private RadioButton organizerButton,participantButton;
 
-    private String email, username, password,firstName,lastName;
-    private String role;
     private FirebaseAuth mAuth;
 
+    private String chosenRole;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,16 +54,25 @@ public class RegistrationActivity extends AppCompatActivity {
         Button submitButton = findViewById(R.id.buttonSubmit);
 
         submitButton.setOnClickListener(v -> {
-            email = emailField.getText().toString().trim();
-            username = usernameField.getText().toString().trim();
-            password = passwordField.getText().toString().trim();
-            firstName = firstNameField.getText().toString().trim();
-            lastName = lastNameField.getText().toString().trim();
+            String email = emailField.getText().toString().trim();
+            String username = usernameField.getText().toString().trim();
+            String password = passwordField.getText().toString().trim();
+            String firstName = firstNameField.getText().toString().trim();
+            String lastName = lastNameField.getText().toString().trim();
+
 
 
             //basic check
             if(email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Email and password required", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (firstName.isEmpty()||lastName.isEmpty()){
+                Toast.makeText(this, "Please input a first and last name", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (!firstName.matches("[a-zA-Z\\s-]+") || !lastName.matches("[a-zA-z\\s-]+")){
+                Toast.makeText(this, "Please only input alphabetical characters for the first and last name", Toast.LENGTH_SHORT).show();
                 return;
             }
             // Checking if participant/organizer button was selected
@@ -73,10 +81,10 @@ public class RegistrationActivity extends AppCompatActivity {
                return;
             }
             if (participantButton.isChecked()){
-                role = "PARTICIPANT";
+                chosenRole = "PARTICIPANT";
             }
             else if (organizerButton.isChecked()){
-                role = "ORGANIZER";
+                chosenRole = "ORGANIZER";
             }
 
 
@@ -97,7 +105,7 @@ public class RegistrationActivity extends AppCompatActivity {
                                     profile.put("lastName",lastName);
                                     profile.put("userName",username);
                                     profile.put("email",firebaseUser.getEmail());
-                                    profile.put("role",role);
+                                    profile.put("role",chosenRole);
                                     db.collection("user_db").document(uid).set(profile);
                                     //LAMBDA!
                                     UserUtils.UIDtoUserAsync(uid, user ->{
