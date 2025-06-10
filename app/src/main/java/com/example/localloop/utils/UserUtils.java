@@ -36,13 +36,13 @@ public class UserUtils {
                         String role = document.get("role").toString();
                         User user = null;
                         if (role.equals("ADMIN")){
-                           user = new Admin(UID,firstName,lastName,userName,email);
+                           user = new Admin(UID,true,firstName,lastName,userName,email);
                         }
                         else if (role.equals("PARTICIPANT")){
-                            user = new Participant(UID,firstName,lastName,userName,email);
+                            user = new Participant(UID,true,firstName,lastName,userName,email);
 
                         } else if (role.equals("ORGANIZER")){
-                            user = new Organizer(UID,firstName,lastName,userName,email);
+                            user = new Organizer(UID,true,firstName,lastName,userName,email);
                         }
                         if (user != null){
                             callback.onUserLoaded(user);

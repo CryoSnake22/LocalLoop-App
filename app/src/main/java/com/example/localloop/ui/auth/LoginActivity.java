@@ -11,8 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.localloop.R;
-import com.example.localloop.data.model.Participant;
-import com.example.localloop.data.model.Role;
 import com.example.localloop.data.model.User;
 import com.example.localloop.utils.UserUtils;
 import com.google.firebase.auth.AuthResult;
@@ -20,8 +18,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 
 //Firebase guide https://firebase.google.com/docs/auth/android/password-auth#java_1
@@ -124,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
     private void updateUI(User user) {
         if (user != null) {
             String email = user.getEmail();
-            Role role = user.getRole();
+            String role = user.getRole();
             String UID = user.getUID();
 
             //Basic check
@@ -141,10 +137,10 @@ public class LoginActivity extends AppCompatActivity {
             intent.putExtra("UID", UID);
             //Hard coded
 
-            if (role == Role.ORGANIZER) {
+            if (role.equals("ORGANIZER")) {
                 intent.setClass(this, OrganizerDashboard.class);
                 startActivity(intent);
-            } else if (role == Role.PARTICIPANT) {
+            } else if (role.equals("PARTICIPANT")) {
                 intent.setClass(this, ParticipantDashboard.class);
                 startActivity(intent);
             } else {
