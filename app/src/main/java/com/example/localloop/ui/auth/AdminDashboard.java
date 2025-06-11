@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.localloop.R;
+import com.example.localloop.data.model.Category;
 import com.example.localloop.data.model.Participant;
 import com.example.localloop.data.model.User;
 import com.example.localloop.utils.UserUtils;
@@ -38,7 +39,9 @@ public class AdminDashboard extends AppCompatActivity {
     private ImageView arrowUser,arrowEvent,arrowCategory;
 
     private UserAdapter userAdapter;
+    private CategoryAdapter categoryAdapter;
     private List<User> userList;
+    private List<Category> categoryList;
     private FirebaseFirestore db;
 
     @Override
@@ -66,26 +69,14 @@ public class AdminDashboard extends AppCompatActivity {
         fetchUsers();
 
 
-
-
-
-
-
-
-
-
-
-
-
-
         rvEvent = findViewById(R.id.rvEvents);
         rvCategory = findViewById(R.id.rvCategories);
+        rvCategory.setLayoutManager(new LinearLayoutManager(this));
 
-
-
-
-
-
+        categoryList = new ArrayList<>();
+        categoryAdapter = new CategoryAdapter(categoryList, this);
+        rvCategory.setAdapter(categoryAdapter);
+        fetchCategories();
 
 
 
@@ -152,6 +143,7 @@ public class AdminDashboard extends AppCompatActivity {
                 for (DocumentSnapshot snapshot : value.getDocuments()){
                     User user = snapshot.toObject(User.class);
                     if (user!=null){
+                        user.setUID(snapshot.getId());
                         userList.add(user);
                     }
                     else{
@@ -162,4 +154,27 @@ public class AdminDashboard extends AppCompatActivity {
             }
         });
     }
+    private void fetchCategories(){
+        db.collection("category_db").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error!= null){
+                    return;
+                }
+                categoryList.clear();
+                for (DocumentSnapshot snapshot : value.getDocuments()){
+                    Category category  = snapshot.toObject(Category.class);
+                    if (category!=null){
+                        category.setId(snapshot.getId());
+                        categoryList.add(category);
+                    }
+                    else{
+                        Log.w("AdminDashboard","NULL USER DETECTED WIMPWOMP");
+                    }
+                }
+                categoryAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
 }
