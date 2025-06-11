@@ -1,6 +1,6 @@
 package com.example.localloop.data.model;
 
-public abstract class User {
+public class User {
     private boolean active;
     private String firstName;
     private String lastName;
@@ -8,7 +8,7 @@ public abstract class User {
     private String email;
     private String role;
     private String UID;
-
+    public User(){};
     public User(String UID, boolean active, String firstName, String lastName, String userName, String email, String role) {
         this.active = active;
         this.firstName = firstName;
@@ -32,6 +32,9 @@ public abstract class User {
     public void setActive(boolean a) { this.active = a; }
     public String getUID() {
         return this.UID;
+    }
+    public void setUID(String UID) {
+        this.UID = UID;
     }
 
     public boolean equals(Object o) {
