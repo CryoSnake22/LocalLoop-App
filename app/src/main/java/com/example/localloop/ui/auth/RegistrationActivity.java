@@ -9,7 +9,6 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.localloop.R;
-import com.example.localloop.data.model.Role;
 import com.example.localloop.data.model.User;
 import com.example.localloop.utils.UserUtils;
 import com.google.firebase.auth.FirebaseAuth;
@@ -148,7 +147,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private void updateUI(User user) {
         if (user != null) {
             String email = user.getEmail();
-            Role role = user.getRole();
+            String role = user.getRole();
             String UID = user.getUID();
 
             //Basic check
@@ -165,10 +164,10 @@ public class RegistrationActivity extends AppCompatActivity {
             intent.putExtra("UID", UID);
             //Hard coded
 
-            if (role == Role.ORGANIZER) {
+            if (role.equals("ORGANIZER")) {
                 intent.setClass(this, OrganizerDashboard.class);
                 startActivity(intent);
-            } else if (role == Role.PARTICIPANT) {
+            } else if (role.equals("PARTICIPANT")) {
                 intent.setClass(this, ParticipantDashboard.class);
                 startActivity(intent);
             } else {
