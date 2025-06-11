@@ -39,6 +39,14 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New User"
+            android:padding="10dp"
+            />
+
+
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -74,6 +82,12 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Event"
+            android:padding="10dp"
+            />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -109,6 +123,12 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Category"
+            android:padding="10dp"
+            />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

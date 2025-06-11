@@ -21,15 +21,9 @@ import com.example.localloop.utils.UserUtils;
 public class AdminDashboard extends AppCompatActivity {
     private User user;
     private TextView textWelcome;
-    private LinearLayout userLayout;
-    private LinearLayout eventLayout;
-    private LinearLayout categoryLayout;
-    private RecyclerView rvUser;
-    private RecyclerView rvEvent;
-    private RecyclerView rvCategory;
-    private ImageView arrowUser;
-    private ImageView arrowEvent;
-    private ImageView arrowCategory;
+    private LinearLayout userLayout,eventLayout,categoryLayout;
+    private RecyclerView rvUser,rvEvent,rvCategory;
+    private ImageView arrowUser,arrowEvent,arrowCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +35,18 @@ public class AdminDashboard extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // This is the whole recycle view shenanigan thing
+
+
+
+
+
+
+
+
+
+
         textWelcome = findViewById(R.id.textWelcome);
         userLayout = findViewById(R.id.headerUsers);
         eventLayout = findViewById(R.id.headerEvents);
@@ -50,7 +56,6 @@ public class AdminDashboard extends AppCompatActivity {
         arrowUser = findViewById(R.id.arrowUsers);
         arrowEvent = findViewById(R.id.arrowEvents);
         arrowCategory = findViewById(R.id.arrowCategories);
-
         categoryLayout = findViewById(R.id.headerCategories);
 
         userLayout.setOnClickListener(v->{
