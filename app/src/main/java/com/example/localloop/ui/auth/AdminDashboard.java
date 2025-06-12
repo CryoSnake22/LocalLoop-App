@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
@@ -20,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.localloop.R;
 import com.example.localloop.data.model.Participant;
 import com.example.localloop.data.model.User;
-import com.example.localloop.utils.UserUtils;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -140,6 +140,18 @@ public class AdminDashboard extends AppCompatActivity {
         // Since we're bypassing I'll just set it manually
         String message = "Welcome Admin, you are logged in as: admin";
         textWelcome.setText(message);
+
+
+        Button btnNewCategory = findViewById(R.id.btnNewCategory);
+
+        btnNewCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AdminDashboard.this, AddCategoryActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
     private void fetchUsers(){
         db.collection("user_db").addSnapshotListener(new EventListener<QuerySnapshot>() {

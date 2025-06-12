@@ -1,4 +1,4 @@
-package com.example.localloop.data.model;
+package com.example.localloop.ui.auth;
 
 
 import android.os.Bundle;
@@ -12,6 +12,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
+import com.example.localloop.R;
 
 public class AddCategoryActivity extends AppCompatActivity {
 
@@ -31,7 +32,7 @@ public class AddCategoryActivity extends AppCompatActivity {
         // Reference UI components
         categoryNameEditText = findViewById(R.id.editTextCategoryName);
         categoryDescriptionEditText = findViewById(R.id.editTextCategoryDescription);
-        addCategoryButton = findViewById(R.id.buttonAddCategory);
+        addCategoryButton = findViewById(R.id.btnNewCategory);
 
         // Set button click listener
         addCategoryButton.setOnClickListener(v -> {
