@@ -23,13 +23,13 @@ import androidx.annotation.NonNull;
 import java.util.HashMap;
 import java.util.Map;
 
-
 //Firebase guide https://firebase.google.com/docs/auth/android/password-auth#java_1
 public class RegistrationActivity extends AppCompatActivity {
+
     private static final String TAG = "RegistrationActivity";
 
-    private EditText emailField, usernameField, passwordField, firstNameField,lastNameField;
-    private RadioButton organizerButton,participantButton;
+    private EditText emailField, usernameField, passwordField, firstNameField, lastNameField;
+    private RadioButton organizerButton, participantButton;
 
     private FirebaseAuth mAuth;
 
@@ -59,33 +59,29 @@ public class RegistrationActivity extends AppCompatActivity {
             String firstName = firstNameField.getText().toString().trim();
             String lastName = lastNameField.getText().toString().trim();
 
-
-
             //basic check
-            if(email.isEmpty() || password.isEmpty()) {
+            if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Email and password required", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (firstName.isEmpty()||lastName.isEmpty()){
+            if (firstName.isEmpty() || lastName.isEmpty()) {
                 Toast.makeText(this, "Please input a first and last name", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (!firstName.matches("[a-zA-Z\\s-]+") || !lastName.matches("[a-zA-z\\s-]+")){
+            if (!firstName.matches("[a-zA-Z\\s-]+") || !lastName.matches("[a-zA-z\\s-]+")) {
                 Toast.makeText(this, "Please only input alphabetical characters for the first and last name", Toast.LENGTH_SHORT).show();
                 return;
             }
             // Checking if participant/organizer button was selected
-            if(!(participantButton.isChecked()||organizerButton.isChecked())){
-               Toast.makeText(this, "Please select sign up as Organizer or Participant", Toast.LENGTH_SHORT).show();
-               return;
+            if (!(participantButton.isChecked() || organizerButton.isChecked())) {
+                Toast.makeText(this, "Please select sign up as Organizer or Participant", Toast.LENGTH_SHORT).show();
+                return;
             }
-            if (participantButton.isChecked()){
+            if (participantButton.isChecked()) {
                 chosenRole = "PARTICIPANT";
-            }
-            else if (organizerButton.isChecked()){
+            } else if (organizerButton.isChecked()) {
                 chosenRole = "ORGANIZER";
             }
-
 
             //firebase auth https://firebase.google.com/docs/auth/android/password-auth#java_1
             mAuth.createUserWithEmailAndPassword(email, password)
@@ -96,22 +92,21 @@ public class RegistrationActivity extends AppCompatActivity {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d(TAG, "createUserWithEmail:success");
                                 FirebaseUser firebaseUser = mAuth.getCurrentUser();
-                                if (firebaseUser != null){
+                                if (firebaseUser != null) {
                                     String uid = firebaseUser.getUid();
                                     FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                    Map<String,String> profile = new HashMap<>();
-                                    profile.put("firstName",firstName);
-                                    profile.put("lastName",lastName);
-                                    profile.put("userName",username);
-                                    profile.put("email",firebaseUser.getEmail());
-                                    profile.put("role",chosenRole);
+                                    Map<String, String> profile = new HashMap<>();
+                                    profile.put("firstName", firstName);
+                                    profile.put("lastName", lastName);
+                                    profile.put("userName", username);
+                                    profile.put("email", firebaseUser.getEmail());
+                                    profile.put("role", chosenRole);
                                     db.collection("user_db").document(uid).set(profile);
                                     //LAMBDA!
-                                    UserUtils.UIDtoUserAsync(uid, user ->{
-                                        if (user != null){
+                                    UserUtils.UIDtoUserAsync(uid, user -> {
+                                        if (user != null) {
                                             updateUI(user); // TO CHANGE TO OUR OWN USER CLASSES
-                                        }
-                                        else{
+                                        } else {
                                             Toast.makeText(RegistrationActivity.this, "User not found in DB",
                                                     Toast.LENGTH_SHORT).show();
                                         }
@@ -134,15 +129,13 @@ public class RegistrationActivity extends AppCompatActivity {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
+        if (currentUser != null) {
             reload();
         }
     }
 
-
     private void reload() {
     }
-
 
     private void updateUI(User user) {
         if (user != null) {
@@ -155,7 +148,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 Toast.makeText(this, "User email not available", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (UID == null){
+            if (UID == null) {
                 Toast.makeText(this, "UID not available", Toast.LENGTH_SHORT).show();
                 return;
             }

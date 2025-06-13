@@ -19,7 +19,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-
 //Firebase guide https://firebase.google.com/docs/auth/android/password-auth#java_1
 public class LoginActivity extends AppCompatActivity {
 
@@ -42,7 +41,6 @@ public class LoginActivity extends AppCompatActivity {
         Button loginButton = findViewById(R.id.buttonLogin);
         Button signupButton = findViewById(R.id.buttonSignup);
 
-
         //What happen after click login
         loginButton.setOnClickListener(v -> {
             String email = emailField.getText().toString().trim();
@@ -55,8 +53,8 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             //Hard code admin login, bypasses firebase auth below
-            if (email.equals("admin") && (password.equals("XPI76SZUqyCjVxgnUjm0"))||password.equals("test")) {
-                Intent intent= new Intent(this,AdminDashboard.class);
+            if (email.equals("admin") && (password.equals("XPI76SZUqyCjVxgnUjm0")) || password.equals("test")) {
+                Intent intent = new Intent(this, AdminDashboard.class);
                 startActivity(intent);
                 Toast.makeText(this, "Admin login successful (bypassed Firebase)", Toast.LENGTH_SHORT).show();
                 return;
@@ -70,14 +68,13 @@ public class LoginActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 Log.d(TAG, "signInWithEmail:success");
                                 FirebaseUser firebaseUser = mAuth.getCurrentUser();
-                                if (firebaseUser!=null){
+                                if (firebaseUser != null) {
                                     String uid = firebaseUser.getUid();
                                     //LAMBDA!
-                                    UserUtils.UIDtoUserAsync(uid, user ->{
-                                        if (user != null){
+                                    UserUtils.UIDtoUserAsync(uid, user -> {
+                                        if (user != null) {
                                             updateUI(user); // TO CHANGE TO OUR OWN USER CLASSES
-                                        }
-                                        else{
+                                        } else {
                                             Toast.makeText(LoginActivity.this, "User not found in DB",
                                                     Toast.LENGTH_SHORT).show();
                                         }
@@ -128,7 +125,7 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(this, "User email not available", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (UID == null){
+            if (UID == null) {
                 Toast.makeText(this, "UID not available", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -148,6 +145,5 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
     }
-
 
 }

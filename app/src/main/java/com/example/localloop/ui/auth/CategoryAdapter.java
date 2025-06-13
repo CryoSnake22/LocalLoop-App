@@ -15,6 +15,7 @@ import com.example.localloop.data.model.Category;
 import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
+
     private List<Category> categoryList;
     private Context context;
 
@@ -43,6 +44,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     }
 
     public static class CategoryViewHolder extends RecyclerView.ViewHolder {
+
         TextView tvCategoryName, tvCategoryDescription;
 
         public CategoryViewHolder(@NonNull View itemView) {

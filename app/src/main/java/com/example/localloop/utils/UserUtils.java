@@ -14,12 +14,15 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class UserUtils {
+
     private static final String TAG = "LoginActivity";
 
-    public interface UserCallback{
+    public interface UserCallback {
+
         void onUserLoaded(User user);
     }
-    static public void UIDtoUserAsync(String UID, UserCallback callback){
+
+    static public void UIDtoUserAsync(String UID, UserCallback callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("user_db").document(UID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -35,16 +38,15 @@ public class UserUtils {
                         String email = document.get("email").toString();
                         String role = document.get("role").toString();
                         User user = null;
-                        if (role.equals("ADMIN")){
-                           user = new Admin(UID,true,firstName,lastName,userName,email);
-                        }
-                        else if (role.equals("PARTICIPANT")){
-                            user = new Participant(UID,true,firstName,lastName,userName,email);
+                        if (role.equals("ADMIN")) {
+                            user = new Admin(UID, true, firstName, lastName, userName, email);
+                        } else if (role.equals("PARTICIPANT")) {
+                            user = new Participant(UID, true, firstName, lastName, userName, email);
 
-                        } else if (role.equals("ORGANIZER")){
-                            user = new Organizer(UID,true,firstName,lastName,userName,email);
+                        } else if (role.equals("ORGANIZER")) {
+                            user = new Organizer(UID, true, firstName, lastName, userName, email);
                         }
-                        if (user != null){
+                        if (user != null) {
                             callback.onUserLoaded(user);
                         }
                     } else {
