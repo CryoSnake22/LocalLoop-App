@@ -6,7 +6,9 @@ public class Category {
     private String name;
     private String description;
 
+
     public Category() {
+    //fire base need this empty method for some reason
     }
 
     public Category(String id, String name, String description) {

@@ -34,6 +34,7 @@
             android:name=".ui.auth.RegistrationActivity"
             android:exported="true" />
         <activity android:name=".ui.auth.AddCategoryActivity" android:exported="false"/>
+        <activity android:name=".ui.auth.EditCategoryActivity" android:exported="true" />
 
 
     </application>
