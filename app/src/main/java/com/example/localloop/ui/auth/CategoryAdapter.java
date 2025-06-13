@@ -1,18 +1,20 @@
 package com.example.localloop.ui.auth;
 
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.localloop.R;
+import java.util.List;
 import com.example.localloop.data.model.Category;
 
-import java.util.List;
+
+
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
 
@@ -46,11 +48,15 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     public static class CategoryViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvCategoryName, tvCategoryDescription;
+        Button btnCategoryEdit, btnCategoryDelete;
 
         public CategoryViewHolder(@NonNull View itemView) {
             super(itemView);
             tvCategoryName = itemView.findViewById(R.id.tvCategoryName);
             tvCategoryDescription = itemView.findViewById(R.id.tvCategoryDescription);
+            btnCategoryEdit = itemView.findViewById(R.id.btnCategoryEdit);
+            btnCategoryDelete = itemView.findViewById(R.id.btnCategoryDelete);
+
         }
     }
 }
