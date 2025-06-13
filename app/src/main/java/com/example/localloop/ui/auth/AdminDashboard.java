@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.localloop.R;
+import com.example.localloop.data.model.Category;
 import com.example.localloop.data.model.Participant;
 import com.example.localloop.data.model.User;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -31,147 +32,174 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdminDashboard extends AppCompatActivity {
-    private User user;
-    private TextView textWelcome;
-    private LinearLayout userLayout,eventLayout,categoryLayout;
-    private RecyclerView rvUser,rvEvent,rvCategory;
-    private ImageView arrowUser,arrowEvent,arrowCategory;
 
-    private UserAdapter userAdapter;
-    private List<User> userList;
+    // Firebase
     private FirebaseFirestore db;
+
+    // UI - Headers
+    private LinearLayout userLayout, eventLayout, categoryLayout;
+    private ImageView arrowUser, arrowEvent, arrowCategory;
+    private TextView textWelcome;
+
+    // RecyclerViews & Adapters
+    private RecyclerView rvUser, rvEvent, rvCategory;
+    private UserAdapter userAdapter;
+    private CategoryAdapter categoryAdapter;
+
+    // Data Lists
+    private List<User> userList;
+    private List<Category> categoryList;
+
+    // User info (optional for future use)
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_admin_dashboard);
+
+        // Ensure system bars are handled correctly
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // This is the whole recycle view shenanigan thing
-        rvUser = findViewById(R.id.rvUsers);
-        rvUser.setLayoutManager(new LinearLayoutManager(this));
-
-        userList = new ArrayList<>();
-        userAdapter = new UserAdapter(userList, this);
-        rvUser.setAdapter(userAdapter);
-
-
-        userList.add(new Participant("test",true,"test","test","test","test"));
+        // Initialize Firebase
         db = FirebaseFirestore.getInstance();
+
+        // Initialize Views
+        initViews();
+
+        // Setup RecyclerViews
+        setupUserRecycler();
+        setupCategoryRecycler();
+
+        // Fetch initial user data
         fetchUsers();
 
+        // Setup Header Toggles
+        setupHeaderListeners();
 
-
-
-
-
-
-
-
-
-
-
-
-
-        rvEvent = findViewById(R.id.rvEvents);
-        rvCategory = findViewById(R.id.rvCategories);
-
-
-
-
-
-
-
-
-
-
-        textWelcome = findViewById(R.id.textWelcome);
-        userLayout = findViewById(R.id.headerUsers);
-        eventLayout = findViewById(R.id.headerEvents);
-        arrowUser = findViewById(R.id.arrowUsers);
-        arrowEvent = findViewById(R.id.arrowEvents);
-        arrowCategory = findViewById(R.id.arrowCategories);
-        categoryLayout = findViewById(R.id.headerCategories);
-
-        userLayout.setOnClickListener(v->{
-            if (rvUser.getVisibility()== View.GONE){
-               rvUser.setVisibility(View.VISIBLE);
-               arrowUser.setRotation(0);
-            } else{
-                rvUser.setVisibility(View.GONE);
-                arrowUser.setRotation(-90);
-            }
-        });
-        eventLayout.setOnClickListener(v->{
-            if (rvEvent.getVisibility()== View.GONE){
-                rvEvent.setVisibility(View.VISIBLE);
-                arrowEvent.setRotation(0);
-            } else{
-                rvEvent.setVisibility(View.GONE);
-                arrowEvent.setRotation(-90);
-            }
-        });
-        categoryLayout.setOnClickListener(v->{
-            if (rvCategory.getVisibility()== View.GONE){
-                rvCategory.setVisibility(View.VISIBLE);
-                arrowCategory.setRotation(0);
-
-            } else{
-                rvCategory.setVisibility(View.GONE);
-                arrowCategory.setRotation(-90);
-            }
-        });
-
-        Intent intent = getIntent();
-        String UID = intent.getStringExtra("UID");
-//        UserUtils.UIDtoUserAsync(UID, userAsync -> {
-//            if (userAsync != null){
-//                this.user = userAsync;
-//                // String message = "Welcome " + user.getFirstName() + ", you are logged in as: " + user.getRole().toString().toLowerCase();
-//                String message = "Welcome Admin, you are logged in as: admin";
-//                textWelcome.setText(message);
-//            }
-//        });
-        // Since we're bypassing I'll just set it manually
+        // Setup Welcome Text
+        String UID = getIntent().getStringExtra("UID");
         String message = "Welcome Admin, you are logged in as: admin";
         textWelcome.setText(message);
 
-
+        // Add new category button
         Button btnNewCategory = findViewById(R.id.btnNewCategory);
-
-        btnNewCategory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AdminDashboard.this, AddCategoryActivity.class);
-                startActivity(intent);
-            }
-        });
-
-    }
-    private void fetchUsers(){
-        db.collection("user_db").addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (error!= null){
-                    return;
-                }
-                userList.clear();
-                for (DocumentSnapshot snapshot : value.getDocuments()){
-                    User user = snapshot.toObject(User.class);
-                    if (user!=null){
-                        userList.add(user);
-                    }
-                    else{
-                        Log.w("AdminDashboard","NULL USER DETECTED WIMPWOMP");
-                    }
-                }
-                userAdapter.notifyDataSetChanged();
-            }
+        btnNewCategory.setOnClickListener(v -> {
+            Intent intent = new Intent(AdminDashboard.this, AddCategoryActivity.class);
+            startActivity(intent);
         });
     }
+
+    /**
+     * Initializes all the views from layout
+     */
+    private void initViews() {
+        textWelcome = findViewById(R.id.textWelcome);
+
+        userLayout = findViewById(R.id.headerUsers);
+        eventLayout = findViewById(R.id.headerEvents);
+        categoryLayout = findViewById(R.id.headerCategories);
+
+        arrowUser = findViewById(R.id.arrowUsers);
+        arrowEvent = findViewById(R.id.arrowEvents);
+        arrowCategory = findViewById(R.id.arrowCategories);
+
+        rvUser = findViewById(R.id.rvUsers);
+        rvEvent = findViewById(R.id.rvEvents);
+        rvCategory = findViewById(R.id.rvCategories);
+    }
+
+    /**
+     * Setup user RecyclerView and adapter
+     */
+    private void setupUserRecycler() {
+        rvUser.setLayoutManager(new LinearLayoutManager(this));
+        userList = new ArrayList<>();
+        userAdapter = new UserAdapter(userList, this);
+        rvUser.setAdapter(userAdapter);
+    }
+
+    /**
+     * Setup category RecyclerView and adapter
+     */
+    private void setupCategoryRecycler() {
+        rvCategory.setLayoutManager(new LinearLayoutManager(this));
+        categoryList = new ArrayList<>();
+        categoryAdapter = new CategoryAdapter(categoryList, this);
+        rvCategory.setAdapter(categoryAdapter);
+    }
+
+    /**
+     * Set header click listeners to expand/collapse sections
+     */
+    private void setupHeaderListeners() {
+        userLayout.setOnClickListener(v -> toggleSection(rvUser, arrowUser));
+        eventLayout.setOnClickListener(v -> toggleSection(rvEvent, arrowEvent));
+
+        categoryLayout.setOnClickListener(v -> {
+            toggleSection(rvCategory, arrowCategory);
+            if (rvCategory.getVisibility() == View.VISIBLE) {
+                fetchCategories();
+            }
+        });
+    }
+
+    /**
+     * Toggle RecyclerView section visibility and rotate arrow
+     */
+    private void toggleSection(RecyclerView recyclerView, ImageView arrow) {
+        if (recyclerView.getVisibility() == View.GONE) {
+            recyclerView.setVisibility(View.VISIBLE);
+            arrow.setRotation(0);
+        } else {
+            recyclerView.setVisibility(View.GONE);
+            arrow.setRotation(-90);
+        }
+    }
+
+    /**
+     * Real-time fetch users from Firestore
+     */
+    private void fetchUsers() {
+        db.collection("user_db").addSnapshotListener((value, error) -> {
+            if (error != null || value == null) return;
+
+            userList.clear();
+            for (DocumentSnapshot snapshot : value.getDocuments()) {
+                User user = snapshot.toObject(User.class);
+                if (user != null) {
+                    userList.add(user);
+                } else {
+                    Log.w("AdminDashboard", "NULL USER DETECTED");
+                }
+            }
+            userAdapter.notifyDataSetChanged();
+        });
+    }
+
+    /**
+     * Real-time fetch users from Firestore
+     */
+    private void fetchCategories() {
+        db.collection("categories").addSnapshotListener((value, error) -> {
+            if (error != null || value == null) return;
+
+            categoryList.clear();
+            for (DocumentSnapshot snapshot : value.getDocuments()) {
+                Category category = snapshot.toObject(Category.class);
+                if (category != null) {
+                    categoryList.add(category);
+                } else {
+                    Log.w("AdminDashboard", "NULL USER DETECTED");
+                }
+            }
+            categoryAdapter.notifyDataSetChanged();
+        });
+    }
+
 }

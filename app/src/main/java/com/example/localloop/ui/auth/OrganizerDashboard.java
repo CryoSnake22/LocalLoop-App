@@ -15,8 +15,10 @@ import com.example.localloop.data.model.User;
 import com.example.localloop.utils.UserUtils;
 
 public class OrganizerDashboard extends AppCompatActivity {
+
     private User user;
     private TextView textWelcome;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +33,7 @@ public class OrganizerDashboard extends AppCompatActivity {
         Intent intent = getIntent();
         String UID = intent.getStringExtra("UID");
         UserUtils.UIDtoUserAsync(UID, userAsync -> {
-            if (userAsync != null){
+            if (userAsync != null) {
                 this.user = userAsync;
                 String message = "Welcome " + user.getFirstName() + ", you are logged in as: " + user.getRole().toString().toLowerCase();
                 textWelcome.setText(message);

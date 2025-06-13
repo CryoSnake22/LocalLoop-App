@@ -1,6 +1,5 @@
 package com.example.localloop.ui.auth;
 
-
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -50,10 +49,10 @@ public class AddCategoryActivity extends AppCompatActivity {
 
             db.collection("categories")
                     .add(category)
-                    .addOnSuccessListener(documentReference ->
-                            Toast.makeText(this, "Category added!", Toast.LENGTH_SHORT).show())
-                    .addOnFailureListener(e ->
-                            Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                    .addOnSuccessListener(documentReference
+                            -> Toast.makeText(this, "Category added!", Toast.LENGTH_SHORT).show())
+                    .addOnFailureListener(e
+                            -> Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
         });
     }
 }
