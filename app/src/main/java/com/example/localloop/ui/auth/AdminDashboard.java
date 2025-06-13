@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.localloop.R;
+import com.example.localloop.data.model.Category;
 import com.example.localloop.data.model.Participant;
 import com.example.localloop.data.model.User;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -40,6 +41,13 @@ public class AdminDashboard extends AppCompatActivity {
     private UserAdapter userAdapter;
     private List<User> userList;
     private FirebaseFirestore db;
+
+
+
+    //Category
+    private List<Category> categoryList;
+    private CategoryAdapter categoryAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,18 +76,16 @@ public class AdminDashboard extends AppCompatActivity {
 
 
 
-
-
-
-
-
-
-
-
-
-
         rvEvent = findViewById(R.id.rvEvents);
+
+
+
+        //Category
         rvCategory = findViewById(R.id.rvCategories);
+        rvCategory.setLayoutManager(new LinearLayoutManager(this));
+        categoryList = new ArrayList<>();
+        categoryAdapter = new CategoryAdapter(categoryList, this);
+        rvCategory.setAdapter(categoryAdapter);
 
 
 
