@@ -3,7 +3,7 @@ package com.example.localloop.data.model;
 public class Category {
 
     private String id;
-    private String name;
+    private String name; 
     private String description;
 
 
