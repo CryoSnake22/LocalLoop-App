@@ -10,12 +10,11 @@ public class User {
     public String user_role;
     public String first_name;
     public String last_name;
-    
-    private int id;
 
-    private static int userId = 1;
+    private boolean disabled;
 
     public User(String user_email, String user_name, String user_password, String user_role, String first_name, String last_name) {
+
         this.user_email = user_email;
         this.user_name = user_name;
         this.user_password = user_password;
@@ -23,8 +22,7 @@ public class User {
         this.first_name = first_name;
         this.last_name = last_name;
 
-        this.id = userId;
-        userId++;
+        this.disabled = false;
     }
 
     public HashMap<String, Object> toMap() {
@@ -35,7 +33,7 @@ public class User {
         fields.put("user_role", this.user_role);
         fields.put("first_name", this.first_name);
         fields.put("last_name", this.last_name);
-        fields.put("user_id", this.id);
+        fields.put("user_disabled", this.disabled);
 
         return fields;
     }
@@ -44,7 +42,11 @@ public class User {
         return user_name;
     }
 
-    public String getId(){
-        return Integer.toString(id);
+    public void setDisable(boolean disabled) {
+        this.disabled = disabled;
+    }
+
+    public String getEmail() {
+        return user_email;
     }
 }
