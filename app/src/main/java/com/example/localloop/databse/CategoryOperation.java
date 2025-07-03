@@ -1,0 +1,13 @@
+package com.example.localloop.databse;
+
+public class CategoryOperation {
+
+    public static void addCategory(Category category) {
+        Database.add("category", category.getCategory_name(), category.toMap());
+    }
+
+    public static void deleteCategory(Category category) {
+        Database.delete("category", category.getCategory_name(), category.toMap());
+
+    }
+}

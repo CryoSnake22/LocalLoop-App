@@ -1,10 +1,13 @@
-package com.example.localloop.utils;
+package com.example.localloop.Archive.utils;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.localloop.Archive.data.model.Admin;
+import com.example.localloop.Archive.data.model.Organizer;
+import com.example.localloop.Archive.data.model.Participant;
+import com.example.localloop.Archive.data.model.User;
 import com.example.localloop.data.model.*;
 import com.example.localloop.ui.auth.LoginActivity;
 import com.google.android.gms.tasks.OnCompleteListener;

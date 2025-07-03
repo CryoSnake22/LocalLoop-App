@@ -1,4 +1,4 @@
-package com.example.localloop.data.model;
+package com.example.localloop.Archive.data.model;
 
 public class Category {
 
