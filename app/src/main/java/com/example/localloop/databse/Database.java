@@ -34,7 +34,10 @@ public class Database {
     public static void get(String collectionPath, Consumer<Map<String, Map<String, Object>>> callback) {
         db.collection(collectionPath).get().addOnSuccessListener(qs -> {
             Map<String, Map<String, Object>> out = new HashMap<>();
-            for (DocumentSnapshot doc : qs) out.put(doc.getId(), doc.getData());
+
+            for (DocumentSnapshot doc : qs) {
+                out.put(doc.getId(), doc.getData());
+            }
             callback.accept(out);
         });
     }
