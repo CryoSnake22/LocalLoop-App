@@ -1,6 +1,9 @@
 package com.example.localloop.databse;
 
 public class UserOperation {
+
+    public static User currentUser; //STORE THE USER INFO AFTER LOGGED IN
+
     public static void addUserAccount(User user) {
         Database.add("user", user.getEmail(), user.toMap());
     }

@@ -1,4 +1,6 @@
 package com.example.localloop.ui;
 
-public class ParticipantActivity {
+import androidx.appcompat.app.AppCompatActivity;
+
+public class ParticipantActivity extends AppCompatActivity {
 }
