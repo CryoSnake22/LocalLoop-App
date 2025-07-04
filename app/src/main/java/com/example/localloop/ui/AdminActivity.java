@@ -1,4 +1,6 @@
 package com.example.localloop.ui;
 
-public class AdminActivity {
+import androidx.appcompat.app.AppCompatActivity;
+
+public class AdminActivity extends AppCompatActivity {
 }

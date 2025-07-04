@@ -41,4 +41,22 @@ public class Database {
             callback.accept(out);
         });
     }
+
+
+    public static void get(String collectionPath, String documentId, Consumer<Map<String, Object>> callback) {
+        db.collection(collectionPath)
+                .document(documentId)
+                .get()
+                .addOnSuccessListener(doc -> {
+                    if (doc.exists()) {
+                        callback.accept(doc.getData());
+                    } else {
+                        callback.accept(null); // No such document
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error fetching document", e);
+                    callback.accept(null); // In case of error
+                });
+    }
 }

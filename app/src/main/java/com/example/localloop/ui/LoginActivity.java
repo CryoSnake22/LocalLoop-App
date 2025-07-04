@@ -1,5 +1,6 @@
 package com.example.localloop.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -13,8 +14,11 @@ import com.example.localloop.R;
 import com.example.localloop.databse.Database;
 import com.example.localloop.databse.User;
 import com.example.localloop.databse.UserOperation;
+import com.example.localloop.usertype.AdminUser;
 import com.example.localloop.usertype.OrganizerUser;
 import com.example.localloop.usertype.ParticipantUser;
+
+import java.util.Objects;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -31,16 +35,83 @@ public class LoginActivity extends AppCompatActivity {
 
         setContentView(R.layout.login_activity);
 
-        //Direct to Sign up
+        //SIGNUP CLICKED
         Button btn_login_signup = findViewById(R.id.btn_login_signup);
         btn_login_signup.setOnClickListener(v -> signupLayout());
 
-        //Login
+        //LOGIN CLICKED
         Button btn_login_login = findViewById(R.id.btn_login_login);
-        btn_login_login.setOnClickListener(v -> signupLayout());
+        btn_login_login.setOnClickListener(v -> {
 
-        String email = findViewById(R.id.text_login_email).toString().trim();
-        String passord = findViewById(R.id.text_login_password).toString().trim();
+            EditText emailField = findViewById(R.id.text_login_email);
+            EditText passwordField = findViewById(R.id.text_login_password);
+
+            String email = emailField.getText().toString().trim();
+            String password = passwordField.getText().toString().trim();
+
+
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Email or Password can not be blank", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+
+            // Db to get user doc by email (document ID)
+            Database.get("user", email, userData -> {
+                if (userData == null) {
+                    Toast.makeText(this, "Username(email) or password does not exsist", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                String storedPassword = (String) userData.get("user_password");
+                String userRole = (String) userData.get("user_role");
+                String username = (String) userData.get("user_name");
+
+
+                if (!password.equals(storedPassword)) {
+                    Toast.makeText(this, "Incorrect password", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                UserOperation.currentUser = new User(
+                        Objects.requireNonNull(userData.get("user_email")).toString(),
+                        Objects.requireNonNull(userData.get("user_name")).toString(),
+                        Objects.requireNonNull(userData.get("user_password")).toString(),
+                        Objects.requireNonNull(userData.get("user_role")).toString(),
+                        Objects.requireNonNull(userData.get("first_name")).toString(),
+                        Objects.requireNonNull(userData.get("last_name")).toString()
+                );;
+
+                Log.d("LOGIN", "Logged in as: " + UserOperation.currentUser.getUserName() + " (" + UserOperation.currentUser.user_role + ")");
+                Toast.makeText(this, ("Logged in as: " + UserOperation.currentUser.getUserName() + " (" + UserOperation.currentUser.user_role + ")"), Toast.LENGTH_SHORT).show();
+
+
+                //REDIRECT
+                if ("admin".equals(UserOperation.currentUser.user_role)) {
+                    Log.d("LOGIN", "Go to admin activity");
+
+                    Intent intent = new Intent(this, AdminActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                else if ("organizer".equals(UserOperation.currentUser.user_role)) {
+                    Log.d("LOGIN", "Go to organizer activity");
+
+                    Intent intent = new Intent(this, OrganizerActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                else {
+                    Log.d("LOGIN", "Go to participant activity");
+
+                    Intent intent = new Intent(this, ParticipantActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+
+
+            });
+        });
     }
 
     private void signupLayout() {
@@ -80,10 +151,10 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(this, "Passwords does not match!", Toast.LENGTH_SHORT).show();
         }
 
-        // Check if email already exists
+/*        // Check if email already exists - to be complete later
         if(Database.get("user") contain email) {
             Toast.makeText(this, "This email is already registered!", Toast.LENGTH_SHORT).show();
-        }
+        }*/
 
 
         //CREATE USER AND GOTO ROLE SPECIFIC HOME
