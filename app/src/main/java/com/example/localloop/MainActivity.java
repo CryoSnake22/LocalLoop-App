@@ -15,6 +15,7 @@ import com.example.localloop.databse.Event;
 import com.example.localloop.databse.EventOperation;
 import com.example.localloop.databse.User;
 import com.example.localloop.databse.UserOperation;
+import com.example.localloop.ui.AdminActivity;
 import com.example.localloop.ui.LoginActivity;
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -32,7 +33,10 @@ public class MainActivity extends AppCompatActivity {
 
         // Redirect to login
         Intent login = new Intent(this, LoginActivity.class);
-        startActivity(login);
+
+        Intent admin = new Intent(this, AdminActivity.class);
+
+        startActivity(admin);
         finish(); // Close MainActivity so user can't return to it
 
 

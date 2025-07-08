@@ -8,16 +8,9 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btn_admin_manageCategory"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewUsers"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Manage Category" />
-
-        <Button
-            android:id="@+id/btn_admin_manageUsers"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Manage Users" />
+            android:layout_height="match_parent" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
