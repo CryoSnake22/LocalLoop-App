@@ -5,7 +5,7 @@ import java.util.HashMap;
 public class Event {
     public String eventName;
     public String description;
-    public String associatedCategory;
+    public Category associatedCategory;
     public String eventDate;
     public String eventTime;
     public float eventFee;
@@ -13,7 +13,7 @@ public class Event {
 
     private static int eventId = 1;
 
-    public Event(String eventName, String description, String associatedCategory, float eventFee, String eventDate, String eventTime) {
+    public Event(String eventName, String description, Category associatedCategory, float eventFee, String eventDate, String eventTime) {
         this.eventName = eventName;
         this.description = description;
         this.associatedCategory = associatedCategory;
@@ -34,7 +34,7 @@ public class Event {
         fields.put("event_time", this.eventTime);
         fields.put("event_id", this.id);
 
-        fields.put("associated_category", this.associatedCategory);
+        fields.put("associated_category", this.associatedCategory.getCategory_name());
 
         return fields;
     }
