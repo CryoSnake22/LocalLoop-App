@@ -1,28 +1,43 @@
 package com.example.localloop.databse;
 
+import com.example.localloop.usertype.OrganizerUser;
+import com.example.localloop.usertype.ParticipantUser;
+
 import java.util.HashMap;
+import java.util.List;
+import java.util.Queue;
 
 public class Event {
     public String eventName;
     public String description;
-    public Category associatedCategory;
+    public String associatedCategory;
     public String eventDate;
     public String eventTime;
     public float eventFee;
     private int id;
 
+    private OrganizerUser eventOwner;
+
+
+
+    private Queue<ParticipantUser> eventRequest;
+    private List<ParticipantUser> eventParticipant;
+
+
     private static int eventId = 1;
 
-    public Event(String eventName, String description, Category associatedCategory, float eventFee, String eventDate, String eventTime) {
+    public Event(String eventName, String description, String associatedCategory, float eventFee, String eventDate, String eventTime, OrganizerUser eventOwner) {
         this.eventName = eventName;
         this.description = description;
         this.associatedCategory = associatedCategory;
         this.eventFee = eventFee;
         this.eventDate = eventDate;
         this.eventTime = eventTime;
-
+        this.eventOwner = eventOwner;
         this.id = eventId;
         eventId++;
+
+        eventOwner.addEvent(this);
     }
 
     public HashMap<String, Object> toMap() {
@@ -34,7 +49,9 @@ public class Event {
         fields.put("event_time", this.eventTime);
         fields.put("event_id", this.id);
 
-        fields.put("associated_category", this.associatedCategory.getCategory_name());
+        fields.put("associated_category", this.associatedCategory);
+
+        fields.put("event_owner", eventOwner.getEmail());
 
         return fields;
     }
@@ -45,5 +62,14 @@ public class Event {
 
     public String getId(){
         return Integer.toString(id);
+    }
+
+
+    public void addEventRequest(ParticipantUser user) {
+        eventRequest.add(user);
+    }
+
+    public void addParticipant(ParticipantUser user) {
+        eventParticipant.add(user);
     }
 }
