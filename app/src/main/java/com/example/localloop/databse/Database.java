@@ -6,6 +6,9 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.localloop.usertype.AdminUser;
+import com.example.localloop.usertype.OrganizerUser;
+import com.example.localloop.usertype.ParticipantUser;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
@@ -91,19 +94,66 @@ public class Database {
 
                 String email = (String) userData.get("user_email");
                 String name = (String) userData.get("user_name");
+                String password = (String) userData.get("user_password");
                 String role = (String) userData.get("user_role");
                 String first = (String) userData.get("first_name");
                 String last = (String) userData.get("last_name");
+
                 boolean disabled = Boolean.TRUE.equals(userData.get("user_disabled"));
 
-                User user = new User(email, name, "", role, first, last);
-                user.setDisable(disabled);
-                userList.add(user);
+
+                if(role.equals("organizer")) {
+                    OrganizerUser user = new OrganizerUser(email, name, password, role, first, last);
+                    user.setDisable(disabled);
+                    userList.add(user);
+                }
+                else if(role.equals("participant")) {
+                    ParticipantUser user = new ParticipantUser(email, name, password, role, first, last);
+                    user.setDisable(disabled);
+                    userList.add(user);
+                }
+                else if(role.equals("admin")) {
+                    AdminUser user = new AdminUser(email, name, password, role, first, last);
+                    userList.add(user);
+                }
+                else {
+                    continue;
+                }
+
             }
         });
 
         return userList;
     }
+
+    public static List<OrganizerUser> getOrganizer() {
+        List<User> userList = getUser();
+        List<OrganizerUser> organizerList = new ArrayList<>();
+
+        for (User user : userList) {
+            if (user instanceof OrganizerUser) {
+                organizerList.add((OrganizerUser) user);
+            }
+        }
+
+        return organizerList;
+    }
+
+    public static List<ParticipantUser> getParticipant() {
+        List<User> userList = getUser();
+        List<ParticipantUser> participantList = new ArrayList<>();
+
+        for (User user : userList) {
+            if (user instanceof ParticipantUser) {
+                participantList.add((ParticipantUser) user);
+            }
+        }
+
+        return participantList;
+    }
+
+
+
 
 
     public static List<Event> getEvents() {
@@ -111,16 +161,17 @@ public class Database {
 
         Database.get("user", data -> {
             for (String docId : data.keySet()) {
-                Map<String, Object> userData = data.get(docId);
+                Map<String, Object> eventData = data.get(docId);
 
-                String name = (String) userData.get("event_name");
-                String description = (String) userData.get("event_description");
-                String category = (String) userData.get("associated_category");
-                String fee = (String) userData.get("event_fee");
-                String date = (String) userData.get("event_date");
-                String time = (String) userData.get("event_time");
+                String name = (String) eventData.get("event_name");
+                String description = (String) eventData.get("event_description");
+                String category = (String) eventData.get("associated_category");
+                String fee = (String) eventData.get("event_fee");
+                String date = (String) eventData.get("event_date");
+                String time = (String) eventData.get("event_time");
+                String owner = (String) eventData.get("event_owner");
 
-                Event event = new Event(name, description, new Category(category, ""), Float.valueOf(fee), date, time);
+                Event event = new Event(name, description, category, Float.valueOf(fee), date, time, owner);
 
                 eventsList.add(event);
             }
@@ -128,5 +179,6 @@ public class Database {
 
         return eventsList;
     }
+
 
 }

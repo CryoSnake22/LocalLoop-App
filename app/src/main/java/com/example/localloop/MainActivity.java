@@ -19,6 +19,8 @@ import com.example.localloop.ui.AdminActivity;
 import com.example.localloop.ui.LoginActivity;
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -31,7 +33,13 @@ public class MainActivity extends AppCompatActivity {
          */
 
 
-        // Redirect to login
+        List<User> userList = Database.getUser();
+
+
+        Event e = new Event("event1", "event1", "event1", 100, "event1", "event1", "admin");
+        Database.add("events", "12345", e.toMap());
+
+/*        // Redirect to login
         Intent login = new Intent(this, LoginActivity.class);
 
         Intent admin = new Intent(this, AdminActivity.class);
@@ -39,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(admin);
         finish(); // Close MainActivity so user can't return to it
 
-
+        */
 
 
     }

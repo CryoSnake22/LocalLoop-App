@@ -1,8 +1,13 @@
 package com.example.localloop.databse;
 
 public class EventOperation {
+
     public static void addEvent(Event event) {
         Database.add("events", event.getEventName(), event.toMap());
+    }
+
+    public static void addEvent(String email, Event event) {
+        Database.add("events", email + "," + event.getEventName(), event.toMap());
     }
 
     public static void deleteEvent(Event event) {

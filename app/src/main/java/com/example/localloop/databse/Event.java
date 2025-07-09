@@ -1,28 +1,34 @@
 package com.example.localloop.databse;
 
+import com.example.localloop.usertype.OrganizerUser;
+
 import java.util.HashMap;
 
 public class Event {
     public String eventName;
     public String description;
-    public Category associatedCategory;
+    public String associatedCategory;
     public String eventDate;
     public String eventTime;
     public float eventFee;
     private int id;
 
+    private User eventOwner;
+
     private static int eventId = 1;
 
-    public Event(String eventName, String description, Category associatedCategory, float eventFee, String eventDate, String eventTime) {
+    public Event(String eventName, String description, String associatedCategory, float eventFee, String eventDate, String eventTime, OrganizerUser eventOwner) {
         this.eventName = eventName;
         this.description = description;
         this.associatedCategory = associatedCategory;
         this.eventFee = eventFee;
         this.eventDate = eventDate;
         this.eventTime = eventTime;
-
+        this.eventOwner = eventOwner;
         this.id = eventId;
         eventId++;
+
+        eventOwner.addEvent(this);
     }
 
     public HashMap<String, Object> toMap() {
@@ -34,7 +40,9 @@ public class Event {
         fields.put("event_time", this.eventTime);
         fields.put("event_id", this.id);
 
-        fields.put("associated_category", this.associatedCategory.getCategory_name());
+        fields.put("associated_category", this.associatedCategory);
+
+        fields.put("event_owner", eventOwner.getEmail());
 
         return fields;
     }
