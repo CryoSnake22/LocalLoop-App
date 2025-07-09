@@ -1,8 +1,11 @@
 package com.example.localloop.databse;
 
 import com.example.localloop.usertype.OrganizerUser;
+import com.example.localloop.usertype.ParticipantUser;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Queue;
 
 public class Event {
     public String eventName;
@@ -13,7 +16,13 @@ public class Event {
     public float eventFee;
     private int id;
 
-    private User eventOwner;
+    private OrganizerUser eventOwner;
+
+
+
+    private Queue<ParticipantUser> eventRequest;
+    private List<ParticipantUser> eventParticipant;
+
 
     private static int eventId = 1;
 
@@ -53,5 +62,14 @@ public class Event {
 
     public String getId(){
         return Integer.toString(id);
+    }
+
+
+    public void addEventRequest(ParticipantUser user) {
+        eventRequest.add(user);
+    }
+
+    public void addParticipant(ParticipantUser user) {
+        eventParticipant.add(user);
     }
 }

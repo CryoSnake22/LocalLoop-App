@@ -169,11 +169,19 @@ public class Database {
                 String fee = (String) eventData.get("event_fee");
                 String date = (String) eventData.get("event_date");
                 String time = (String) eventData.get("event_time");
-                String owner = (String) eventData.get("event_owner");
+                String ownerEmail = (String) eventData.get("event_owner");
 
-                Event event = new Event(name, description, category, Float.valueOf(fee), date, time, owner);
+                List<OrganizerUser> organizerList = new ArrayList<>();
 
-                eventsList.add(event);
+                for (OrganizerUser user : organizerList) {
+                    if (user.getEmail().equals(ownerEmail)) {
+                        Event event = new Event(name, description, category, Float.valueOf(fee), date, time, user);
+                        eventsList.add(event);
+                        break;
+                    }
+                }
+
+
             }
         });
 
