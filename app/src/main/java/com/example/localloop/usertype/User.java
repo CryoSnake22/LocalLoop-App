@@ -42,6 +42,9 @@ public abstract class User {
         return user_name;
     }
 
+    public boolean isDisabled() {
+        return this.disabled;
+    }
     public void setDisable(boolean disabled) {
         this.disabled = disabled;
     }

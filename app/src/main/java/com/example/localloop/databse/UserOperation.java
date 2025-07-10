@@ -19,7 +19,5 @@ public class UserOperation {
         addUserAccount(newUser);
     }
 
-    public static void getAllUserAccount() {
 
-    }
 }

@@ -88,7 +88,6 @@ public class AdminActivity extends AppCompatActivity {
         });
     }
 
-
     //USE THIS TO EDIT EXIST CATEGORY INFO
     private void addCategoryLayout(Category category) {
         Log.d("LAYOUT", "admin_add_category_activity");
@@ -121,12 +120,25 @@ public class AdminActivity extends AppCompatActivity {
 
 
     private void manageUsersLayout() {
+        Log.d("LAYOUT", "THIS IS admin_manage_users_activity PAGE");
+        setContentView(R.layout.admin_manage_users_activity);
 
+        RecyclerView rv = findViewById(R.id.recycler_user_list);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+
+        Database.getUserSync(users -> {
+            runOnUiThread(() -> {
+                UserAdapter adapter = AdminActivity.this.new UserAdapter(users);
+                rv.setAdapter(adapter);
+            });
+        });
     }
 
 
 
 
+
+    //For category items
     private class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.VH> {
 
         private final List<Category> items;
@@ -165,7 +177,7 @@ public class AdminActivity extends AppCompatActivity {
             });
 
             holder.btnDelete.setOnClickListener(v -> {
-                CategoryOperation.deleteCategory(c);           // implement this
+                CategoryOperation.deleteCategory(c);
                 items.remove(pos);
                 notifyItemRemoved(pos);
             });
@@ -176,4 +188,83 @@ public class AdminActivity extends AppCompatActivity {
             return items.size();
         }
     }
+
+    private class UserAdapter extends RecyclerView.Adapter<UserAdapter.VH> {
+
+        private final List<User> items;
+
+        UserAdapter(List<User> items) {
+            this.items = items;
+        }
+
+        class VH extends RecyclerView.ViewHolder {
+            TextView name, email, role, firstName, lastName, status;
+            Button btnDisable, btnEnable;
+
+            VH(View itemView) {
+                super(itemView);
+                name = itemView.findViewById(R.id.text_user_item_username);
+                email = itemView.findViewById(R.id.text_user_item_email);
+                role = itemView.findViewById(R.id.text_user_item_role);
+                firstName = itemView.findViewById(R.id.text_user_item_first_name);
+                lastName = itemView.findViewById(R.id.text_user_item_last_name);
+                status = itemView.findViewById(R.id.text_user_item_status);
+                btnDisable = itemView.findViewById(R.id.btn_user_item_disable);
+                btnEnable = itemView.findViewById(R.id.btn_user_item_enable);
+            }
+        }
+
+        @Override
+        public VH onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_user, parent, false);
+            return new VH(v);
+        }
+
+        @Override
+        public void onBindViewHolder(VH holder, int pos) {
+            User user = items.get(pos);
+
+            holder.name.setText(user.user_name);
+            holder.email.setText(user.user_email);
+            holder.role.setText(user.user_role);
+            holder.firstName.setText(user.first_name);
+            holder.lastName.setText(user.last_name);
+            holder.status.setText("Status: " + (user.isDisabled() ? "Disabled" : "Active"));
+
+            if (user.isDisabled()) {
+                holder.btnDisable.setVisibility(View.GONE);
+                holder.btnEnable.setVisibility(View.VISIBLE);
+            } else {
+                holder.btnDisable.setVisibility(View.VISIBLE);
+                holder.btnEnable.setVisibility(View.GONE);
+            }
+
+            holder.btnDisable.setOnClickListener(v -> {
+                user.setDisable(true);
+                UserOperation.addUserAccount(user);
+
+                holder.status.setText("Status: Disabled");
+                holder.btnDisable.setVisibility(View.GONE);
+                holder.btnEnable.setVisibility(View.VISIBLE);
+                Toast.makeText(v.getContext(), "User disabled", Toast.LENGTH_SHORT).show();
+            });
+
+            holder.btnEnable.setOnClickListener(v -> {
+                user.setDisable(false);
+                UserOperation.addUserAccount(user);
+
+                holder.status.setText("Status: Active");
+                holder.btnDisable.setVisibility(View.VISIBLE);
+                holder.btnEnable.setVisibility(View.GONE);
+                Toast.makeText(v.getContext(), "User enabled", Toast.LENGTH_SHORT).show();
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return items.size();
+        }
+    }
+
+
 }
