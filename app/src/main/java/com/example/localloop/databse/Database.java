@@ -59,10 +59,10 @@ public class Database {
     }
 
 
-    public static List<Category> getCategory() {
+/*    public static List<Category> getCategory() {
         List<Category> categoryList = new ArrayList<>();
 
-        Database.get("user", data -> {
+        Database.get("category", data -> {
             for (String docId : data.keySet()) {
                 Map<String, Object> categoryData = data.get(docId);
 
@@ -75,8 +75,60 @@ public class Database {
         });
 
         return categoryList;
+    }*/
+
+    public static void getCategory(Consumer<List<Category>> callback) {
+        List<Category> categoryList = new ArrayList<>();
+
+        Database.get("category", data -> {
+            for (String docId : data.keySet()) {
+                Map<String, Object> categoryData = data.get(docId);
+
+                String name = (String) categoryData.get("category_name");
+                String description = (String) categoryData.get("category_description");
+
+                Category category = new Category(name, description);
+                categoryList.add(category);
+            }
+
+            callback.accept(categoryList);
+        });
     }
 
+
+    public static void getUserSync(Consumer<List<User>> callback) {
+        List<User> userList = new ArrayList<>();
+
+        Database.get("user", data -> {
+            for (String docId : data.keySet()) {
+                Map<String, Object> userData = data.get(docId);
+
+                String email = (String) userData.get("user_email");
+                String name = (String) userData.get("user_name");
+                String password = (String) userData.get("user_password");
+                String role = (String) userData.get("user_role");
+                String first = (String) userData.get("first_name");
+                String last = (String) userData.get("last_name");
+
+                boolean disabled = Boolean.TRUE.equals(userData.get("user_disabled"));
+
+                if (role.equals("organizer")) {
+                    OrganizerUser user = new OrganizerUser(email, name, password, role, first, last);
+                    user.setDisable(disabled);
+                    userList.add(user);
+                } else if (role.equals("participant")) {
+                    ParticipantUser user = new ParticipantUser(email, name, password, role, first, last);
+                    user.setDisable(disabled);
+                    userList.add(user);
+                } else if (role.equals("admin")) {
+                    AdminUser user = new AdminUser(email, name, password, role, first, last);
+                    userList.add(user);
+                }
+            }
+
+            callback.accept(userList);
+        });
+    }
 
     public static List<User> getUser() {
         List<User> userList = new ArrayList<>();
@@ -162,7 +214,7 @@ public class Database {
                 String fee = (String) eventData.get("event_fee");
                 String date = (String) eventData.get("event_date");
                 String time = (String) eventData.get("event_time");
-                String ownerEmail = (String) eventData.get("event_owner");
+                String ownerEmail = (String) eventData.get("event_owner_email");
 
                 List<OrganizerUser> organizerList = new ArrayList<>();
 

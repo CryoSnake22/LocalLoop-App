@@ -8,15 +8,26 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_category_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:id="@+id/btn_add_category"
+        <EditText
+            android:id="@+id/text_category_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add Category" />
+            android:ems="10"
+            android:hint="Category Name"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/text_category_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Category Description"
+            android:inputType="text" />
+
+        <Button
+            android:id="@+id/btn_add_category_submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save Category" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

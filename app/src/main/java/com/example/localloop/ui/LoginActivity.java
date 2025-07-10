@@ -125,52 +125,52 @@ public class LoginActivity extends AppCompatActivity {
         btn_login_signup.setOnClickListener(v -> loginLayout());
 
         Button btn_signup_signup = findViewById(R.id.btn_signup_signup);
-        btn_login_signup.setOnClickListener(v -> loginLayout());
+        btn_login_signup.setOnClickListener(v -> {
 
 
-        //GET INFO
-        EditText emailField = findViewById(R.id.text_signup_email);
-        EditText firstnameField = findViewById(R.id.text_signup_firstname);
-        EditText lastnameField = findViewById(R.id.text_signup_lastname);
-        EditText usernameField = findViewById(R.id.text_signup_username);
-        EditText passwordField = findViewById(R.id.text_signup_password);
-        EditText confirmField = findViewById(R.id.text_signup_confirmPassword);
+            //GET INFO
+            EditText emailField = findViewById(R.id.text_signup_email);
+            EditText firstnameField = findViewById(R.id.text_signup_firstname);
+            EditText lastnameField = findViewById(R.id.text_signup_lastname);
+            EditText usernameField = findViewById(R.id.text_signup_username);
+            EditText passwordField = findViewById(R.id.text_signup_password);
+            EditText confirmField = findViewById(R.id.text_signup_confirmPassword);
 
-        RadioButton organizer = findViewById(R.id.radio_signup_organizer);
-        RadioButton participant = findViewById(R.id.radio_signup_participant);
+            RadioButton organizer = findViewById(R.id.radio_signup_organizer);
+            RadioButton participant = findViewById(R.id.radio_signup_participant);
 
-        String email = emailField.getText().toString().trim();
-        String firstname = firstnameField.getText().toString().trim();
-        String lastname = lastnameField.getText().toString().trim();
-        String username = usernameField.getText().toString().trim();
-        String password = passwordField.getText().toString().trim();
-        String confirmPassword = confirmField.getText().toString().trim();
+            String email = emailField.getText().toString().trim();
+            String firstname = firstnameField.getText().toString().trim();
+            String lastname = lastnameField.getText().toString().trim();
+            String username = usernameField.getText().toString().trim();
+            String password = passwordField.getText().toString().trim();
+            String confirmPassword = confirmField.getText().toString().trim();
 
-        //FIELD AND DB CHECK
-        if(!password.equals(confirmPassword)) {
-            Toast.makeText(this, "Passwords does not match!", Toast.LENGTH_SHORT).show();
-        }
+            //FIELD AND DB CHECK
+            if (!password.equals(confirmPassword)) {
+                Toast.makeText(this, "Passwords does not match!", Toast.LENGTH_SHORT).show();
+            }
 
-/*        // Check if email already exists - to be complete later
-        if(Database.get("user") contain email) {
-            Toast.makeText(this, "This email is already registered!", Toast.LENGTH_SHORT).show();
-        }*/
-
-
-        //CREATE USER AND GOTO ROLE SPECIFIC HOME
-        User user;
-
-        if(organizer.isChecked()) {
-            user = new OrganizerUser(email, username, password, "organizer", firstname, lastname);
-            UserOperation.addUserAccount(user);
-
-        }
-        else if(participant.isChecked()){
-            user = new ParticipantUser(email, username, password, "participant", firstname, lastname);
-            UserOperation.addUserAccount(user);
-
-        }
+    /*        // Check if email already exists - to be complete later
+            if(Database.get("user") contain email) {
+                Toast.makeText(this, "This email is already registered!", Toast.LENGTH_SHORT).show();
+            }*/
 
 
+            //CREATE USER AND GOTO ROLE SPECIFIC HOME
+            User user;
+
+            if (organizer.isChecked()) {
+                user = new OrganizerUser(email, username, password, "organizer", firstname, lastname);
+                UserOperation.addUserAccount(user);
+                Toast.makeText(this, "Account Created", Toast.LENGTH_SHORT).show();
+
+            } else if (participant.isChecked()) {
+                user = new ParticipantUser(email, username, password, "participant", firstname, lastname);
+                UserOperation.addUserAccount(user);
+                Toast.makeText(this, "Account Created", Toast.LENGTH_SHORT).show();
+
+            }
+        });
     }
 }
