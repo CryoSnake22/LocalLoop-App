@@ -28,6 +28,6 @@
             android:id="@+id/btn_add_category_submit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add Category" />
+            android:text="Save Category" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

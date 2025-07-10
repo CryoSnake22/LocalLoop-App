@@ -59,9 +59,7 @@ public class AdminActivity extends AppCompatActivity {
         RecyclerView rv = findViewById(R.id.recycler_category_list);
         rv.setLayoutManager(new LinearLayoutManager(this));
 
-        // 🔄 Use the new async method:
         Database.getCategory(categories -> {
-            // Now you can safely set the adapter
             runOnUiThread(() -> {
                 CategoryAdapter adapter = new CategoryAdapter(categories);
                 rv.setAdapter(adapter);
@@ -69,26 +67,58 @@ public class AdminActivity extends AppCompatActivity {
         });
     }
 
-
+    //USE THIS IF CREATING NEW
     private void addCategoryLayout() {
         Log.d("LAYOUT", "admin_add_category_activity");
         setContentView(R.layout.admin_add_category_activity);
 
+        Button btnSubmit = findViewById(R.id.btn_add_category_submit);
+        EditText categoryNameField = findViewById(R.id.text_category_name);
+        EditText categoryDescriptionField = findViewById(R.id.text_category_description);
 
-        Button btn_login_login = findViewById(R.id.btn_add_category_submit);
-        btn_login_login.setOnClickListener(v -> {
-
-            EditText categoryNameField = findViewById(R.id.text_category_name);
-            EditText categoryDescriptionField = findViewById(R.id.text_category_description);
-
+        btnSubmit.setOnClickListener(v -> {
             String categoryName = categoryNameField.getText().toString().trim();
             String categoryDescription = categoryDescriptionField.getText().toString().trim();
 
             Category category = new Category(categoryName, categoryDescription);
             CategoryOperation.addCategory(category);
             Toast.makeText(this, "Category Created", Toast.LENGTH_SHORT).show();
+
+            manageCategoryLayout();
         });
     }
+
+
+    //USE THIS TO EDIT EXIST CATEGORY INFO
+    private void addCategoryLayout(Category category) {
+        Log.d("LAYOUT", "admin_add_category_activity");
+        setContentView(R.layout.admin_add_category_activity);
+
+        EditText categoryNameField = findViewById(R.id.text_category_name);
+        EditText categoryDescriptionField = findViewById(R.id.text_category_description);
+        Button btnSubmit = findViewById(R.id.btn_add_category_submit);
+
+        if (category != null) {
+            categoryNameField.setText(category.getCategory_name());
+            categoryDescriptionField.setText(category.category_description);
+        }
+
+        btnSubmit.setOnClickListener(v -> {
+            String categoryName = categoryNameField.getText().toString().trim();
+            String categoryDescription = categoryDescriptionField.getText().toString().trim();
+
+            if (category != null) {
+                CategoryOperation.deleteCategory(category);
+            }
+
+            Category newCategory = new Category(categoryName, categoryDescription);
+            CategoryOperation.addCategory(newCategory);
+            Toast.makeText(this, "Category Updated", Toast.LENGTH_SHORT).show();
+
+            manageCategoryLayout();
+        });
+    }
+
 
     private void manageUsersLayout() {
 
@@ -131,7 +161,7 @@ public class AdminActivity extends AppCompatActivity {
             holder.desc.setText(c.category_description);
 
             holder.btnEdit.setOnClickListener(v -> {
-                Toast.makeText(v.getContext(),"Edit " + c.getCategory_name(), Toast.LENGTH_SHORT).show();
+                addCategoryLayout(c);
             });
 
             holder.btnDelete.setOnClickListener(v -> {
