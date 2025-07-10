@@ -12,9 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.localloop.R;
 import com.example.localloop.databse.Database;
-import com.example.localloop.databse.User;
+import com.example.localloop.usertype.User;
 import com.example.localloop.databse.UserOperation;
-import com.example.localloop.usertype.AdminUser;
 import com.example.localloop.usertype.OrganizerUser;
 import com.example.localloop.usertype.ParticipantUser;
 
@@ -29,9 +28,9 @@ public class LoginActivity extends AppCompatActivity {
         loginLayout(); // goto login page
     }
 
-
+    //TODO NEED TO REIMPLEMENT LOGIN LOGIC USING DATABASE GETUSER()
     private void loginLayout() {
-        Log.d("LAYOUT", "THIS IS LAYOUT PAGE");
+        Log.d("Login", "THIS IS Login PAGE");
 
         setContentView(R.layout.login_activity);
 
@@ -73,7 +72,8 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
 
-                UserOperation.currentUser = new User(
+
+                UserOperation.currentUser = new ParticipantUser(
                         Objects.requireNonNull(userData.get("user_email")).toString(),
                         Objects.requireNonNull(userData.get("user_name")).toString(),
                         Objects.requireNonNull(userData.get("user_password")).toString(),

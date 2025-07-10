@@ -1,5 +1,7 @@
 package com.example.localloop.databse;
 
+import com.example.localloop.usertype.User;
+
 public class UserOperation {
 
     public static User currentUser; //STORE THE USER INFO AFTER LOGGED IN

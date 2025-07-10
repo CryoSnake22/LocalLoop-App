@@ -20,8 +20,8 @@ public class Event {
 
 
 
-    private Queue<ParticipantUser> eventRequest;
-    private List<ParticipantUser> eventParticipant;
+    public List<ParticipantUser> eventRequest;
+    public List<ParticipantUser> eventParticipant;
 
 
     private static int eventId = 1;
@@ -37,7 +37,7 @@ public class Event {
         this.id = eventId;
         eventId++;
 
-        eventOwner.addEvent(this);
+        eventOwner.createEvent(this);
     }
 
     public HashMap<String, Object> toMap() {

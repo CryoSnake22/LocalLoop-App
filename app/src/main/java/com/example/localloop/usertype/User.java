@@ -1,8 +1,8 @@
-package com.example.localloop.databse;
+package com.example.localloop.usertype;
 
 import java.util.HashMap;
 
-public class User {
+public abstract class User {
     public String user_email;
     public String user_name;
     public String user_password;
