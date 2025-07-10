@@ -1,25 +1,14 @@
 package com.example.localloop; 
 
-import static android.content.ContentValues.TAG;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.localloop.databse.Category;
-import com.example.localloop.databse.CategoryOperation;
-import com.example.localloop.databse.Database;
-import com.example.localloop.databse.Event;
-import com.example.localloop.databse.EventOperation;
-import com.example.localloop.databse.User;
-import com.example.localloop.databse.UserOperation;
 import com.example.localloop.ui.AdminActivity;
 import com.example.localloop.ui.LoginActivity;
-import com.google.firebase.firestore.DocumentSnapshot;
-
-import java.util.List;
+import com.example.localloop.ui.OrganizerActivity;
+import com.example.localloop.ui.ParticipantActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,21 +22,16 @@ public class MainActivity extends AppCompatActivity {
          */
 
 
-        List<User> userList = Database.getUser();
-
-
-        Event e = new Event("event1", "event1", "event1", 100, "event1", "event1", "admin");
-        Database.add("events", "12345", e.toMap());
-
-/*        // Redirect to login
+        // Redirects
         Intent login = new Intent(this, LoginActivity.class);
-
         Intent admin = new Intent(this, AdminActivity.class);
+        Intent organizer = new Intent(this, OrganizerActivity.class);
+        Intent participant = new Intent(this, ParticipantActivity.class);
 
         startActivity(admin);
-        finish(); // Close MainActivity so user can't return to it
 
-        */
+
+        finish();
 
 
     }
