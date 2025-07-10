@@ -5,29 +5,31 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/text_category_name"
+        <TextView
+            android:id="@+id/text_category_item_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Category Name"
-            android:inputType="text" />
+            android:text="Category Name" />
 
-        <EditText
-            android:id="@+id/text_category_description"
+        <TextView
+            android:id="@+id/text_category_item_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Category Description"
-            android:inputType="text" />
+            android:text="Category Description" />
 
         <Button
-            android:id="@+id/btn_add_category_submit"
+            android:id="@+id/btn_edit_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add Category" />
+            android:text="Edit Category" />
+
+        <Button
+            android:id="@+id/btn_delete_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Delete Category" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

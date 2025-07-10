@@ -59,10 +59,10 @@ public class Database {
     }
 
 
-    public static List<Category> getCategory() {
+/*    public static List<Category> getCategory() {
         List<Category> categoryList = new ArrayList<>();
 
-        Database.get("user", data -> {
+        Database.get("category", data -> {
             for (String docId : data.keySet()) {
                 Map<String, Object> categoryData = data.get(docId);
 
@@ -75,7 +75,26 @@ public class Database {
         });
 
         return categoryList;
+    }*/
+
+    public static void getCategory(Consumer<List<Category>> callback) {
+        List<Category> categoryList = new ArrayList<>();
+
+        Database.get("category", data -> {
+            for (String docId : data.keySet()) {
+                Map<String, Object> categoryData = data.get(docId);
+
+                String name = (String) categoryData.get("category_name");
+                String description = (String) categoryData.get("category_description");
+
+                Category category = new Category(name, description);
+                categoryList.add(category);
+            }
+
+            callback.accept(categoryList);
+        });
     }
+
 
 
     public static List<User> getUser() {

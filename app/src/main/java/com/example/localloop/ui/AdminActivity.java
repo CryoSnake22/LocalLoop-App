@@ -3,11 +3,17 @@ package com.example.localloop.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.localloop.R;
 import com.example.localloop.databse.Category;
@@ -50,12 +56,19 @@ public class AdminActivity extends AppCompatActivity {
         Button btn_add_category = findViewById(R.id.btn_add_category);
         btn_add_category.setOnClickListener(v -> addCategoryLayout());
 
-        /*
-        TODO
+        RecyclerView rv = findViewById(R.id.recycler_category_list);
+        rv.setLayoutManager(new LinearLayoutManager(this));
 
-        Display Category list with Add, Edit, Delete
-         */
+        // 🔄 Use the new async method:
+        Database.getCategory(categories -> {
+            // Now you can safely set the adapter
+            runOnUiThread(() -> {
+                CategoryAdapter adapter = new CategoryAdapter(categories);
+                rv.setAdapter(adapter);
+            });
+        });
     }
+
 
     private void addCategoryLayout() {
         Log.d("LAYOUT", "admin_add_category_activity");
@@ -63,28 +76,74 @@ public class AdminActivity extends AppCompatActivity {
 
 
         Button btn_login_login = findViewById(R.id.btn_add_category_submit);
+        btn_login_login.setOnClickListener(v -> {
 
-        EditText categoryNameField = findViewById(R.id.text_category_name);
-        EditText categoryDescriptionField = findViewById(R.id.text_category_description);
+            EditText categoryNameField = findViewById(R.id.text_category_name);
+            EditText categoryDescriptionField = findViewById(R.id.text_category_description);
 
-        String categoryName = categoryNameField.getText().toString().trim();
-        String categoryDescription = categoryDescriptionField.getText().toString().trim();
+            String categoryName = categoryNameField.getText().toString().trim();
+            String categoryDescription = categoryDescriptionField.getText().toString().trim();
 
-        Category category = new Category(categoryName, categoryDescription);
-        CategoryOperation.addCategory(category);
+            Category category = new Category(categoryName, categoryDescription);
+            CategoryOperation.addCategory(category);
+            Toast.makeText(this, "Category Created", Toast.LENGTH_SHORT).show();
+        });
     }
 
     private void manageUsersLayout() {
 
-        Log.d("LAYOUT", "THIS IS admin_manage_users_activity PAGE");
-        setContentView(R.layout.admin_manage_users_activity);
+    }
 
-        List<User> userList = Database.getUser();
 
-        /*
-        TODO
 
-        Display User List with delete and disable
-         */
+
+    private class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.VH> {
+
+        private final List<Category> items;
+
+        CategoryAdapter(List<Category> items) {
+            this.items = items;
+        }
+
+        class VH extends RecyclerView.ViewHolder {
+            TextView name, desc;
+            Button btnEdit, btnDelete;
+
+            VH(View itemView) {
+                super(itemView);
+                name      = itemView.findViewById(R.id.text_category_item_name);
+                desc      = itemView.findViewById(R.id.text_category_item_description);
+                btnEdit   = itemView.findViewById(R.id.btn_edit_category);
+                btnDelete = itemView.findViewById(R.id.btn_delete_category);
+            }
+        }
+
+        @Override
+        public VH onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_category, parent, false);
+            return new VH(v);
+        }
+
+        @Override
+        public void onBindViewHolder(VH holder, int pos) {
+            Category c = items.get(pos);
+            holder.name.setText(c.getCategory_name());
+            holder.desc.setText(c.category_description);
+
+            holder.btnEdit.setOnClickListener(v -> {
+                Toast.makeText(v.getContext(),"Edit " + c.getCategory_name(), Toast.LENGTH_SHORT).show();
+            });
+
+            holder.btnDelete.setOnClickListener(v -> {
+                CategoryOperation.deleteCategory(c);           // implement this
+                items.remove(pos);
+                notifyItemRemoved(pos);
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return items.size();
+        }
     }
 }
