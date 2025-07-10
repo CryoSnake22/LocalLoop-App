@@ -16,7 +16,7 @@ public class Event {
     public float eventFee;
     private int id;
 
-    private OrganizerUser eventOwner;
+    private OrganizerUser eventOwnerEmail;
 
 
 
@@ -26,18 +26,18 @@ public class Event {
 
     private static int eventId = 1;
 
-    public Event(String eventName, String description, String associatedCategory, float eventFee, String eventDate, String eventTime, OrganizerUser eventOwner) {
+    public Event(String eventName, String description, String associatedCategory, float eventFee, String eventDate, String eventTime, OrganizerUser eventOwnerEmail) {
         this.eventName = eventName;
         this.description = description;
         this.associatedCategory = associatedCategory;
         this.eventFee = eventFee;
         this.eventDate = eventDate;
         this.eventTime = eventTime;
-        this.eventOwner = eventOwner;
+        this.eventOwnerEmail = eventOwnerEmail;
         this.id = eventId;
         eventId++;
 
-        eventOwner.createEvent(this);
+        eventOwnerEmail.createEvent(this);
     }
 
     public HashMap<String, Object> toMap() {
@@ -51,7 +51,7 @@ public class Event {
 
         fields.put("associated_category", this.associatedCategory);
 
-        fields.put("event_owner", eventOwner.getEmail());
+        fields.put("event_owner_email", eventOwnerEmail.getEmail());
 
         return fields;
     }

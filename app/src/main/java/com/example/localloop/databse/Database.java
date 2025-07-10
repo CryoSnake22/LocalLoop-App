@@ -162,7 +162,7 @@ public class Database {
                 String fee = (String) eventData.get("event_fee");
                 String date = (String) eventData.get("event_date");
                 String time = (String) eventData.get("event_time");
-                String ownerEmail = (String) eventData.get("event_owner");
+                String ownerEmail = (String) eventData.get("event_owner_email");
 
                 List<OrganizerUser> organizerList = new ArrayList<>();
 
