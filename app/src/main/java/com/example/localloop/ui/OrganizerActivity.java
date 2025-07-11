@@ -1,8 +1,11 @@
 package com.example.localloop.ui;
 
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,10 +13,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.localloop.R;
 import com.example.localloop.databse.Category;
 import com.example.localloop.databse.CategoryOperation;
+import com.example.localloop.databse.Database;
 import com.example.localloop.databse.Event;
 import com.example.localloop.databse.EventOperation;
 import com.example.localloop.databse.UserOperation;
 import com.example.localloop.usertype.OrganizerUser;
+
+import java.util.List;
 
 
 /*
@@ -28,7 +34,9 @@ View all events he owns and open it
 
  */
 public class OrganizerActivity extends AppCompatActivity {
-    private void adminHomeLayout() {
+
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         Log.d("LAYOUT", "THIS IS organizer home activity PAGE");
         setContentView(R.layout.organizer_home_activity);
 
@@ -74,21 +82,53 @@ public class OrganizerActivity extends AppCompatActivity {
         EditText eventFeeField = findViewById(R.id.text_organizer_add_event_fee);
         EditText eventDateField = findViewById(R.id.text_organizer_add_event_date);
         EditText eventTimeField = findViewById(R.id.text_organizer_add_event_time);
+        RadioGroup categoryGroup = findViewById(R.id.radio_group_event_categories);
 
-
-        btnSubmit.setOnClickListener(v -> {
-            String name = eventNameField.getText().toString().trim();
-            String description = eventDescriptionField.getText().toString().trim();
-            String fee = eventFeeField.getText().toString().trim();
-            String date = eventDateField.getText().toString().trim();
-            String time = eventTimeField.getText().toString().trim();
-
-            Event event = new Event(name, description, "", Float.parseFloat(fee), date, time, (OrganizerUser) UserOperation.currentUser);
-            EventOperation.addEvent(UserOperation.currentUser.getEmail(), event);
-            Toast.makeText(this, "Event Created", Toast.LENGTH_SHORT).show();
-
-            manageEvents();
+        Database.getCategory(categories -> {
+            runOnUiThread(() -> {
+                for (Category category : categories) {
+                    RadioButton radioButton = new RadioButton(this);
+                    radioButton.setText(category.getCategory_name());
+                    categoryGroup.addView(radioButton);
+                }
+            });
         });
 
+        try {
+            btnSubmit.setOnClickListener(v -> {
+                String name = eventNameField.getText().toString().trim();
+                String description = eventDescriptionField.getText().toString().trim();
+                String date = eventDateField.getText().toString().trim();
+                String time = eventTimeField.getText().toString().trim();
+
+                float fee;
+                try {
+                    fee = Float.parseFloat(eventFeeField.getText().toString().trim());
+                } catch (NumberFormatException e) {
+                    Toast.makeText(this, "Invalid fee amount", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                int selectedId = categoryGroup.getCheckedRadioButtonId();
+                if (selectedId == -1) {
+                    Toast.makeText(this, "Please select a category", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                RadioButton selectedRadio = findViewById(selectedId);
+                String selectedCategory = selectedRadio.getText().toString();
+
+                Event event = new Event(name, description, selectedCategory, fee, date, time, (OrganizerUser) UserOperation.currentUser);
+                EventOperation.addEvent(UserOperation.currentUser.getEmail(), event);
+
+                Toast.makeText(this, "Event Created", Toast.LENGTH_SHORT).show();
+                manageEvents();
+            });
+        }
+        catch(Exception e) {
+            Log.d("Event", "Error in submitting new event requrest");
+            manageEvents();
+
+        }
     }
 }

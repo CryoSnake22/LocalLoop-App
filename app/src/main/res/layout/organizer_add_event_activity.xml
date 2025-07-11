@@ -46,14 +46,13 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="text"
-            android:text="Event Time" />
+            android:text="Event Time"
+            android:orientation="vertical"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_organizer_add_event_category"
+        <RadioGroup
+            android:id="@+id/radio_group_event_categories"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </androidx.recyclerview.widget.RecyclerView>
+            android:layout_height="wrap_content" />
 
         <Button
             android:id="@+id/btn_organizer_add_event_submit"
