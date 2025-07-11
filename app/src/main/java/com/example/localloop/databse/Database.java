@@ -201,7 +201,7 @@ public class Database {
 
 
 
-    public static List<Event> getEvents() {
+/*    public static List<Event> getEvents() {
         List<Event> eventsList = new ArrayList<>();
 
         Database.get("user", data -> {
@@ -231,7 +231,61 @@ public class Database {
         });
 
         return eventsList;
+    }*/
+
+
+
+    public static void getEvents(Consumer<List<Event>> callback) {
+        List<Event> eventsList = new ArrayList<>();
+
+        Database.get("events", data -> {
+            Log.d("Database", "Fetched events size: " + data.size());  // ADD THIS
+
+            for (String docId : data.keySet()) {
+                try {
+                    Map<String, Object> eventData = data.get(docId);
+                    Log.d("Database", "Raw event: " + eventData); // ADD THIS
+
+                    String name = (String) eventData.get("event_name");
+                    String description = (String) eventData.get("event_description");
+                    String category = (String) eventData.get("associated_category");
+                    String feeStr = String.valueOf(eventData.get("event_fee"));
+                    String date = (String) eventData.get("event_date");
+                    String time = (String) eventData.get("event_time");
+                    String ownerEmail = (String) eventData.get("event_owner_email");
+
+                    // Skip if missing anything
+                    if (name == null || description == null || category == null ||
+                            feeStr == null || date == null || time == null || ownerEmail == null) {
+                        Log.d("Database", "Skipping incomplete event");
+                        continue;
+                    }
+
+                    float fee = Float.parseFloat(feeStr);
+
+                    // Only show events owned by current organizer
+                    if (UserOperation.currentUser instanceof OrganizerUser &&
+                            ownerEmail.equals(UserOperation.currentUser.getEmail())) {
+
+                        OrganizerUser owner = (OrganizerUser) UserOperation.currentUser;
+                        Event event = new Event(name, description, category, fee, date, time, owner);
+                        eventsList.add(event);
+                        Log.d("Database", "Added event: " + name);
+                    } else {
+                        Log.d("Database", "Skipped event (owner mismatch): " + ownerEmail);
+                    }
+
+                } catch (Exception e) {
+                    Log.e("Database", "Error parsing event: " + e.getMessage());
+                }
+            }
+
+            callback.accept(eventsList);
+        });
     }
+
+
+
 
 
 }

@@ -14,7 +14,6 @@ public class Event {
     public String eventDate;
     public String eventTime;
     public float eventFee;
-    private int id;
 
     private OrganizerUser eventOwnerEmail;
 
@@ -34,7 +33,6 @@ public class Event {
         this.eventDate = eventDate;
         this.eventTime = eventTime;
         this.eventOwnerEmail = eventOwnerEmail;
-        this.id = eventId;
         eventId++;
 
         eventOwnerEmail.createEvent(this);
@@ -47,7 +45,6 @@ public class Event {
         fields.put("event_fee", this.eventFee);
         fields.put("event_date", this.eventDate);
         fields.put("event_time", this.eventTime);
-        fields.put("event_id", this.id);
 
         fields.put("associated_category", this.associatedCategory);
 
@@ -58,10 +55,6 @@ public class Event {
 
     public String getEventName() {
         return eventName;
-    }
-
-    public String getId(){
-        return Integer.toString(id);
     }
 
 
