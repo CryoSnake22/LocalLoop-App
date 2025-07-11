@@ -13,6 +13,7 @@ import com.example.localloop.ui.LoginActivity;
 import com.example.localloop.ui.OrganizerActivity;
 import com.example.localloop.ui.ParticipantActivity;
 import com.example.localloop.usertype.OrganizerUser;
+import com.example.localloop.usertype.ParticipantUser;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,9 +38,9 @@ public class MainActivity extends AppCompatActivity {
         CategoryOperation.addCategory(new Category("Category 2", ""));
         CategoryOperation.addCategory(new Category("Category 3", ""));
 
-        UserOperation.currentUser = new OrganizerUser("email@gmail.com", "user1", "12345678", "organizer", "firstname", "lastname");
+        UserOperation.currentUser = new ParticipantUser("email@gmail.com", "user1", "12345678", "organizer", "firstname", "lastname");
 
-        startActivity(organizer);
+        startActivity(participant);
 
 
         finish();

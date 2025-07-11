@@ -65,4 +65,8 @@ public class Event {
     public void addParticipant(ParticipantUser user) {
         eventParticipant.add(user);
     }
+
+    public String getEventOwnerEmail() {
+        return this.eventOwnerEmail.user_email;
+    }
 }
