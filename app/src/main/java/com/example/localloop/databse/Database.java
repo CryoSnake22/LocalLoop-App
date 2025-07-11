@@ -284,6 +284,37 @@ public class Database {
         });
     }
 
+    public static void getAllEvents(Consumer<List<Event>> callback) {
+        List<Event> eventsList = new ArrayList<>();
+
+        Database.get("events", data -> {
+            for (String docId : data.keySet()) {
+                Map<String, Object> eventData = data.get(docId);
+
+                String name = (String) eventData.get("event_name");
+                String description = (String) eventData.get("event_description");
+                String category = (String) eventData.get("associated_category");
+                String feeStr = String.valueOf(eventData.get("event_fee"));
+                String date = (String) eventData.get("event_date");
+                String time = (String) eventData.get("event_time");
+                String ownerEmail = (String) eventData.get("event_owner_email");
+
+                float fee = 0;
+                try {
+                    fee = Float.parseFloat(feeStr);
+                } catch (Exception ignored) {}
+
+                Event event = new Event(name, description, category, fee, date, time, new OrganizerUser(ownerEmail, "", "", "", "", ""));
+                eventsList.add(event);
+
+                Log.d("Database", "Loaded ALL event: " + name + " by " + ownerEmail);
+            }
+
+            Log.d("Database", "Total ALL events loaded: " + eventsList.size());
+            callback.accept(eventsList);
+        });
+    }
+
 
 
 

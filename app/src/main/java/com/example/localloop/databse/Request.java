@@ -26,7 +26,7 @@ public class Request {
         fields.put("attendee_email", this.attendee.user_email);
         fields.put("attendee_username", this.attendee.user_name);
         fields.put("attendee_firstname", this.attendee.first_name);
-        fields.put("attendee_firstname", this.attendee.last_name);
+        fields.put("attendee_lastname", this.attendee.last_name);
         fields.put("event_name", this.event.eventName);
         fields.put("event_owner_email", this.event.getEventOwnerEmail());
 
