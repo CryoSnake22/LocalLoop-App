@@ -9,15 +9,14 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/btn_organizer_manage_events"
+            android:id="@+id/btn_organizer_create_event"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Manage Events" />
+            android:text="Create Event" />
 
-        <Button
-            android:id="@+id/btn_organizer_pending_request"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_organizer_manage_event"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Pending Requests" />
+            android:layout_height="match_parent" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,10 +5,14 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.localloop.databse.Category;
+import com.example.localloop.databse.CategoryOperation;
+import com.example.localloop.databse.UserOperation;
 import com.example.localloop.ui.AdminActivity;
 import com.example.localloop.ui.LoginActivity;
 import com.example.localloop.ui.OrganizerActivity;
 import com.example.localloop.ui.ParticipantActivity;
+import com.example.localloop.usertype.OrganizerUser;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,7 +32,14 @@ public class MainActivity extends AppCompatActivity {
         Intent organizer = new Intent(this, OrganizerActivity.class);
         Intent participant = new Intent(this, ParticipantActivity.class);
 
-        startActivity(admin);
+
+        CategoryOperation.addCategory(new Category("Category 1", ""));
+        CategoryOperation.addCategory(new Category("Category 2", ""));
+        CategoryOperation.addCategory(new Category("Category 3", ""));
+
+        UserOperation.currentUser = new OrganizerUser("email@gmail.com", "user1", "12345678", "organizer", "firstname", "lastname");
+
+        startActivity(organizer);
 
 
         finish();
