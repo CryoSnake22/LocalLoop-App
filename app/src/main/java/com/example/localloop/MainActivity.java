@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         ParticipantUser par = new ParticipantUser("par@gmail.com", "user2", "12345678", "participant", "par", "ticipant");
 
-        UserOperation.currentUser = par;
+        UserOperation.currentUser = org;
 
         startActivity(organizer);
 

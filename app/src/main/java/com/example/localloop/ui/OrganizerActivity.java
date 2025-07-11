@@ -26,6 +26,7 @@ import com.example.localloop.databse.Request;
 import com.example.localloop.databse.UserOperation;
 import com.example.localloop.usertype.OrganizerUser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrganizerActivity extends AppCompatActivity {
@@ -58,9 +59,21 @@ public class OrganizerActivity extends AppCompatActivity {
 
         Database.getAllRequests(requests -> {
             runOnUiThread(() -> {
-                recyclerView.setAdapter(new RequestAdapter(requests));
+                List<Request> pending = new ArrayList<>();
+                String currentOrganizerEmail = UserOperation.currentUser.getEmail();
+
+                for (Request r : requests) {
+                    // Only show current user and pending request
+                    if (r.requestStatus == 0 && r.getEventOwnerEmail().equals(currentOrganizerEmail)) {
+                        pending.add(r);
+                    }
+                }
+
+                recyclerView.setAdapter(new RequestAdapter(pending));
             });
         });
+
+
     }
 
     private class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.VH> {
@@ -107,13 +120,20 @@ public class OrganizerActivity extends AppCompatActivity {
                 r.requestStatus = 1;
                 Database.add("requests", docId, r.toMap());
                 Toast.makeText(v.getContext(), "Request accepted", Toast.LENGTH_SHORT).show();
+
+                // Refresh the view
+                manageRequestLayout();
             });
 
             holder.btnDecline.setOnClickListener(v -> {
                 r.requestStatus = -1;
                 Database.add("requests", docId, r.toMap());
                 Toast.makeText(v.getContext(), "Request declined", Toast.LENGTH_SHORT).show();
+
+                // Refresh the view
+                manageRequestLayout();
             });
+
         }
 
         @Override
