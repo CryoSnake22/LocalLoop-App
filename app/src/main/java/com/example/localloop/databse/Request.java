@@ -11,7 +11,7 @@ public class Request {
     public Event event;
     public int requestStatus;
 
-    private ParticipantUser attendee;
+    public ParticipantUser attendee;
 
     public Request(ParticipantUser attendee, Event event) {
 
@@ -23,6 +23,7 @@ public class Request {
 
     public HashMap<String, Object> toMap() {
         HashMap<String, Object> fields = new HashMap<>();
+        fields.put("request_status", this.requestStatus);
         fields.put("attendee_email", this.attendee.user_email);
         fields.put("attendee_username", this.attendee.user_name);
         fields.put("attendee_firstname", this.attendee.first_name);

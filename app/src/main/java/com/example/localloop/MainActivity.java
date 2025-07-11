@@ -38,9 +38,13 @@ public class MainActivity extends AppCompatActivity {
         CategoryOperation.addCategory(new Category("Category 2", ""));
         CategoryOperation.addCategory(new Category("Category 3", ""));
 
-        UserOperation.currentUser = new ParticipantUser("email@gmail.com", "user1", "12345678", "organizer", "firstname", "lastname");
+        OrganizerUser org = new OrganizerUser("org@gmail.com", "user1", "12345678", "organizer", "org1", "anizer1");
 
-        startActivity(participant);
+        ParticipantUser par = new ParticipantUser("par@gmail.com", "user2", "12345678", "participant", "par", "ticipant");
+
+        UserOperation.currentUser = org;
+
+        startActivity(organizer);
 
 
         finish();
