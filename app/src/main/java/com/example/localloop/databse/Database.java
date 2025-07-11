@@ -316,7 +316,45 @@ public class Database {
     }
 
 
+    public static void getAllRequests(Consumer<List<Request>> callback) {
+        List<Request> requestList = new ArrayList<>();
 
+        Database.get("requests", data -> {
+            for (String docId : data.keySet()) {
+                Map<String, Object> requestData = data.get(docId);
+
+                String attendeeEmail = (String) requestData.get("attendee_email");
+                String attendeeUsername = (String) requestData.get("attendee_username");
+                String attendeeFirst = (String) requestData.get("attendee_firstname");
+                String attendeeLast = (String) requestData.get("attendee_lastname");
+                String eventName = (String) requestData.get("event_name");
+                String eventOwnerEmail = (String) requestData.get("event_owner_email");
+                Object statusObj = requestData.get("request_status");
+
+                if (attendeeEmail == null || eventName == null || eventOwnerEmail == null || statusObj == null)
+                    continue;
+
+                int status = 0;
+                try {
+                    status = ((Number) statusObj).intValue();
+                } catch (Exception ignored) {}
+
+                ParticipantUser participant = new ParticipantUser(attendeeEmail, attendeeUsername, "", "participant", attendeeFirst, attendeeLast);
+                OrganizerUser organizer = new OrganizerUser(eventOwnerEmail, "", "", "", "", "");
+                Event dummyEvent = new Event(eventName, "", "", 0f, "", "", organizer);
+
+                Request request = new Request(participant, dummyEvent);
+                request.requestStatus = status;
+
+                requestList.add(request);
+
+                Log.d("Database", "Loaded request: " + attendeeEmail + " for event: " + eventName);
+            }
+
+            Log.d("Database", "Total ALL requests loaded: " + requestList.size());
+            callback.accept(requestList);
+        });
+    }
 
 
 }

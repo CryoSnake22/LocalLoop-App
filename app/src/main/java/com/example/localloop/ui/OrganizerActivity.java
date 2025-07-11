@@ -22,6 +22,7 @@ import com.example.localloop.databse.CategoryOperation;
 import com.example.localloop.databse.Database;
 import com.example.localloop.databse.Event;
 import com.example.localloop.databse.EventOperation;
+import com.example.localloop.databse.Request;
 import com.example.localloop.databse.UserOperation;
 import com.example.localloop.usertype.OrganizerUser;
 
@@ -35,6 +36,8 @@ public class OrganizerActivity extends AppCompatActivity {
         organizerHomeLayout();
     }
 
+
+
     private void organizerHomeLayout() {
         Log.d("LAYOUT", "THIS IS organizer_home_activity PAGE");
         setContentView(R.layout.organizer_home_activity);
@@ -45,6 +48,80 @@ public class OrganizerActivity extends AppCompatActivity {
         Button btnPendingRequests = findViewById(R.id.btn_organizer_pending_request);
         btnPendingRequests.setOnClickListener(v -> manageRequestLayout());
     }
+
+    private void manageRequestLayout() {
+        Log.d("LAYOUT", "THIS IS organizer_manage_request_activity PAGE");
+        setContentView(R.layout.organizer_manage_request_activity);
+
+        RecyclerView recyclerView = findViewById(R.id.recycler_organizer_manage_requrest);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        Database.getAllRequests(requests -> {
+            runOnUiThread(() -> {
+                recyclerView.setAdapter(new RequestAdapter(requests));
+            });
+        });
+    }
+
+    private class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.VH> {
+
+        private final List<Request> requests;
+
+        RequestAdapter(List<Request> requests) {
+            this.requests = requests;
+        }
+
+        class VH extends RecyclerView.ViewHolder {
+            TextView username, email, firstName, lastName;
+            Button btnAccept, btnDecline;
+
+            VH(View itemView) {
+                super(itemView);
+                username = itemView.findViewById(R.id.text_event_request_username);
+                email = itemView.findViewById(R.id.text_event_request_email);
+                firstName = itemView.findViewById(R.id.text_event_request_firstname);
+                lastName = itemView.findViewById(R.id.text_event_request_lastname);
+                btnAccept = itemView.findViewById(R.id.btn_event_request_accept);
+                btnDecline = itemView.findViewById(R.id.btn_event_request_declien);
+            }
+        }
+
+        @Override
+        public VH onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_event_request, parent, false);
+            return new VH(v);
+        }
+
+        @Override
+        public void onBindViewHolder(VH holder, int position) {
+            Request r = requests.get(position);
+
+            holder.username.setText("Username: " + r.attendee.user_name);
+            holder.email.setText("Email: " + r.attendee.user_email);
+            holder.firstName.setText("First Name: " + r.attendee.first_name);
+            holder.lastName.setText("Last Name: " + r.attendee.last_name);
+
+            String docId = r.getEventOwnerEmail() + "," + r.getAttendeeEmail() + "," + r.event.eventName;
+
+            holder.btnAccept.setOnClickListener(v -> {
+                r.requestStatus = 1;
+                Database.add("requests", docId, r.toMap());
+                Toast.makeText(v.getContext(), "Request accepted", Toast.LENGTH_SHORT).show();
+            });
+
+            holder.btnDecline.setOnClickListener(v -> {
+                r.requestStatus = -1;
+                Database.add("requests", docId, r.toMap());
+                Toast.makeText(v.getContext(), "Request declined", Toast.LENGTH_SHORT).show();
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return requests.size();
+        }
+    }
+
 
     private void manageEventsLayout() {
         Log.d("LAYOUT", "THIS IS organizer_manage_event_activity PAGE");
@@ -59,11 +136,6 @@ public class OrganizerActivity extends AppCompatActivity {
         Database.getEvents(events -> runOnUiThread(() -> {
             rv.setAdapter(new EventAdapter(events));
         }));
-    }
-
-    private void manageRequestLayout() {
-        Log.d("LAYOUT", "THIS IS organizer_manage_request_activity PAGE");
-        setContentView(R.layout.organizer_manage_request_activity);
     }
 
     private void createEventLayout() {
