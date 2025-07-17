@@ -8,6 +8,20 @@
   android:padding="16dp"
   tools:context=".LoginActivity">
 
+  <TextView
+    android:id="@+id/text_login_title"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Login"
+    android:textSize="28sp"
+    android:textStyle="bold"
+    android:gravity="center"
+    android:layout_marginBottom="32dp"
+    android:textColor="?android:attr/textColorPrimary"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent" />
+
   <!-- Email Field with Material Design -->
   <com.google.android.material.textfield.TextInputLayout
     android:id="@+id/text_login_email_layout"
@@ -15,7 +29,7 @@
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:hint="Email"
-    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/text_login_title"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toEndOf="parent">
 

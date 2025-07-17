@@ -6,42 +6,56 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="16dp">
 
         <TextView
             android:id="@+id/text_event_request_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="User Name" />
+            android:text="User Name"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="2dp" />
 
         <TextView
             android:id="@+id/text_event_request_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="User Email" />
+            android:text="User Email"
+            android:textSize="14sp"
+            android:layout_marginBottom="2dp" />
 
         <TextView
             android:id="@+id/text_event_request_firstname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="First Name" />
+            android:text="First Name"
+            android:textSize="14sp"
+            android:layout_marginBottom="2dp" />
 
         <TextView
             android:id="@+id/text_event_request_lastname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="lastname" />
+            android:text="lastname"
+            android:textSize="14sp"
+            android:layout_marginBottom="8dp" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_event_request_accept"
+            style="?attr/materialButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Accept" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_event_request_declien"
+            style="?attr/materialButtonOutlinedStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="decline" />
+            android:text="Decline"
+            android:layout_marginTop="8dp" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

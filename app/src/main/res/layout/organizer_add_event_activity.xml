@@ -6,58 +6,97 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <EditText
-            android:id="@+id/text_organizer_add_event_name"
+        <!-- Event Name -->
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
             android:hint="Event Name"
-            android:inputType="text" />
+            style="?attr/textInputStyle">
 
-        <EditText
-            android:id="@+id/text_organizer_add_event_description"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_organizer_add_event_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Event Description -->
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
             android:hint="Event Description"
-            android:inputType="text" />
+            style="?attr/textInputStyle"
+            android:layout_marginTop="12dp">
 
-        <EditText
-            android:id="@+id/text_organizer_add_event_fee"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_organizer_add_event_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Event Fee -->
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
             android:hint="Event Fee"
-            android:inputType="text" />
+            style="?attr/textInputStyle"
+            android:layout_marginTop="12dp">
 
-        <EditText
-            android:id="@+id/text_organizer_add_event_date"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_organizer_add_event_fee"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Event Date -->
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
             android:hint="Event Date"
-            android:inputType="text" />
+            style="?attr/textInputStyle"
+            android:layout_marginTop="12dp">
 
-        <EditText
-            android:id="@+id/text_organizer_add_event_time"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_organizer_add_event_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Event Time -->
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
             android:hint="Event Time"
-            android:inputType="text"
-            android:orientation="vertical" />
+            style="?attr/textInputStyle"
+            android:layout_marginTop="12dp">
 
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_organizer_add_event_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Category RadioGroup -->
         <RadioGroup
             android:id="@+id/radio_group_event_categories"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:id="@+id/btn_organizer_add_event_submit"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Save Event" />
+            android:layout_marginTop="16dp" />
+
+        <!-- Save Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_organizer_add_event_submit"
+            style="?attr/materialButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save Event"
+            android:layout_marginTop="24dp" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
