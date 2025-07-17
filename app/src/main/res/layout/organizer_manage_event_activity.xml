@@ -6,17 +6,32 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <Button
-            android:id="@+id/btn_organizer_create_event"
+        <TextView
+            android:id="@+id/text_organizer_manage_event_welcome"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Create Event" />
+            android:text="Manage Your Events"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="24dp"
+            android:textColor="?android:attr/textColorPrimary" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_organizer_create_event"
+            style="?attr/materialButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create Event"
+            android:layout_marginBottom="16dp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_organizer_manage_event"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="0dp"
+            android:layout_weight="1" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

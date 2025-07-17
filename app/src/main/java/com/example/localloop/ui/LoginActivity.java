@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.localloop.R;
 import com.example.localloop.databse.Database;
+import com.example.localloop.usertype.AdminUser;
 import com.example.localloop.usertype.User;
 import com.example.localloop.databse.UserOperation;
 import com.example.localloop.usertype.OrganizerUser;
@@ -71,22 +72,40 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(this, "Incorrect password", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-
-                UserOperation.currentUser = new ParticipantUser(
-                        Objects.requireNonNull(userData.get("user_email")).toString(),
-                        Objects.requireNonNull(userData.get("user_name")).toString(),
-                        Objects.requireNonNull(userData.get("user_password")).toString(),
-                        Objects.requireNonNull(userData.get("user_role")).toString(),
-                        Objects.requireNonNull(userData.get("first_name")).toString(),
-                        Objects.requireNonNull(userData.get("last_name")).toString()
-                );;
+                if ("organizer".equals(userRole)){
+                    UserOperation.currentUser = new OrganizerUser(
+                            Objects.requireNonNull(userData.get("user_email")).toString(),
+                            Objects.requireNonNull(userData.get("user_name")).toString(),
+                            Objects.requireNonNull(userData.get("user_password")).toString(),
+                            Objects.requireNonNull(userData.get("user_role")).toString(),
+                            Objects.requireNonNull(userData.get("first_name")).toString(),
+                            Objects.requireNonNull(userData.get("last_name")).toString()
+                    );;
+                }
+                else if ("participant".equals(userRole)){
+                    UserOperation.currentUser = new ParticipantUser(
+                            Objects.requireNonNull(userData.get("user_email")).toString(),
+                            Objects.requireNonNull(userData.get("user_name")).toString(),
+                            Objects.requireNonNull(userData.get("user_password")).toString(),
+                            Objects.requireNonNull(userData.get("user_role")).toString(),
+                            Objects.requireNonNull(userData.get("first_name")).toString(),
+                            Objects.requireNonNull(userData.get("last_name")).toString()
+                    );;
+                } else if ("admin".equals(userRole)){
+                    UserOperation.currentUser = new AdminUser(
+                            Objects.requireNonNull(userData.get("user_email")).toString(),
+                            Objects.requireNonNull(userData.get("user_name")).toString(),
+                            Objects.requireNonNull(userData.get("user_password")).toString(),
+                            Objects.requireNonNull(userData.get("user_role")).toString(),
+                            Objects.requireNonNull(userData.get("first_name")).toString(),
+                            Objects.requireNonNull(userData.get("last_name")).toString()
+                    );;
+                }
 
                 Log.d("LOGIN", "Logged in as: " + UserOperation.currentUser.getUserName() + " (" + UserOperation.currentUser.user_role + ")");
                 Toast.makeText(this, ("Logged in as: " + UserOperation.currentUser.getUserName() + " (" + UserOperation.currentUser.user_role + ")"), Toast.LENGTH_SHORT).show();
 
 
-                //REDIRECT
                 if ("admin".equals(UserOperation.currentUser.user_role)) {
                     Log.d("LOGIN", "Go to admin activity");
 
@@ -94,6 +113,7 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 }
+                //REDIRECT
                 else if ("organizer".equals(UserOperation.currentUser.user_role)) {
                     Log.d("LOGIN", "Go to organizer activity");
 
@@ -121,13 +141,11 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-        Button btn_login_signup = findViewById(R.id.btn_signup_back);
-        btn_login_signup.setOnClickListener(v -> loginLayout());
+        Button btn_signup_back = findViewById(R.id.btn_signup_back);
+        btn_signup_back.setOnClickListener(v->{loginLayout();});
 
         Button btn_signup_signup = findViewById(R.id.btn_signup_signup);
-        btn_login_signup.setOnClickListener(v -> {
-
-
+        btn_signup_signup.setOnClickListener(v -> {
             //GET INFO
             EditText emailField = findViewById(R.id.text_signup_email);
             EditText firstnameField = findViewById(R.id.text_signup_firstname);
@@ -135,7 +153,6 @@ public class LoginActivity extends AppCompatActivity {
             EditText usernameField = findViewById(R.id.text_signup_username);
             EditText passwordField = findViewById(R.id.text_signup_password);
             EditText confirmField = findViewById(R.id.text_signup_confirmPassword);
-
             RadioButton organizer = findViewById(R.id.radio_signup_organizer);
             RadioButton participant = findViewById(R.id.radio_signup_participant);
 
@@ -149,6 +166,7 @@ public class LoginActivity extends AppCompatActivity {
             //FIELD AND DB CHECK
             if (!password.equals(confirmPassword)) {
                 Toast.makeText(this, "Passwords does not match!", Toast.LENGTH_SHORT).show();
+                return;
             }
 
     /*        // Check if email already exists - to be complete later
@@ -169,7 +187,6 @@ public class LoginActivity extends AppCompatActivity {
                 user = new ParticipantUser(email, username, password, "participant", firstname, lastname);
                 UserOperation.addUserAccount(user);
                 Toast.makeText(this, "Account Created", Toast.LENGTH_SHORT).show();
-
             }
         });
     }

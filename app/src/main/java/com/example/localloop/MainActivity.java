@@ -34,17 +34,8 @@ public class MainActivity extends AppCompatActivity {
         Intent participant = new Intent(this, ParticipantActivity.class);
 
 
-        CategoryOperation.addCategory(new Category("Category 1", ""));
-        CategoryOperation.addCategory(new Category("Category 2", ""));
-        CategoryOperation.addCategory(new Category("Category 3", ""));
 
-        OrganizerUser org = new OrganizerUser("org@gmail.com", "user1", "12345678", "organizer", "org1", "anizer1");
-
-        ParticipantUser par = new ParticipantUser("par@gmail.com", "user2", "12345678", "participant", "par", "ticipant");
-
-        UserOperation.currentUser = org;
-
-        startActivity(organizer);
+        startActivity(login);
 
 
         finish();
