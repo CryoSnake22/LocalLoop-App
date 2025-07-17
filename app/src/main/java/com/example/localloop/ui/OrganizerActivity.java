@@ -28,6 +28,9 @@ import com.example.localloop.usertype.OrganizerUser;
 
 import java.util.ArrayList;
 import java.util.List;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import java.util.Calendar;
 
 public class OrganizerActivity extends AppCompatActivity {
 
@@ -170,6 +173,33 @@ public class OrganizerActivity extends AppCompatActivity {
         EditText timeField = findViewById(R.id.text_organizer_add_event_time);
         RadioGroup categoryGroup = findViewById(R.id.radio_group_event_categories);
 
+        dateField.setOnClickListener(v -> {
+            final Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                (view, selectedYear, selectedMonth, selectedDay) -> {
+                    String date = String.format("%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear);
+                    dateField.setText(date);
+                }, year, month, day);
+            datePickerDialog.show();
+        });
+
+        timeField.setOnClickListener(v -> {
+            final Calendar calendar = Calendar.getInstance();
+            int hour = calendar.get(Calendar.HOUR_OF_DAY);
+            int minute = calendar.get(Calendar.MINUTE);
+
+            TimePickerDialog timePickerDialog = new TimePickerDialog(this,
+                (view, selectedHour, selectedMinute) -> {
+                    String time = String.format("%02d:%02d", selectedHour, selectedMinute);
+                    timeField.setText(time);
+                }, hour, minute, true);
+            timePickerDialog.show();
+        });
+
         Database.getCategory(categories -> runOnUiThread(() -> {
             for (Category c : categories) {
                 RadioButton rb = new RadioButton(this);
@@ -222,6 +252,33 @@ public class OrganizerActivity extends AppCompatActivity {
         feeField.setText(String.valueOf(event.eventFee));
         dateField.setText(event.eventDate);
         timeField.setText(event.eventTime);
+
+        dateField.setOnClickListener(v -> {
+            final Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                (view, selectedYear, selectedMonth, selectedDay) -> {
+                    String date = String.format("%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear);
+                    dateField.setText(date);
+                }, year, month, day);
+            datePickerDialog.show();
+        });
+
+        timeField.setOnClickListener(v -> {
+            final Calendar calendar = Calendar.getInstance();
+            int hour = calendar.get(Calendar.HOUR_OF_DAY);
+            int minute = calendar.get(Calendar.MINUTE);
+
+            TimePickerDialog timePickerDialog = new TimePickerDialog(this,
+                (view, selectedHour, selectedMinute) -> {
+                    String time = String.format("%02d:%02d", selectedHour, selectedMinute);
+                    timeField.setText(time);
+                }, hour, minute, true);
+            timePickerDialog.show();
+        });
 
         Database.getCategory(categories -> runOnUiThread(() -> {
             for (Category c : categories) {

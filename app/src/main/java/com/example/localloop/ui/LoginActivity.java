@@ -72,8 +72,6 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(this, "Incorrect password", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-
                 if ("organizer".equals(userRole)){
                     UserOperation.currentUser = new OrganizerUser(
                             Objects.requireNonNull(userData.get("user_email")).toString(),
