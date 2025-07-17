@@ -1,4 +1,4 @@
-package com.example.localloop.databse;
+package com.example.localloop.database;
 
 import java.util.HashMap;
 

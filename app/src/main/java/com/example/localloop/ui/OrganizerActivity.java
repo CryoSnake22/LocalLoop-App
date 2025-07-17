@@ -17,13 +17,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.localloop.R;
-import com.example.localloop.databse.Category;
-import com.example.localloop.databse.CategoryOperation;
-import com.example.localloop.databse.Database;
-import com.example.localloop.databse.Event;
-import com.example.localloop.databse.EventOperation;
-import com.example.localloop.databse.Request;
-import com.example.localloop.databse.UserOperation;
+import com.example.localloop.database.Category;
+import com.example.localloop.database.Database;
+import com.example.localloop.database.Event;
+import com.example.localloop.database.EventOperation;
+import com.example.localloop.database.Request;
+import com.example.localloop.database.UserOperation;
 import com.example.localloop.usertype.OrganizerUser;
 
 import java.util.ArrayList;
@@ -121,7 +120,7 @@ public class OrganizerActivity extends AppCompatActivity {
 
             holder.btnAccept.setOnClickListener(v -> {
                 r.requestStatus = 1;
-                Database.add("requests", docId, r.toMap());
+                Database.set("requests", docId, r.toMap());
                 Toast.makeText(v.getContext(), "Request accepted", Toast.LENGTH_SHORT).show();
 
                 // Refresh the view
@@ -130,7 +129,7 @@ public class OrganizerActivity extends AppCompatActivity {
 
             holder.btnDecline.setOnClickListener(v -> {
                 r.requestStatus = -1;
-                Database.add("requests", docId, r.toMap());
+                Database.set("requests", docId, r.toMap());
                 Toast.makeText(v.getContext(), "Request declined", Toast.LENGTH_SHORT).show();
 
                 // Refresh the view

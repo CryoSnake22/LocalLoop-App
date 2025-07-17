@@ -1,6 +1,5 @@
 package com.example.localloop.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,15 +15,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.localloop.R;
-import com.example.localloop.databse.Category;
-import com.example.localloop.databse.CategoryOperation;
-import com.example.localloop.databse.Database;
-import com.example.localloop.databse.UserOperation;
-import com.example.localloop.usertype.ParticipantUser;
+import com.example.localloop.database.Category;
+import com.example.localloop.database.CategoryOperation;
+import com.example.localloop.database.Database;
+import com.example.localloop.database.UserOperation;
 import com.example.localloop.usertype.User;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.function.Consumer;
 
 public class AdminActivity extends AppCompatActivity {
     @Override
@@ -126,7 +124,7 @@ public class AdminActivity extends AppCompatActivity {
         RecyclerView rv = findViewById(R.id.recycler_user_list);
         rv.setLayoutManager(new LinearLayoutManager(this));
 
-        Database.getUserSync(users -> {
+        Database.getUsersSync(users -> {
             runOnUiThread(() -> {
                 UserAdapter adapter = AdminActivity.this.new UserAdapter(users);
                 rv.setAdapter(adapter);
@@ -240,23 +238,29 @@ public class AdminActivity extends AppCompatActivity {
             }
 
             holder.btnDisable.setOnClickListener(v -> {
-                user.setDisable(true);
-                UserOperation.addUserAccount(user);
-
-                holder.status.setText("Status: Disabled");
-                holder.btnDisable.setVisibility(View.GONE);
-                holder.btnEnable.setVisibility(View.VISIBLE);
-                Toast.makeText(v.getContext(), "User disabled", Toast.LENGTH_SHORT).show();
+                UserOperation.setEnableUserAccount(
+                    user, true,
+                    () -> {
+                        holder.status.setText("Status: Disabled");
+                        holder.btnDisable.setVisibility(View.GONE);
+                        holder.btnEnable.setVisibility(View.VISIBLE);
+                        Toast.makeText(v.getContext(), "User disabled", Toast.LENGTH_SHORT).show();
+                    },
+                    exc -> Toast.makeText(v.getContext(), exc.getMessage(), Toast.LENGTH_SHORT).show()
+                );
             });
 
             holder.btnEnable.setOnClickListener(v -> {
-                user.setDisable(false);
-                UserOperation.addUserAccount(user);
-
-                holder.status.setText("Status: Active");
-                holder.btnDisable.setVisibility(View.VISIBLE);
-                holder.btnEnable.setVisibility(View.GONE);
-                Toast.makeText(v.getContext(), "User enabled", Toast.LENGTH_SHORT).show();
+                UserOperation.setEnableUserAccount(
+                    user, false,
+                    () -> {
+                        holder.status.setText("Status: Active");
+                        holder.btnDisable.setVisibility(View.VISIBLE);
+                        holder.btnEnable.setVisibility(View.GONE);
+                        Toast.makeText(v.getContext(), "User enabled", Toast.LENGTH_SHORT).show();
+                    },
+                    exc -> Toast.makeText(v.getContext(), exc.getMessage(), Toast.LENGTH_SHORT).show()
+                );
             });
         }
 

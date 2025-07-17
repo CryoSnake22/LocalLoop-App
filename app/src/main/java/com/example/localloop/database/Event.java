@@ -1,11 +1,10 @@
-package com.example.localloop.databse;
+package com.example.localloop.database;
 
 import com.example.localloop.usertype.OrganizerUser;
 import com.example.localloop.usertype.ParticipantUser;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Queue;
 
 public class Event {
     public String eventName;

@@ -1,11 +1,11 @@
-package com.example.localloop.databse;
+package com.example.localloop.database;
 
 public class EventOperation {
 
 
     //Email represent event organizer
     public static void addEvent(String email, Event event) {
-        Database.add("events", email + "," + event.getEventName(), event.toMap());
+        Database.set("events", email + "," + event.getEventName(), event.toMap());
     }
 
     public static void deleteEvent(String email, Event event) {

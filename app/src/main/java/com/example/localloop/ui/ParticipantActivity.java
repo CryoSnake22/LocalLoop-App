@@ -16,12 +16,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.localloop.R;
-import com.example.localloop.databse.Category;
-import com.example.localloop.databse.Database;
-import com.example.localloop.databse.Event;
-import com.example.localloop.databse.Request;
-import com.example.localloop.databse.RequestOperation;
-import com.example.localloop.databse.UserOperation;
+import com.example.localloop.database.Category;
+import com.example.localloop.database.Database;
+import com.example.localloop.database.Event;
+import com.example.localloop.database.Request;
+import com.example.localloop.database.RequestOperation;
+import com.example.localloop.database.UserOperation;
 import com.example.localloop.usertype.ParticipantUser;
 
 import java.util.ArrayList;

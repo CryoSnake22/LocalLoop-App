@@ -1,4 +1,4 @@
-package com.example.localloop.databse;
+package com.example.localloop.database;
 
 import static android.content.ContentValues.TAG;
 
@@ -21,7 +21,7 @@ import java.util.function.Consumer;
 public class Database {
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    public static void add(String collectionPath, String documentPath, HashMap<String, Object>fields) {
+    public static void set(String collectionPath, String documentPath, HashMap<String, Object>fields) {
         db.collection(collectionPath).document(documentPath).set(fields);
     }
 
@@ -96,16 +96,15 @@ public class Database {
     }
 
 
-    public static void getUserSync(Consumer<List<User>> callback) {
+    public static void getUsersSync(Consumer<List<User>> callback) {
         List<User> userList = new ArrayList<>();
 
-        Database.get("user", data -> {
+        Database.get("users", data -> {
             for (String docId : data.keySet()) {
                 Map<String, Object> userData = data.get(docId);
 
                 String email = (String) userData.get("user_email");
                 String name = (String) userData.get("user_name");
-                String password = (String) userData.get("user_password");
                 String role = (String) userData.get("user_role");
                 String first = (String) userData.get("first_name");
                 String last = (String) userData.get("last_name");
@@ -113,15 +112,15 @@ public class Database {
                 boolean disabled = Boolean.TRUE.equals(userData.get("user_disabled"));
 
                 if (role.equals("organizer")) {
-                    OrganizerUser user = new OrganizerUser(email, name, password, role, first, last);
+                    OrganizerUser user = new OrganizerUser(email, name, role, first, last);
                     user.setDisable(disabled);
                     userList.add(user);
                 } else if (role.equals("participant")) {
-                    ParticipantUser user = new ParticipantUser(email, name, password, role, first, last);
+                    ParticipantUser user = new ParticipantUser(email, name, role, first, last);
                     user.setDisable(disabled);
                     userList.add(user);
                 } else if (role.equals("admin")) {
-                    AdminUser user = new AdminUser(email, name, password, role, first, last);
+                    AdminUser user = new AdminUser(email, name, role, first, last);
                     userList.add(user);
                 }
             }
@@ -130,16 +129,15 @@ public class Database {
         });
     }
 
-    public static List<User> getUser() {
+    public static List<User> getUsers() {
         List<User> userList = new ArrayList<>();
 
-        Database.get("user", data -> {
+        Database.get("users", data -> {
             for (String docId : data.keySet()) {
                 Map<String, Object> userData = data.get(docId);
 
                 String email = (String) userData.get("user_email");
                 String name = (String) userData.get("user_name");
-                String password = (String) userData.get("user_password");
                 String role = (String) userData.get("user_role");
                 String first = (String) userData.get("first_name");
                 String last = (String) userData.get("last_name");
@@ -148,17 +146,17 @@ public class Database {
 
 
                 if(role.equals("organizer")) {
-                    OrganizerUser user = new OrganizerUser(email, name, password, role, first, last);
+                    OrganizerUser user = new OrganizerUser(email, name, role, first, last);
                     user.setDisable(disabled);
                     userList.add(user);
                 }
                 else if(role.equals("participant")) {
-                    ParticipantUser user = new ParticipantUser(email, name, password, role, first, last);
+                    ParticipantUser user = new ParticipantUser(email, name, role, first, last);
                     user.setDisable(disabled);
                     userList.add(user);
                 }
                 else if(role.equals("admin")) {
-                    AdminUser user = new AdminUser(email, name, password, role, first, last);
+                    AdminUser user = new AdminUser(email, name, role, first, last);
                     userList.add(user);
                 }
                 else {
@@ -172,7 +170,7 @@ public class Database {
     }
 
     public static List<OrganizerUser> getOrganizer() {
-        List<User> userList = getUser();
+        List<User> userList = getUsers();
         List<OrganizerUser> organizerList = new ArrayList<>();
 
         for (User user : userList) {
@@ -185,7 +183,7 @@ public class Database {
     }
 
     public static List<ParticipantUser> getParticipant() {
-        List<User> userList = getUser();
+        List<User> userList = getUsers();
         List<ParticipantUser> participantList = new ArrayList<>();
 
         for (User user : userList) {
@@ -204,7 +202,7 @@ public class Database {
 /*    public static List<Event> getEvents() {
         List<Event> eventsList = new ArrayList<>();
 
-        Database.get("user", data -> {
+        Database.get("users", data -> {
             for (String docId : data.keySet()) {
                 Map<String, Object> eventData = data.get(docId);
 
@@ -304,7 +302,7 @@ public class Database {
                     fee = Float.parseFloat(feeStr);
                 } catch (Exception ignored) {}
 
-                Event event = new Event(name, description, category, fee, date, time, new OrganizerUser(ownerEmail, "", "", "", "", ""));
+                Event event = new Event(name, description, category, fee, date, time, new OrganizerUser(ownerEmail, "", "", "", ""));
                 eventsList.add(event);
 
                 Log.d("Database", "Loaded ALL event: " + name + " by " + ownerEmail);
@@ -339,8 +337,8 @@ public class Database {
                     status = ((Number) statusObj).intValue();
                 } catch (Exception ignored) {}
 
-                ParticipantUser participant = new ParticipantUser(attendeeEmail, attendeeUsername, "", "participant", attendeeFirst, attendeeLast);
-                OrganizerUser organizer = new OrganizerUser(eventOwnerEmail, "", "", "", "", "");
+                ParticipantUser participant = new ParticipantUser(attendeeEmail, attendeeUsername, "participant", attendeeFirst, attendeeLast);
+                OrganizerUser organizer = new OrganizerUser(eventOwnerEmail, "", "", "", "");
                 Event dummyEvent = new Event(eventName, "", "", 0f, "", "", organizer);
 
                 Request request = new Request(participant, dummyEvent);

@@ -11,10 +11,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.localloop.R;
-import com.example.localloop.databse.Database;
+import com.example.localloop.database.Database;
 import com.example.localloop.usertype.AdminUser;
 import com.example.localloop.usertype.User;
-import com.example.localloop.databse.UserOperation;
+import com.example.localloop.database.UserOperation;
 import com.example.localloop.usertype.OrganizerUser;
 import com.example.localloop.usertype.ParticipantUser;
 
@@ -46,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
             EditText emailField = findViewById(R.id.text_login_email);
             EditText passwordField = findViewById(R.id.text_login_password);
 
-            String email = emailField.getText().toString().trim();
+            String email = emailField.getText().toString().trim().toLowerCase();
             String password = passwordField.getText().toString().trim();
 
 
@@ -55,82 +55,97 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
-
-            // Db to get user doc by email (document ID)
-            Database.get("user", email, userData -> {
-                if (userData == null) {
-                    Toast.makeText(this, "Username(email) or password does not exsist", Toast.LENGTH_SHORT).show();
+            if (email.equals("admin")) {
+                email = "admin@domain.com"; // Admin email is hardcoded
+            }
+            else{
+                // Check if email is valid
+                if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    Toast.makeText(this, "Please enter a valid email address", Toast.LENGTH_SHORT).show();
                     return;
                 }
+            }
 
-                String storedPassword = (String) userData.get("user_password");
-                String userRole = (String) userData.get("user_role");
-                String username = (String) userData.get("user_name");
+            // Attempt to login via UserOperation
+            UserOperation.signInUserAuthEmailAndPassword(
+                email,
+                password,
+                firebaseUser -> {
+                    String userEmail = firebaseUser.getEmail();
+                    Toast.makeText(this, "Logged in as: " + userEmail, Toast.LENGTH_SHORT).show();
+
+                    // Db to get user doc by UID
+                    Database.get("users", firebaseUser.getUid(), userData -> {
+                        if (userData == null) {
+                            Log.e("LOGIN", "User data not found for email: " + userEmail);
+                            Toast.makeText(this, "Your account data has been lost. You must sign up again with a different email.", Toast.LENGTH_SHORT).show();
+                            UserOperation.signOutUserAuth(); // Sign out the user
+                            return;
+                        }
+
+                        String userRole = (String) userData.get("user_role");
+
+                        if ("organizer".equals(userRole)){
+                            UserOperation.currentUser = new OrganizerUser(
+                                    Objects.requireNonNull(userData.get("user_email")).toString(),
+                                    Objects.requireNonNull(userData.get("user_name")).toString(),
+                                    Objects.requireNonNull(userData.get("user_role")).toString(),
+                                    Objects.requireNonNull(userData.get("first_name")).toString(),
+                                    Objects.requireNonNull(userData.get("last_name")).toString()
+                            );
+                        }
+                        else if ("participant".equals(userRole)){
+                            UserOperation.currentUser = new ParticipantUser(
+                                    Objects.requireNonNull(userData.get("user_email")).toString(),
+                                    Objects.requireNonNull(userData.get("user_name")).toString(),
+                                    Objects.requireNonNull(userData.get("user_role")).toString(),
+                                    Objects.requireNonNull(userData.get("first_name")).toString(),
+                                    Objects.requireNonNull(userData.get("last_name")).toString()
+                            );
+                        } else if ("admin".equals(userRole)){
+                            UserOperation.currentUser = new AdminUser(
+                                    Objects.requireNonNull(userData.get("user_email")).toString(),
+                                    Objects.requireNonNull(userData.get("user_name")).toString(),
+                                    Objects.requireNonNull(userData.get("user_role")).toString(),
+                                    Objects.requireNonNull(userData.get("first_name")).toString(),
+                                    Objects.requireNonNull(userData.get("last_name")).toString()
+                            );
+                        }
+
+                        Log.d("LOGIN", "Logged in as: " + UserOperation.currentUser.getUserName() + " (" + UserOperation.currentUser.user_role + ")");
+                        Toast.makeText(this, ("Logged in as: " + UserOperation.currentUser.getUserName() + " (" + UserOperation.currentUser.user_role + ")"), Toast.LENGTH_SHORT).show();
 
 
-                if (!password.equals(storedPassword)) {
-                    Toast.makeText(this, "Incorrect password", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if ("organizer".equals(userRole)){
-                    UserOperation.currentUser = new OrganizerUser(
-                            Objects.requireNonNull(userData.get("user_email")).toString(),
-                            Objects.requireNonNull(userData.get("user_name")).toString(),
-                            Objects.requireNonNull(userData.get("user_password")).toString(),
-                            Objects.requireNonNull(userData.get("user_role")).toString(),
-                            Objects.requireNonNull(userData.get("first_name")).toString(),
-                            Objects.requireNonNull(userData.get("last_name")).toString()
-                    );;
-                }
-                else if ("participant".equals(userRole)){
-                    UserOperation.currentUser = new ParticipantUser(
-                            Objects.requireNonNull(userData.get("user_email")).toString(),
-                            Objects.requireNonNull(userData.get("user_name")).toString(),
-                            Objects.requireNonNull(userData.get("user_password")).toString(),
-                            Objects.requireNonNull(userData.get("user_role")).toString(),
-                            Objects.requireNonNull(userData.get("first_name")).toString(),
-                            Objects.requireNonNull(userData.get("last_name")).toString()
-                    );;
-                } else if ("admin".equals(userRole)){
-                    UserOperation.currentUser = new AdminUser(
-                            Objects.requireNonNull(userData.get("user_email")).toString(),
-                            Objects.requireNonNull(userData.get("user_name")).toString(),
-                            Objects.requireNonNull(userData.get("user_password")).toString(),
-                            Objects.requireNonNull(userData.get("user_role")).toString(),
-                            Objects.requireNonNull(userData.get("first_name")).toString(),
-                            Objects.requireNonNull(userData.get("last_name")).toString()
-                    );;
-                }
+                        if ("admin".equals(UserOperation.currentUser.user_role)) {
+                            Log.d("LOGIN", "Go to admin activity");
 
-                Log.d("LOGIN", "Logged in as: " + UserOperation.currentUser.getUserName() + " (" + UserOperation.currentUser.user_role + ")");
-                Toast.makeText(this, ("Logged in as: " + UserOperation.currentUser.getUserName() + " (" + UserOperation.currentUser.user_role + ")"), Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(this, AdminActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                        //REDIRECT
+                        else if ("organizer".equals(UserOperation.currentUser.user_role)) {
+                            Log.d("LOGIN", "Go to organizer activity");
 
+                            Intent intent = new Intent(this, OrganizerActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                        else {
+                            Log.d("LOGIN", "Go to participant activity");
 
-                if ("admin".equals(UserOperation.currentUser.user_role)) {
-                    Log.d("LOGIN", "Go to admin activity");
+                            Intent intent = new Intent(this, ParticipantActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    });
 
-                    Intent intent = new Intent(this, AdminActivity.class);
-                    startActivity(intent);
                     finish();
+                },
+                exception -> {
+                    Toast.makeText(this, exception.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-                //REDIRECT
-                else if ("organizer".equals(UserOperation.currentUser.user_role)) {
-                    Log.d("LOGIN", "Go to organizer activity");
-
-                    Intent intent = new Intent(this, OrganizerActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-                else {
-                    Log.d("LOGIN", "Go to participant activity");
-
-                    Intent intent = new Intent(this, ParticipantActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-
-
-            });
+            );
         });
     }
 
@@ -170,7 +185,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
     /*        // Check if email already exists - to be complete later
-            if(Database.get("user") contain email) {
+            if(Database.get("users") contain email) {
                 Toast.makeText(this, "This email is already registered!", Toast.LENGTH_SHORT).show();
             }*/
 
@@ -179,14 +194,27 @@ public class LoginActivity extends AppCompatActivity {
             User user;
 
             if (organizer.isChecked()) {
-                user = new OrganizerUser(email, username, password, "organizer", firstname, lastname);
-                UserOperation.addUserAccount(user);
-                Toast.makeText(this, "Account Created", Toast.LENGTH_SHORT).show();
-
+                user = new OrganizerUser(email, username, "organizer", firstname, lastname);
+                UserOperation.signUpUserAuth(
+                    user,
+                    password,
+                    firebaseUser -> {
+                        Toast.makeText(this, "Account Created", Toast.LENGTH_SHORT).show();
+                        loginLayout();
+                    },
+                    exception -> Toast.makeText(this, exception.getMessage(), Toast.LENGTH_SHORT).show()
+                );
             } else if (participant.isChecked()) {
-                user = new ParticipantUser(email, username, password, "participant", firstname, lastname);
-                UserOperation.addUserAccount(user);
-                Toast.makeText(this, "Account Created", Toast.LENGTH_SHORT).show();
+                user = new ParticipantUser(email, username, "participant", firstname, lastname);
+                UserOperation.signUpUserAuth(
+                    user,
+                    password,
+                    firebaseUser -> {
+                        Toast.makeText(this, "Account Created", Toast.LENGTH_SHORT).show();
+                        loginLayout();
+                    },
+                    exception -> Toast.makeText(this, exception.getMessage(), Toast.LENGTH_SHORT).show()
+                );
             }
         });
     }
