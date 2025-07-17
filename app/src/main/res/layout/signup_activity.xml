@@ -1,90 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:orientation="vertical"
+  android:padding="16dp"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <!-- Back Button (outlined secondary) -->
+  <com.google.android.material.button.MaterialButton
+    android:id="@+id/btn_signup_back"
+    style="?attr/materialButtonOutlinedStyle"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:text="Back" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+  <!-- Email -->
+  <com.google.android.material.textfield.TextInputLayout
+    android:id="@+id/text_signup_email_layout"
+    style="?attr/textInputDenseStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="Email"
+    android:layout_marginTop="16dp">
 
-        <Button
-            android:id="@+id/btn_signup_back"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Back" />
+    <com.google.android.material.textfield.TextInputEditText
+      android:id="@+id/text_signup_email"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:inputType="textEmailAddress"
+      android:autofillHints="emailAddress" />
+  </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
-            android:id="@+id/text_signup_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Email"
-            android:inputType="textEmailAddress" />
+  <!-- First Name -->
+  <com.google.android.material.textfield.TextInputLayout
+    android:id="@+id/text_signup_firstname_layout"
+    style="?attr/textInputDenseStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="First Name"
+    android:layout_marginTop="8dp">
 
-        <EditText
-            android:id="@+id/text_signup_firstname"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="First Name"
-            android:inputType="text" />
+    <com.google.android.material.textfield.TextInputEditText
+      android:id="@+id/text_signup_firstname"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:inputType="textPersonName" />
+  </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
-            android:id="@+id/text_signup_lastname"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Last Name"
-            android:inputType="text" />
+  <!-- Last Name -->
+  <com.google.android.material.textfield.TextInputLayout
+    android:id="@+id/text_signup_lastname_layout"
+    style="?attr/textInputDenseStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="Last Name"
+    android:layout_marginTop="8dp">
 
-        <EditText
-            android:id="@+id/text_signup_username"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="User Name"
-            android:inputType="text" />
+    <com.google.android.material.textfield.TextInputEditText
+      android:id="@+id/text_signup_lastname"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:inputType="textPersonName" />
+  </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
-            android:id="@+id/text_signup_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Password"
-            android:inputType="textPassword" />
+  <!-- User Name -->
+  <com.google.android.material.textfield.TextInputLayout
+    android:id="@+id/text_signup_username_layout"
+    style="?attr/textInputDenseStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="User Name"
+    android:layout_marginTop="8dp">
 
-        <EditText
-            android:id="@+id/text_signup_confirmPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Confirm Password"
-            android:inputType="textPassword" />
+    <com.google.android.material.textfield.TextInputEditText
+      android:id="@+id/text_signup_username"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:inputType="text" />
+  </com.google.android.material.textfield.TextInputLayout>
 
-        <RadioGroup
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+  <!-- Password -->
+  <com.google.android.material.textfield.TextInputLayout
+    android:id="@+id/text_signup_password_layout"
+    style="?attr/textInputDenseStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="Password"
+    app:endIconMode="password_toggle"
+    android:layout_marginTop="8dp">
 
-            <RadioButton
-                android:id="@+id/radio_signup_participant"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Sign up as Participant" />
+    <com.google.android.material.textfield.TextInputEditText
+      android:id="@+id/text_signup_password"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:inputType="textPassword" />
+  </com.google.android.material.textfield.TextInputLayout>
 
-            <RadioButton
-                android:id="@+id/radio_signup_organizer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Sign up as Organizer" />
+  <!-- Confirm Password -->
+  <com.google.android.material.textfield.TextInputLayout
+    android:id="@+id/text_signup_confirmPassword_layout"
+    style="?attr/textInputDenseStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="Confirm Password"
+    app:endIconMode="password_toggle"
+    android:layout_marginTop="8dp">
 
-        </RadioGroup>
+    <com.google.android.material.textfield.TextInputEditText
+      android:id="@+id/text_signup_confirmPassword"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:inputType="textPassword" />
+  </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:id="@+id/btn_signup_signup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Signup" />
+  <!-- Role Selection -->
+  <RadioGroup
+    android:id="@+id/radio_signup_role_group"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginTop="16dp">
 
-    </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.radiobutton.MaterialRadioButton
+      android:id="@+id/radio_signup_participant"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="Sign up as Participant" />
+
+    <com.google.android.material.radiobutton.MaterialRadioButton
+      android:id="@+id/radio_signup_organizer"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="Sign up as Organizer" />
+  </RadioGroup>
+
+  <!-- Signup Button (filled primary) -->
+  <com.google.android.material.button.MaterialButton
+    android:id="@+id/btn_signup_signup"
+    style="?attr/materialButtonStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Signup"
+    android:layout_marginTop="24dp" />
+
+</LinearLayout>
