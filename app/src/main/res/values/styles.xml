@@ -5,7 +5,5 @@
     <item name="editTextStyle">@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox</item>
     <item name="materialButtonStyle">@style/Widget.MaterialComponents.Button</item>
     <item name="materialButtonOutlinedStyle">@style/Widget.MaterialComponents.Button.OutlinedButton</item>
-    <item name="textInputDenseStyle">
-      @style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense</item>
   </style>
 </resources>

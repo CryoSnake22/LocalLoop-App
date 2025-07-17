@@ -151,7 +151,7 @@ public class OrganizerActivity extends AppCompatActivity {
         btnCreate.setOnClickListener(v -> createEventLayout());
 
         RecyclerView rv = findViewById(R.id.recycler_organizer_manage_event);
-        rv.setLayoutManager(new LinearLayoutManager(this)); // 🟢 THIS WAS MISSING!
+        rv.setLayoutManager(new LinearLayoutManager(this)); // THIS WAS MISSING!
 
         Database.getEvents(events -> runOnUiThread(() -> {
             rv.setAdapter(new EventAdapter(events));

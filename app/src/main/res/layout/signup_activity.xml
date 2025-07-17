@@ -32,7 +32,7 @@
   <!-- Email -->
   <com.google.android.material.textfield.TextInputLayout
     android:id="@+id/text_signup_email_layout"
-    style="?attr/textInputDenseStyle"
+    style="?attr/textInputStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:hint="Email"
@@ -50,7 +50,7 @@
   <!-- First Name -->
   <com.google.android.material.textfield.TextInputLayout
     android:id="@+id/text_signup_firstname_layout"
-    style="?attr/textInputDenseStyle"
+    style="?attr/textInputStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:hint="First Name"
@@ -66,7 +66,7 @@
   <!-- Last Name -->
   <com.google.android.material.textfield.TextInputLayout
     android:id="@+id/text_signup_lastname_layout"
-    style="?attr/textInputDenseStyle"
+    style="?attr/textInputStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:hint="Last Name"
@@ -82,7 +82,7 @@
   <!-- User Name -->
   <com.google.android.material.textfield.TextInputLayout
     android:id="@+id/text_signup_username_layout"
-    style="?attr/textInputDenseStyle"
+    style="?attr/textInputStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:hint="User Name"
@@ -98,7 +98,7 @@
   <!-- Password -->
   <com.google.android.material.textfield.TextInputLayout
     android:id="@+id/text_signup_password_layout"
-    style="?attr/textInputDenseStyle"
+    style="?attr/textInputStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:hint="Password"
@@ -115,7 +115,7 @@
   <!-- Confirm Password -->
   <com.google.android.material.textfield.TextInputLayout
     android:id="@+id/text_signup_confirmPassword_layout"
-    style="?attr/textInputDenseStyle"
+    style="?attr/textInputStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:hint="Confirm Password"
