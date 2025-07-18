@@ -51,7 +51,8 @@
                 android:id="@+id/text_organizer_add_event_fee"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text" />
+                android:inputType="number|numberDecimal"
+                android:text="0" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Event Date -->
