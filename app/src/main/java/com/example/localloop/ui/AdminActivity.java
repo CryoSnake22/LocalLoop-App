@@ -78,6 +78,11 @@ public class AdminActivity extends AppCompatActivity {
             String categoryName = categoryNameField.getText().toString().trim();
             String categoryDescription = categoryDescriptionField.getText().toString().trim();
 
+            if (categoryName.isEmpty()) {
+                Toast.makeText(this, "Please fill in category name.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             Category category = new Category(categoryName, categoryDescription);
             CategoryOperation.addCategory(category);
             Toast.makeText(this, "Category Created", Toast.LENGTH_SHORT).show();
