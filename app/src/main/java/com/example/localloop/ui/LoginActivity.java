@@ -23,14 +23,20 @@ import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private boolean isSignupScreen = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         loginLayout(); // goto login page
     }
 
+
     //TODO NEED TO REIMPLEMENT LOGIN LOGIC USING DATABASE GETUSER()
     private void loginLayout() {
+        isSignupScreen = false;
+
+
         Log.d("Login", "THIS IS Login PAGE");
 
         setContentView(R.layout.login_activity);
@@ -121,7 +127,6 @@ public class LoginActivity extends AppCompatActivity {
 
                             Intent intent = new Intent(this, AdminActivity.class);
                             startActivity(intent);
-                            finish();
                         }
                         //REDIRECT
                         else if ("organizer".equals(UserOperation.currentUser.user_role)) {
@@ -129,18 +134,15 @@ public class LoginActivity extends AppCompatActivity {
 
                             Intent intent = new Intent(this, OrganizerActivity.class);
                             startActivity(intent);
-                            finish();
                         }
                         else {
                             Log.d("LOGIN", "Go to participant activity");
 
                             Intent intent = new Intent(this, ParticipantActivity.class);
                             startActivity(intent);
-                            finish();
                         }
                     });
 
-                    finish();
                 },
                 exception -> {
                     Toast.makeText(this, exception.getMessage(), Toast.LENGTH_SHORT).show();
@@ -150,6 +152,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void signupLayout() {
+        isSignupScreen = true;
+
         Log.d("LAYOUT", "THIS IS SIGNUP PAGE");
 
         setContentView(R.layout.signup_activity);
@@ -217,5 +221,14 @@ public class LoginActivity extends AppCompatActivity {
                 );
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isSignupScreen) {
+            loginLayout();
+        } else {
+            super.onBackPressed();
+        }
     }
 }
