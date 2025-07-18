@@ -39,8 +39,6 @@ public class OrganizerActivity extends AppCompatActivity {
         organizerHomeLayout();
     }
 
-
-
     private void organizerHomeLayout() {
         Log.d("LAYOUT", "THIS IS organizer_home_activity PAGE");
         setContentView(R.layout.organizer_home_activity);
@@ -380,4 +378,5 @@ public class OrganizerActivity extends AppCompatActivity {
             return items.size();
         }
     }
+
 }
