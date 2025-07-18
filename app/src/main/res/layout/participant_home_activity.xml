@@ -1,61 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  android:padding="24dp"
+  android:gravity="center_horizontal"
+  android:fitsSystemWindows="true"
+  android:background="@color/white">
+
+  <ImageView
+    android:layout_width="100dp"
+    android:layout_height="100dp"
+    android:src="@drawable/ic_user"
+    android:contentDescription="Participant Icon"
+    android:layout_marginBottom="16dp" />
+
+  <TextView
+    android:id="@+id/text_participant_welcome"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Welcome, Participant"
+    android:textSize="26sp"
+    android:textStyle="bold"
+    android:textColor="@android:color/black"
+    android:gravity="center"
+    android:layout_marginBottom="4dp" />
+
+  <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Search for events that match your interests"
+    android:textSize="14sp"
+    android:textColor="#666666"
+    android:gravity="center"
+    android:layout_marginBottom="24dp" />
+
+  <com.google.android.material.textfield.TextInputLayout
     android:layout_width="match_parent"
-    android:fitsSystemWindows="true"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:hint="Search"
+    style="?attr/textInputStyle">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp">
+    <com.google.android.material.textfield.TextInputEditText
+      android:id="@+id/text_participant_searchbar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:inputType="text" />
+  </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:id="@+id/text_participant_welcome"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Welcome, Participant"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:layout_marginBottom="24dp"
-            android:textColor="?android:attr/textColorPrimary" />
+  <RadioGroup
+    android:id="@+id/radio_group_category_filter"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="12dp" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Search"
-            style="?attr/textInputStyle">
+  <com.google.android.material.button.MaterialButton
+    android:id="@+id/btn_participant_searchevents_submit"
+    style="?attr/materialButtonStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Search Events"
+    android:layout_marginTop="16dp"
+    app:icon="@drawable/ic_search"
+    app:iconGravity="textStart"
+    app:iconPadding="8dp"
+    app:iconSize="24dp" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/text_participant_searchbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text" />
-        </com.google.android.material.textfield.TextInputLayout>
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/recycler_participant_events"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    android:layout_marginTop="16dp"
+    android:layout_marginBottom="8dp" />
+</LinearLayout>
 
-        <RadioGroup
-            android:id="@+id/radio_group_category_filter"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_participant_searchevents_submit"
-            style="?attr/materialButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Search Events"
-            android:layout_marginTop="16dp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_participant_events"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="16dp" />
-    </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+<!-- <?xml version="1.0" encoding="utf-8"?> -->
+<!-- <androidx.constraintlayout.widget.ConstraintLayout
+xmlns:android="http://schemas.android.com/apk/res/android" -->
+<!--     xmlns:app="http://schemas.android.com/apk/res-auto" -->
+<!--     xmlns:tools="http://schemas.android.com/tools" -->
+<!--     android:layout_width="match_parent" -->
+<!--     android:fitsSystemWindows="true" -->
+<!--     android:layout_height="match_parent"> -->
+<!---->
+<!--     <LinearLayout -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="match_parent" -->
+<!--         android:orientation="vertical" -->
+<!--         android:padding="16dp"> -->
+<!---->
+<!--         <TextView -->
+<!--             android:id="@+id/text_participant_welcome" -->
+<!--             android:layout_width="match_parent" -->
+<!--             android:layout_height="wrap_content" -->
+<!--             android:text="Welcome, Participant" -->
+<!--             android:textSize="24sp" -->
+<!--             android:textStyle="bold" -->
+<!--             android:gravity="center" -->
+<!--             android:layout_marginBottom="24dp" -->
+<!--             android:textColor="?android:attr/textColorPrimary" /> -->
+<!---->
+<!--         <com.google.android.material.textfield.TextInputLayout -->
+<!--             android:layout_width="match_parent" -->
+<!--             android:layout_height="wrap_content" -->
+<!--             android:hint="Search" -->
+<!--             style="?attr/textInputStyle"> -->
+<!---->
+<!--             <com.google.android.material.textfield.TextInputEditText -->
+<!--                 android:id="@+id/text_participant_searchbar" -->
+<!--                 android:layout_width="match_parent" -->
+<!--                 android:layout_height="wrap_content" -->
+<!--                 android:inputType="text" /> -->
+<!--         </com.google.android.material.textfield.TextInputLayout> -->
+<!---->
+<!--         <RadioGroup -->
+<!--             android:id="@+id/radio_group_category_filter" -->
+<!--             android:layout_width="match_parent" -->
+<!--             android:layout_height="wrap_content" -->
+<!--             android:layout_marginTop="12dp" /> -->
+<!---->
+<!--         <com.google.android.material.button.MaterialButton -->
+<!--             android:id="@+id/btn_participant_searchevents_submit" -->
+<!--             style="?attr/materialButtonStyle" -->
+<!--             android:layout_width="match_parent" -->
+<!--             android:layout_height="wrap_content" -->
+<!--             android:text="Search Events" -->
+<!--             android:layout_marginTop="16dp" /> -->
+<!---->
+<!--         <androidx.recyclerview.widget.RecyclerView -->
+<!--             android:id="@+id/recycler_participant_events" -->
+<!--             android:layout_width="match_parent" -->
+<!--             android:layout_height="0dp" -->
+<!--             android:layout_weight="1" -->
+<!--             android:layout_marginTop="16dp" /> -->
+<!--     </LinearLayout> -->
+<!---->
+<!-- </androidx.constraintlayout.widget.ConstraintLayout> -->

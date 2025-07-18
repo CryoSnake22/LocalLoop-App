@@ -7,11 +7,10 @@
   android:layout_height="match_parent"
   android:orientation="vertical"
   android:padding="24dp"
-  android:gravity="center_horizontal"
+  android:gravity="center"
   android:fitsSystemWindows="true"
   tools:context=".LoginActivity">
 
-  <!-- Logo -->
   <ImageView
     android:id="@+id/imageView"
     android:layout_width="200dp"
@@ -20,7 +19,6 @@
     android:contentDescription="App Logo"
     android:layout_marginBottom="16dp" />
 
-  <!-- App Title -->
   <TextView
     android:id="@+id/text_app_title"
     android:layout_width="wrap_content"
@@ -31,7 +29,6 @@
     android:textColor="?android:attr/textColorPrimary"
     android:layout_marginBottom="4dp" />
 
-  <!-- Login Subtitle -->
   <TextView
     android:id="@+id/text_login_title"
     android:layout_width="wrap_content"
@@ -42,7 +39,6 @@
     android:textColor="?android:attr/textColorSecondary"
     android:layout_marginBottom="24dp" />
 
-  <!-- Email Field -->
   <com.google.android.material.textfield.TextInputLayout
     android:id="@+id/text_login_email_layout"
     style="?attr/textInputStyle"
@@ -58,7 +54,6 @@
       android:autofillHints="emailAddress" />
   </com.google.android.material.textfield.TextInputLayout>
 
-  <!-- Password Field -->
   <com.google.android.material.textfield.TextInputLayout
     android:id="@+id/text_login_password_layout"
     style="?attr/textInputStyle"
@@ -76,7 +71,6 @@
       android:autofillHints="password" />
   </com.google.android.material.textfield.TextInputLayout>
 
-  <!-- Login Button -->
   <com.google.android.material.button.MaterialButton
     android:id="@+id/btn_login_login"
     style="?attr/materialButtonStyle"
@@ -85,7 +79,6 @@
     android:text="Login"
     android:layout_marginTop="24dp" />
 
-  <!-- Signup Button -->
   <com.google.android.material.button.MaterialButton
     android:id="@+id/btn_login_signup"
     style="?attr/materialButtonOutlinedStyle"
