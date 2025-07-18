@@ -211,6 +211,11 @@ public class OrganizerActivity extends AppCompatActivity {
             String date = dateField.getText().toString().trim();
             String time = timeField.getText().toString().trim();
 
+            if (name.isEmpty()) {
+                Toast.makeText(this, "Event name cannot be empty", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             float fee;
             try {
                 fee = Float.parseFloat(feeField.getText().toString().trim());
