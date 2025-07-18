@@ -18,7 +18,6 @@ public class OrganizerUser extends User {
 
     public void createEvent(Event event) {
         eventsList.add(event);
-        EventOperation.addEvent(event);
     }
 
     public List<ParticipantUser> getJoinRequest(Event event) {
