@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -23,6 +24,8 @@ import com.example.localloop.database.Request;
 import com.example.localloop.database.RequestOperation;
 import com.example.localloop.database.UserOperation;
 import com.example.localloop.usertype.ParticipantUser;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,12 +41,14 @@ public class ParticipantActivity extends AppCompatActivity {
     private void participantHomeLayout() {
         setContentView(R.layout.participant_home_activity);
 
-        EditText searchBar = findViewById(R.id.text_participant_searchbar);
         Button btnSearch = findViewById(R.id.btn_participant_searchevents_submit);
+        EditText searchBar = findViewById(R.id.text_participant_searchbar);
         RadioGroup categoryRadio = findViewById(R.id.radio_group_category_filter);
         RecyclerView recycler = findViewById(R.id.recycler_participant_events);
         recycler.setLayoutManager(new LinearLayoutManager(this));
-
+        searchBar.setOnClickListener(v->{
+            categoryRadio.setVisibility(View.VISIBLE);
+        });
         // Add default radio All Categories
         RadioButton allButton = new RadioButton(this);
         allButton.setText("All Categories");
@@ -60,6 +65,7 @@ public class ParticipantActivity extends AppCompatActivity {
                     rb.setId(View.generateViewId());
                     categoryRadio.addView(rb);
                 }
+
             });
         });
 
@@ -105,7 +111,15 @@ public class ParticipantActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "Category: " + category, Toast.LENGTH_SHORT).show();
             }
+            categoryRadio.setVisibility(View.GONE);
+
+            // input manager black magic to turn off the keyboard when you click search
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            if (imm != null && v != null) {
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            }
         });
+
     }
 
 

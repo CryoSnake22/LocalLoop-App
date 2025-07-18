@@ -1,5 +1,6 @@
 package com.example.localloop.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -232,12 +233,11 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    @SuppressLint("MissingSuperCall")
     @Override
     public void onBackPressed() {
         if (isSignupScreen) {
             loginLayout();
-        } else {
-            super.onBackPressed();
         }
     }
 }
