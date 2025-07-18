@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Event {
+
     public String eventName;
     public String description;
     public String associatedCategory;
@@ -14,7 +15,8 @@ public class Event {
     public String eventTime;
     public float eventFee;
 
-    private OrganizerUser eventOwnerEmail;
+    private OrganizerUser eventOwner;
+    private String uniqueId;
 
 
 
@@ -24,21 +26,29 @@ public class Event {
 
     private static int eventId = 1;
 
-    public Event(String eventName, String description, String associatedCategory, float eventFee, String eventDate, String eventTime, OrganizerUser eventOwnerEmail) {
+    public Event(String eventName, String description, String associatedCategory, float eventFee, String eventDate, String eventTime, OrganizerUser eventOwner) {
         this.eventName = eventName;
         this.description = description;
         this.associatedCategory = associatedCategory;
         this.eventFee = eventFee;
         this.eventDate = eventDate;
         this.eventTime = eventTime;
-        this.eventOwnerEmail = eventOwnerEmail;
+        this.eventOwner = eventOwner;
         eventId++;
 
-        eventOwnerEmail.createEvent(this);
+        this.uniqueId = eventOwner.getUid() + "." + String.valueOf(System.currentTimeMillis());
+
+        eventOwner.createEvent(this);
+    }
+
+    public Event(String eventName, String description, String associatedCategory, float eventFee, String eventDate, String eventTime, OrganizerUser eventOwner, String uniqueId) {
+        this(eventName, description, associatedCategory, eventFee, eventDate, eventTime, eventOwner);
+        this.uniqueId = uniqueId;
     }
 
     public HashMap<String, Object> toMap() {
         HashMap<String, Object> fields = new HashMap<>();
+        fields.put("unique_id", this.uniqueId);
         fields.put("event_name", this.eventName);
         fields.put("event_description", this.description);
         fields.put("event_fee", this.eventFee);
@@ -47,7 +57,8 @@ public class Event {
 
         fields.put("associated_category", this.associatedCategory);
 
-        fields.put("event_owner_email", eventOwnerEmail.getEmail());
+        fields.put("event_owner_email", eventOwner.getEmail());
+        fields.put("event_owner_uid", eventOwner.getUid());
 
         return fields;
     }
@@ -65,7 +76,22 @@ public class Event {
         eventParticipant.add(user);
     }
 
+    public String getEventOwnerUid() { return this.eventOwner.getUid(); }
+
     public String getEventOwnerEmail() {
-        return this.eventOwnerEmail.user_email;
+        return this.eventOwner.user_email;
+    }
+
+    public String getUniqueId() {
+        return uniqueId;
+    }
+
+    public void update(Event update) {
+        this.eventName = update.eventName;
+        this.description = update.description;
+        this.associatedCategory = update.associatedCategory;
+        this.eventFee = update.eventFee;
+        this.eventDate = update.eventDate;
+        this.eventTime = update.eventTime;
     }
 }

@@ -13,29 +13,21 @@ public abstract class User {
 
     private boolean disabled;
 
-    public User(String user_email, String user_name, String user_role, String first_name, String last_name) {
+    public User(String user_email, String user_name, String user_role, String first_name, String last_name, String uid) {
 
         this.user_email = user_email;
         this.user_name = user_name;
         this.user_role = user_role;
         this.first_name = first_name;
         this.last_name = last_name;
+        this.uid = uid;
 
         this.disabled = false;
     }
 
-    // new getter for UID
-    public String getUid() {
-        return uid;
-    }
-
-    // new setter for UID
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
-
     public HashMap<String, Object> toMap() {
         HashMap<String, Object> fields = new HashMap<>();
+        fields.put("uid", this.uid);
         fields.put("user_email", this.user_email);
         fields.put("user_name", this.user_name);
         fields.put("user_role", this.user_role);
@@ -46,8 +38,28 @@ public abstract class User {
         return fields;
     }
 
+    public String getUid() {
+        return uid;
+    }
+
+    public String getEmail() {
+        return user_email;
+    }
+
     public String getUserName() {
         return user_name;
+    }
+
+    public String getUserRole() {
+        return user_role;
+    }
+
+    public String getFirstName() {
+        return first_name;
+    }
+
+    public String getLastName() {
+        return last_name;
     }
 
     public boolean isDisabled() {
@@ -57,7 +69,5 @@ public abstract class User {
         this.disabled = disabled;
     }
 
-    public String getEmail() {
-        return user_email;
-    }
+
 }

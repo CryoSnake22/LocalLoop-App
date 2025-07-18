@@ -8,14 +8,18 @@ import com.example.localloop.usertype.AdminUser;
 import com.example.localloop.usertype.OrganizerUser;
 import com.example.localloop.usertype.ParticipantUser;
 import com.example.localloop.usertype.User;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public class Database {
@@ -25,7 +29,7 @@ public class Database {
         db.collection(collectionPath).document(documentPath).set(fields);
     }
 
-    public static void delete(String collectionPath, String documentPath, HashMap<String, Object>fields) {
+    public static void delete(String collectionPath, String documentPath) {
         db.collection(collectionPath).document(documentPath).delete();
     }
 
@@ -93,6 +97,32 @@ public class Database {
 
             callback.accept(categoryList);
         });
+
+    }
+
+    private static User parseUserFromMap(String uid, Map<String,Object> data) {
+        if (data == null) return null;
+        String email    = (String) data.get("user_email");
+        String username     = (String) data.get("user_name");
+        String role     = (String) data.get("user_role");
+        String first    = (String) data.get("first_name");
+        String last     = (String) data.get("last_name");
+        boolean disabled = Boolean.TRUE.equals(data.get("user_disabled"));
+
+        switch (role) {
+            case "organizer":
+                OrganizerUser ou = new OrganizerUser(email, username, role, first, last, uid);
+                ou.setDisable(disabled);
+                return ou;
+            case "participant":
+                ParticipantUser pu = new ParticipantUser(email, username, role, first, last, uid);
+                pu.setDisable(disabled);
+                return pu;
+            case "admin":
+                return new AdminUser(email, username, role, first, last, uid);
+            default:
+                return null;
+        }
     }
 
 
@@ -112,15 +142,15 @@ public class Database {
                 boolean disabled = Boolean.TRUE.equals(userData.get("user_disabled"));
 
                 if (role.equals("organizer")) {
-                    OrganizerUser user = new OrganizerUser(email, name, role, first, last);
+                    OrganizerUser user = new OrganizerUser(email, name, role, first, last, docId);
                     user.setDisable(disabled);
                     userList.add(user);
                 } else if (role.equals("participant")) {
-                    ParticipantUser user = new ParticipantUser(email, name, role, first, last);
+                    ParticipantUser user = new ParticipantUser(email, name, role, first, last, docId);
                     user.setDisable(disabled);
                     userList.add(user);
                 } else if (role.equals("admin")) {
-                    AdminUser user = new AdminUser(email, name, role, first, last);
+                    AdminUser user = new AdminUser(email, name, role, first, last, docId);
                     userList.add(user);
                 }
             }
@@ -144,19 +174,18 @@ public class Database {
 
                 boolean disabled = Boolean.TRUE.equals(userData.get("user_disabled"));
 
-
-                if(role.equals("organizer")) {
-                    OrganizerUser user = new OrganizerUser(email, name, role, first, last);
+                if (role.equals("organizer")) {
+                    OrganizerUser user = new OrganizerUser(email, name, role, first, last, docId);
                     user.setDisable(disabled);
                     userList.add(user);
                 }
                 else if(role.equals("participant")) {
-                    ParticipantUser user = new ParticipantUser(email, name, role, first, last);
+                    ParticipantUser user = new ParticipantUser(email, name, role, first, last, docId);
                     user.setDisable(disabled);
                     userList.add(user);
                 }
                 else if(role.equals("admin")) {
-                    AdminUser user = new AdminUser(email, name, role, first, last);
+                    AdminUser user = new AdminUser(email, name, role, first, last, docId);
                     userList.add(user);
                 }
                 else {
@@ -169,7 +198,72 @@ public class Database {
         return userList;
     }
 
-    public static List<OrganizerUser> getOrganizer() {
+    public static void getUserByUid(String uid, Consumer<User> callback) {
+        get("users", uid, data -> {
+            User u = parseUserFromMap(uid, data);
+            callback.accept(u);
+        });
+    }
+
+    public static void getUsersByUids(List<String> uids, Consumer<Map<String, User>> callback) {
+        get("users", allData -> {
+            Map<String, User> out = new HashMap<>();
+            for (Map.Entry<String, Map<String,Object>> e : allData.entrySet()) {
+                String docId = e.getKey();
+                if (uids.contains(docId)) {
+                    User u = parseUserFromMap(docId, e.getValue());
+                    if (u != null) out.put(docId, u);
+                }
+            }
+            callback.accept(out);
+        });
+    }
+
+    private static Event parseEventFromMap(Map<String,Object> data, OrganizerUser owner) {
+        if (data == null) return null;
+        try {
+            String uniqueId    = (String) data.get("unique_id");
+            String name        = (String) data.get("event_name");
+            String description = (String) data.get("event_description");
+            String category    = (String) data.get("associated_category");
+            float  fee         = Float.parseFloat(String.valueOf(data.get("event_fee")));
+            String date        = (String) data.get("event_date");
+            String time        = (String) data.get("event_time");
+            // Construct with the real owner
+            return new Event(name, description, category, fee, date, time, owner, uniqueId);
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to parse event " + data.get("unique_id"), e);
+            return null;
+        }
+    }
+
+    public static void getEventById(String eventId, Consumer<Event> callback) {
+
+        // Grab the raw event document
+        get("events", eventId, eventMap -> {
+            if (eventMap == null) {
+                callback.accept(null);
+                return;
+            }
+
+            // Pull out the owner's UID and fetch that user
+            String ownerUid = (String) eventMap.get("event_owner_uid");
+            getUserByUid(ownerUid, user -> {
+                OrganizerUser owner = null;
+                if (user instanceof OrganizerUser) {
+                    owner = (OrganizerUser) user;
+                } else {
+                    Log.w(TAG, "Owner UID " + ownerUid + " is not an OrganizerUser");
+                }
+
+                // Parse the rest of the event, wiring in the owner
+                Event ev = parseEventFromMap(eventMap, owner);
+                callback.accept(ev);
+            });
+        });
+    }
+
+    public static List<OrganizerUser> getOrganizers() {
         List<User> userList = getUsers();
         List<OrganizerUser> organizerList = new ArrayList<>();
 
@@ -182,7 +276,7 @@ public class Database {
         return organizerList;
     }
 
-    public static List<ParticipantUser> getParticipant() {
+    public static List<ParticipantUser> getParticipants() {
         List<User> userList = getUsers();
         List<ParticipantUser> participantList = new ArrayList<>();
 
@@ -244,6 +338,7 @@ public class Database {
                     Map<String, Object> eventData = data.get(docId);
                     Log.d("Database", "Raw event: " + eventData); // ADD THIS
 
+                    String uniqueId = (String) eventData.get("unique_id");
                     String name = (String) eventData.get("event_name");
                     String description = (String) eventData.get("event_description");
                     String category = (String) eventData.get("associated_category");
@@ -251,10 +346,11 @@ public class Database {
                     String date = (String) eventData.get("event_date");
                     String time = (String) eventData.get("event_time");
                     String ownerEmail = (String) eventData.get("event_owner_email");
+                    String ownerUid = (String) eventData.get("event_owner_uid");
 
                     // Skip if missing anything
-                    if (name == null || description == null || category == null ||
-                            feeStr == null || date == null || time == null || ownerEmail == null) {
+                    if (uniqueId == null || name == null || description == null || category == null ||
+                            feeStr == null || date == null || time == null || ownerEmail == null || ownerUid == null) {
                         Log.d("Database", "Skipping incomplete event");
                         continue;
                     }
@@ -263,12 +359,12 @@ public class Database {
 
                     // Only show events owned by current organizer
                     if (UserOperation.currentUser instanceof OrganizerUser &&
-                            ownerEmail.equals(UserOperation.currentUser.getEmail())) {
+                            ownerUid.equals(UserOperation.currentUser.getUid())) {
 
                         OrganizerUser owner = (OrganizerUser) UserOperation.currentUser;
-                        Event event = new Event(name, description, category, fee, date, time, owner);
+                        Event event = new Event(name, description, category, fee, date, time, owner, uniqueId);
                         eventsList.add(event);
-                        Log.d("Database", "Added event: " + name);
+                        Log.d("Database", "Added event " + uniqueId + ": " + name);
                     } else {
                         Log.d("Database", "Skipped event (owner mismatch): " + ownerEmail);
                     }
@@ -289,6 +385,7 @@ public class Database {
             for (String docId : data.keySet()) {
                 Map<String, Object> eventData = data.get(docId);
 
+                String uniqueId = (String) eventData.get("unique_id");
                 String name = (String) eventData.get("event_name");
                 String description = (String) eventData.get("event_description");
                 String category = (String) eventData.get("associated_category");
@@ -296,13 +393,23 @@ public class Database {
                 String date = (String) eventData.get("event_date");
                 String time = (String) eventData.get("event_time");
                 String ownerEmail = (String) eventData.get("event_owner_email");
+                String ownerUid = (String) eventData.get("event_owner_uid");
 
                 float fee = 0;
                 try {
                     fee = Float.parseFloat(feeStr);
                 } catch (Exception ignored) {}
 
-                Event event = new Event(name, description, category, fee, date, time, new OrganizerUser(ownerEmail, "", "", "", ""));
+                // Lookup owner
+                OrganizerUser owner = null;
+                for (OrganizerUser organizer : getOrganizers()) {
+                    if (organizer.getUid().equals(ownerUid)) {
+                        owner = organizer;
+                        break;
+                    }
+                }
+
+                Event event = new Event(name, description, category, fee, date, time, owner, uniqueId);
                 eventsList.add(event);
 
                 Log.d("Database", "Loaded ALL event: " + name + " by " + ownerEmail);
@@ -315,44 +422,48 @@ public class Database {
 
 
     public static void getAllRequests(Consumer<List<Request>> callback) {
-        List<Request> requestList = new ArrayList<>();
-
-        Database.get("requests", data -> {
-            for (String docId : data.keySet()) {
-                Map<String, Object> requestData = data.get(docId);
-
-                String attendeeEmail = (String) requestData.get("attendee_email");
-                String attendeeUsername = (String) requestData.get("attendee_username");
-                String attendeeFirst = (String) requestData.get("attendee_firstname");
-                String attendeeLast = (String) requestData.get("attendee_lastname");
-                String eventName = (String) requestData.get("event_name");
-                String eventOwnerEmail = (String) requestData.get("event_owner_email");
-                Object statusObj = requestData.get("request_status");
-
-                if (attendeeEmail == null || eventName == null || eventOwnerEmail == null || statusObj == null)
-                    continue;
-
-                int status = 0;
-                try {
-                    status = ((Number) statusObj).intValue();
-                } catch (Exception ignored) {}
-
-                ParticipantUser participant = new ParticipantUser(attendeeEmail, attendeeUsername, "participant", attendeeFirst, attendeeLast);
-                OrganizerUser organizer = new OrganizerUser(eventOwnerEmail, "", "", "", "");
-                Event dummyEvent = new Event(eventName, "", "", 0f, "", "", organizer);
-
-                Request request = new Request(participant, dummyEvent);
-                request.requestStatus = status;
-
-                requestList.add(request);
-
-                Log.d("Database", "Loaded request: " + attendeeEmail + " for event: " + eventName);
+        get("requests", raw -> {
+            if (raw == null || raw.isEmpty()) {
+                callback.accept(Collections.emptyList());
+                return;
             }
 
-            Log.d("Database", "Total ALL requests loaded: " + requestList.size());
-            callback.accept(requestList);
+            int total = raw.size();
+            AtomicInteger remaining = new AtomicInteger(total);
+            List<Request> requests = Collections.synchronizedList(new ArrayList<>());
+
+            for (Map<String, Object> requestData : raw.values()) {
+                // pull everything into final locals
+                final String attendeeUid  = (String) requestData.get("attendee_uid");
+                final String eventDocId   = (String) requestData.get("event_unique_id");
+                final Number statusNum    = (Number) requestData.get("request_status");
+                final int status          = statusNum != null ? statusNum.intValue() : 0;
+
+                // 1) load the participant
+                getUserByUid(attendeeUid, u -> {
+                    // now participant is a single, final assignment
+                    final ParticipantUser participant =
+                            (u instanceof ParticipantUser) ? (ParticipantUser) u : null;
+
+                    // 2) load the event (which itself wires its owner)
+                    getEventById(eventDocId, ev -> {
+                        if (participant != null && ev != null) {
+                            Request req = new Request(participant, ev);
+                            req.requestStatus = status;
+                            requests.add(req);
+                            Log.d(TAG, "Loaded request: " + participant.getEmail() + " for event: " + ev.getEventName());
+                        } else {
+                            Log.w(TAG, "Skipping invalid request: " + attendeeUid + " / " + eventDocId);
+                        }
+
+                        // 3) countdown and fire final callback when done
+                        if (remaining.decrementAndGet() == 0) {
+                            Log.d(TAG, "Total ALL requests loaded: " + requests.size());
+                            callback.accept(requests);
+                        }
+                    });
+                });
+            }
         });
     }
-
-
 }

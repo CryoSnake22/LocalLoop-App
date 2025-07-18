@@ -1,6 +1,10 @@
 package com.example.localloop.database;
 
 import android.util.Log;
+
+import com.example.localloop.usertype.AdminUser;
+import com.example.localloop.usertype.OrganizerUser;
+import com.example.localloop.usertype.ParticipantUser;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -57,8 +61,17 @@ public class UserOperation {
                     FirebaseUser firebaseUser = task.getResult().getUser();
                     String uid = firebaseUser != null ? firebaseUser.getUid() : null;
                     if (uid != null) {
-                        user.setUid(uid);
-                        Database.set("users", uid, user.toMap());
+                        User authenticatedUser;
+
+                        if ("admin".equals(user.getUserRole())) {
+                            authenticatedUser = new AdminUser(user.getEmail(), user.getUserName(), user.getUserRole(),user.getFirstName(), user.getLastName(), uid);
+                        } else if ("organizer".equals(user.getUserRole())) {
+                            authenticatedUser = new OrganizerUser(user.getEmail(), user.getUserName(), user.getUserRole(),user.getFirstName(), user.getLastName(), uid);
+                        } else {
+                            authenticatedUser = new ParticipantUser(user.getEmail(), user.getUserName(), user.getUserRole(),user.getFirstName(), user.getLastName(), uid);
+                        }
+
+                        Database.set("users", uid, authenticatedUser.toMap());
                         Log.d("SIGNUP", "User created and stored: " + uid);
                         onSuccess.accept(firebaseUser);
                     } else {
@@ -74,7 +87,7 @@ public class UserOperation {
     }
 
     public static void deleteUserAccount(User user) {
-        Database.delete("users", user.getUid(), user.toMap());
+        Database.delete("users", user.getUid());
     }
 
     public static void setEnableUserAccount(

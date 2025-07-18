@@ -27,7 +27,7 @@ public class UserUtils {
 
     static public void UIDtoUserAsync(String UID, UserCallback callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("user_db").document(UID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        db.collection("users").document(UID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -41,12 +41,12 @@ public class UserUtils {
                         String email = document.get("email").toString();
                         String role = document.get("role").toString();
                         User user = null;
-                        if (role.equals("ADMIN")) {
+                        if (role.equals("admin")) {
                             user = new Admin(UID, true, firstName, lastName, userName, email);
-                        } else if (role.equals("PARTICIPANT")) {
+                        } else if (role.equals("participant")) {
                             user = new Participant(UID, true, firstName, lastName, userName, email);
 
-                        } else if (role.equals("ORGANIZER")) {
+                        } else if (role.equals("organizer")) {
                             user = new Organizer(UID, true, firstName, lastName, userName, email);
                         }
                         if (user != null) {

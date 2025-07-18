@@ -7,7 +7,7 @@ public class CategoryOperation {
     }
 
     public static void deleteCategory(Category category) {
-        Database.delete("category", category.getCategory_name(), category.toMap());
+        Database.delete("category", category.getCategory_name());
 
     }
 }

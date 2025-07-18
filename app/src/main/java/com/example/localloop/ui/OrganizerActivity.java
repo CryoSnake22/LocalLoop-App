@@ -229,7 +229,7 @@ public class OrganizerActivity extends AppCompatActivity {
 
             String category = ((RadioButton) findViewById(selectedId)).getText().toString();
             Event event = new Event(name, desc, category, fee, date, time, (OrganizerUser) UserOperation.currentUser);
-            EventOperation.addEvent(UserOperation.currentUser.getEmail(), event);
+            EventOperation.addEvent(event);
             Toast.makeText(this, "Event Created", Toast.LENGTH_SHORT).show();
             manageEventsLayout();
         });
@@ -307,8 +307,7 @@ public class OrganizerActivity extends AppCompatActivity {
 
             String newCategory = ((RadioButton) findViewById(selectedId)).getText().toString();
 
-            EventOperation.deleteEvent(UserOperation.currentUser.getEmail(), event);
-            Event updated = new Event(
+            Event update = new Event(
                     nameField.getText().toString().trim(),
                     descField.getText().toString().trim(),
                     newCategory,
@@ -318,7 +317,8 @@ public class OrganizerActivity extends AppCompatActivity {
                     (OrganizerUser) UserOperation.currentUser
             );
 
-            EventOperation.addEvent(UserOperation.currentUser.getEmail(), updated);
+            EventOperation.updateEvent(event, update);
+
             Toast.makeText(this, "Event updated", Toast.LENGTH_SHORT).show();
             manageEventsLayout();
         });
@@ -368,7 +368,7 @@ public class OrganizerActivity extends AppCompatActivity {
             holder.btnEdit.setOnClickListener(v -> editEventLayout(e));
 
             holder.btnDelete.setOnClickListener(v -> {
-                EventOperation.deleteEvent(UserOperation.currentUser.getEmail(), e);
+                EventOperation.deleteEvent(e);
                 items.remove(pos);
                 notifyItemRemoved(pos);
                 Toast.makeText(v.getContext(), "Event deleted", Toast.LENGTH_SHORT).show();

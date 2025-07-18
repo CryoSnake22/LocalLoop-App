@@ -153,7 +153,7 @@ public class ParticipantActivity extends AppCompatActivity {
 
             holder.btnJoin.setOnClickListener(v -> {
                 Request request = new Request((ParticipantUser) UserOperation.currentUser, e);
-                RequestOperation.addEvent(request);
+                RequestOperation.addRequest(request);
                 Toast.makeText(v.getContext(), "Join request sent", Toast.LENGTH_SHORT).show();
             });
         }

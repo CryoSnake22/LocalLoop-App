@@ -79,7 +79,7 @@ public class LoginActivity extends AppCompatActivity {
                 password,
                 firebaseUser -> {
                     String userEmail = firebaseUser.getEmail();
-                    Toast.makeText(this, "Logged in as: " + userEmail, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Logging in as: " + userEmail, Toast.LENGTH_SHORT).show();
 
                     // Route to the appropriate home screen based on user role
                     routeSignIn(firebaseUser);
@@ -143,7 +143,7 @@ public class LoginActivity extends AppCompatActivity {
             User user;
 
             if (organizer.isChecked()) {
-                user = new OrganizerUser(email, username, "organizer", firstname, lastname);
+                user = new OrganizerUser(email, username, "organizer", firstname, lastname, null);
                 UserOperation.signUpUserAuth(
                     user,
                     password,
@@ -154,7 +154,7 @@ public class LoginActivity extends AppCompatActivity {
                     exception -> Toast.makeText(this, exception.getMessage(), Toast.LENGTH_SHORT).show()
                 );
             } else if (participant.isChecked()) {
-                user = new ParticipantUser(email, username, "participant", firstname, lastname);
+                user = new ParticipantUser(email, username, "participant", firstname, lastname, null);
                 UserOperation.signUpUserAuth(
                     user,
                     password,
@@ -185,7 +185,8 @@ public class LoginActivity extends AppCompatActivity {
                         Objects.requireNonNull(userData.get("user_name")).toString(),
                         Objects.requireNonNull(userData.get("user_role")).toString(),
                         Objects.requireNonNull(userData.get("first_name")).toString(),
-                        Objects.requireNonNull(userData.get("last_name")).toString()
+                        Objects.requireNonNull(userData.get("last_name")).toString(),
+                        Objects.requireNonNull(firebaseUser.getUid())
                 );
             }
             else if ("participant".equals(userRole)){
@@ -194,7 +195,8 @@ public class LoginActivity extends AppCompatActivity {
                         Objects.requireNonNull(userData.get("user_name")).toString(),
                         Objects.requireNonNull(userData.get("user_role")).toString(),
                         Objects.requireNonNull(userData.get("first_name")).toString(),
-                        Objects.requireNonNull(userData.get("last_name")).toString()
+                        Objects.requireNonNull(userData.get("last_name")).toString(),
+                        Objects.requireNonNull(firebaseUser.getUid())
                 );
             } else if ("admin".equals(userRole)){
                 UserOperation.currentUser = new AdminUser(
@@ -202,7 +204,8 @@ public class LoginActivity extends AppCompatActivity {
                         Objects.requireNonNull(userData.get("user_name")).toString(),
                         Objects.requireNonNull(userData.get("user_role")).toString(),
                         Objects.requireNonNull(userData.get("first_name")).toString(),
-                        Objects.requireNonNull(userData.get("last_name")).toString()
+                        Objects.requireNonNull(userData.get("last_name")).toString(),
+                        Objects.requireNonNull(firebaseUser.getUid())
                 );
             }
 
