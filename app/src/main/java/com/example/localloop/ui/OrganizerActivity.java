@@ -73,11 +73,11 @@ public class OrganizerActivity extends AppCompatActivity {
         Database.getAllRequests(requests -> {
             runOnUiThread(() -> {
                 List<Request> pending = new ArrayList<>();
-                String currentOrganizerEmail = UserOperation.currentUser.getEmail();
+                String currentOrganizerUid = UserOperation.currentUser.getUid();
 
                 for (Request r : requests) {
                     // Only show current user and pending request
-                    if (r.requestStatus == 0 && r.getEventOwnerEmail().equals(currentOrganizerEmail)) {
+                    if (r.requestStatus == 0 && r.getEventOwnerUid().equals(currentOrganizerUid)) {
                         pending.add(r);
                     }
                 }
@@ -85,8 +85,6 @@ public class OrganizerActivity extends AppCompatActivity {
                 recyclerView.setAdapter(new RequestAdapter(pending));
             });
         });
-
-
     }
 
     private class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.VH> {
@@ -127,7 +125,7 @@ public class OrganizerActivity extends AppCompatActivity {
             holder.firstName.setText("First Name: " + r.attendee.first_name);
             holder.lastName.setText("Last Name: " + r.attendee.last_name);
 
-            String docId = r.getEventOwnerEmail() + "," + r.getAttendeeEmail() + "," + r.event.eventName;
+            String docId = r.getRequestId();
 
             holder.btnAccept.setOnClickListener(v -> {
                 r.requestStatus = 1;

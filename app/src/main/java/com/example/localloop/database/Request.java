@@ -52,4 +52,6 @@ public class Request {
         return this.event.getEventOwnerEmail();
     }
 
+    public String getEventOwnerUid() { return this.event.getEventOwnerUid(); }
+
 }
