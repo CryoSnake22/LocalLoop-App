@@ -46,8 +46,10 @@ public class UserOperation {
 
     public static void signOutUserAuth() {
         mAuth.signOut();
+        currentUser = null;
         Log.d("LOGOUT", "User logged out");
     }
+
 
     public static void signUpUserAuth(
         User user,

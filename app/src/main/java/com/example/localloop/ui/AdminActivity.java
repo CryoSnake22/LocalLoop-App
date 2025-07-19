@@ -55,7 +55,21 @@ public class AdminActivity extends AppCompatActivity {
         //MANAGE USERS CLICKED
         Button btn_admin_manageUsers = findViewById(R.id.btn_admin_manageUsers);
         btn_admin_manageUsers.setOnClickListener(v -> manageUsersLayout());
+
+        //logout button
+        Button btnLogout = findViewById(R.id.btn_logout);
+        btnLogout.setOnClickListener(v -> logout());
+
     }
+
+    private void logout() {
+        UserOperation.signOutUserAuth(); // signs out and sets currentUser to null
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish(); // closes the current activity
+    }
+
 
 
 

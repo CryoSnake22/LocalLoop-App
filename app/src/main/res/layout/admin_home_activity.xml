@@ -8,6 +8,22 @@
   android:background="@color/white"
   android:fitsSystemWindows="true">
 
+
+  <com.google.android.material.button.MaterialButton
+      android:id="@+id/btn_logout"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Logout"
+      android:textAllCaps="false"
+      app:icon="@drawable/ic_logout"
+      app:iconGravity="textStart"
+      app:iconPadding="8dp"
+      app:iconSize="20dp"
+      android:layout_margin="8dp"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintEnd_toEndOf="parent" />
+
+
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

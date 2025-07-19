@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        startActivity(login);
+        startActivity(admin);
 
 
     }

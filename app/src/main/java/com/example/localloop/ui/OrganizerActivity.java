@@ -57,7 +57,20 @@ public class OrganizerActivity extends AppCompatActivity {
 
         Button btnPendingRequests = findViewById(R.id.btn_organizer_pending_request);
         btnPendingRequests.setOnClickListener(v -> manageRequestLayout());
+
+        Button btnLogout = findViewById(R.id.btn_logout);
+        btnLogout.setOnClickListener(v -> logout());
+
     }
+
+    private void logout() {
+        UserOperation.signOutUserAuth(); // signs out and sets currentUser to null
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish(); // closes the current activity
+    }
+
 
     private void manageRequestLayout() {
         isOrgHome = false;
