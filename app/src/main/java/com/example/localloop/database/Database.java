@@ -434,6 +434,7 @@ public class Database {
 
             for (Map<String, Object> requestData : raw.values()) {
                 // pull everything into final locals
+                final String requestId     = (String) requestData.get("request_id");
                 final String attendeeUid  = (String) requestData.get("attendee_uid");
                 final String eventDocId   = (String) requestData.get("event_unique_id");
                 final Number statusNum    = (Number) requestData.get("request_status");
@@ -448,7 +449,7 @@ public class Database {
                     // 2) load the event (which itself wires its owner)
                     getEventById(eventDocId, ev -> {
                         if (participant != null && ev != null) {
-                            Request req = new Request(participant, ev);
+                            Request req = new Request(participant, ev, requestId);
                             req.requestStatus = status;
                             requests.add(req);
                             Log.d(TAG, "Loaded request: " + participant.getEmail() + " for event: " + ev.getEventName());

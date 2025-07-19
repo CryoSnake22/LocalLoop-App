@@ -18,6 +18,7 @@ import com.example.localloop.usertype.User;
 import com.example.localloop.database.UserOperation;
 import com.example.localloop.usertype.OrganizerUser;
 import com.example.localloop.usertype.ParticipantUser;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Objects;
@@ -30,7 +31,15 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        loginLayout(); // goto login page
+
+        // If a user is already signed in, go straight to their home
+        FirebaseUser existing = FirebaseAuth.getInstance().getCurrentUser();
+        if (existing != null) {
+            routeSignIn(existing);
+            return;
+        }
+
+        loginLayout(); // no signed‐in user, show login form
     }
 
 

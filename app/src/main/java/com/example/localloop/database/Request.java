@@ -12,13 +12,17 @@ public class Request {
     private String requestId;
 
     public Request(ParticipantUser attendee, Event event) {
-
         this.attendee = attendee;
         this.event = event;
 
         this.requestId = event.getUniqueId() + "," + attendee.getUid();
 
         this.requestStatus = 0; //-1 = declined, 0 = pending, 1 = accepted
+    }
+
+    public Request(ParticipantUser attendee, Event event, String requestId) {
+        this(attendee, event);
+        this.requestId = requestId;
     }
 
     public HashMap<String, Object> toMap() {
