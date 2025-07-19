@@ -1,5 +1,7 @@
 package com.example.localloop.ui;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,7 +34,10 @@ import android.app.TimePickerDialog;
 import java.util.Calendar;
 
 public class OrganizerActivity extends AppCompatActivity {
-
+    private boolean isOrgHome = false;
+    private boolean isRequestPage = false;
+    private boolean isEventPage = false;
+    private boolean isEditEventPage = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +45,10 @@ public class OrganizerActivity extends AppCompatActivity {
     }
 
     private void organizerHomeLayout() {
+        isOrgHome = true;
+        isRequestPage = false;
+        isEventPage = false;
+        isEditEventPage=false;
         Log.d("LAYOUT", "THIS IS organizer_home_activity PAGE");
         setContentView(R.layout.organizer_home_activity);
 
@@ -51,6 +60,10 @@ public class OrganizerActivity extends AppCompatActivity {
     }
 
     private void manageRequestLayout() {
+        isOrgHome = false;
+        isRequestPage = true;
+        isEventPage = false;
+        isEditEventPage=false;
         Log.d("LAYOUT", "THIS IS organizer_manage_request_activity PAGE");
         setContentView(R.layout.organizer_manage_request_activity);
 
@@ -144,6 +157,10 @@ public class OrganizerActivity extends AppCompatActivity {
 
 
     private void manageEventsLayout() {
+        isOrgHome = false;
+        isRequestPage = false;
+        isEventPage = true;
+        isEditEventPage=false;
         Log.d("LAYOUT", "THIS IS organizer_manage_event_activity PAGE");
         setContentView(R.layout.organizer_manage_event_activity);
 
@@ -159,6 +176,10 @@ public class OrganizerActivity extends AppCompatActivity {
     }
 
     private void createEventLayout() {
+        isOrgHome = false;
+        isRequestPage = false;
+        isEventPage = false;
+        isEditEventPage=true;
         Log.d("LAYOUT", "THIS IS organizer_add_event_activity PAGE");
         setContentView(R.layout.organizer_add_event_activity);
 
@@ -239,6 +260,10 @@ public class OrganizerActivity extends AppCompatActivity {
     }
 
     private void editEventLayout(Event event) {
+        isOrgHome = false;
+        isRequestPage = false;
+        isEventPage = false;
+        isEditEventPage=true;
         setContentView(R.layout.organizer_add_event_activity);
 
         EditText nameField = findViewById(R.id.text_organizer_add_event_name);
@@ -383,5 +408,18 @@ public class OrganizerActivity extends AppCompatActivity {
             return items.size();
         }
     }
+    @SuppressLint("MissingSuperCall")
+    @Override
+    public void onBackPressed() {
+        if (isOrgHome) {
+            startActivity(new Intent(this, LoginActivity.class));
+        }
+        else if(isEditEventPage || isRequestPage) {
+            organizerHomeLayout();
+        } else if (isEditEventPage){
+            manageEventsLayout();
+        }
+    }
+
 
 }

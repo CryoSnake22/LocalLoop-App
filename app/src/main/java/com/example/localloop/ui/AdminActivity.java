@@ -1,5 +1,7 @@
 package com.example.localloop.ui;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,15 +26,25 @@ import com.example.localloop.usertype.User;
 import java.util.List;
 import java.util.function.Consumer;
 
+
+
 public class AdminActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         adminHomeLayout(); // goto login page
     }
-
+    public boolean isAdminHome = false;
+    public boolean isCategoryLayout = false;
+    public boolean isAddCategoryLayout = false;
+    public boolean isUserLayout = false;
 
     private void adminHomeLayout() {
+        isAdminHome=true;
+        isCategoryLayout=false;
+        isAddCategoryLayout=false;
+        isUserLayout=false;
         Log.d("LAYOUT", "THIS IS admin_home_activity PAGE");
         setContentView(R.layout.admin_home_activity);
 
@@ -48,6 +60,10 @@ public class AdminActivity extends AppCompatActivity {
 
 
     private void manageCategoryLayout() {
+        isAdminHome=false;
+        isCategoryLayout=true;
+        isAddCategoryLayout=false;
+        isUserLayout=false;
         Log.d("LAYOUT", "THIS IS admin_manage_category_activity PAGE");
         setContentView(R.layout.admin_manage_category_activity);
 
@@ -67,6 +83,10 @@ public class AdminActivity extends AppCompatActivity {
 
     //USE THIS IF CREATING NEW
     private void addCategoryLayout() {
+        isAdminHome=false;
+        isCategoryLayout=false;
+        isAddCategoryLayout=true;
+        isUserLayout=false;
         Log.d("LAYOUT", "admin_add_category_activity");
         setContentView(R.layout.admin_add_category_activity);
 
@@ -93,6 +113,10 @@ public class AdminActivity extends AppCompatActivity {
 
     //USE THIS TO EDIT EXIST CATEGORY INFO
     private void addCategoryLayout(Category category) {
+        isAdminHome=false;
+        isCategoryLayout=false;
+        isAddCategoryLayout=true;
+        isUserLayout=false;
         Log.d("LAYOUT", "admin_add_category_activity");
         setContentView(R.layout.admin_add_category_activity);
 
@@ -123,6 +147,10 @@ public class AdminActivity extends AppCompatActivity {
 
 
     private void manageUsersLayout() {
+        isAdminHome=false;
+        isCategoryLayout=false;
+        isAddCategoryLayout=false;
+        isUserLayout=true;
         Log.d("LAYOUT", "THIS IS admin_manage_users_activity PAGE");
         setContentView(R.layout.admin_manage_users_activity);
 
@@ -272,6 +300,20 @@ public class AdminActivity extends AppCompatActivity {
         @Override
         public int getItemCount() {
             return items.size();
+        }
+
+    }
+
+    @SuppressLint("MissingSuperCall")
+    @Override
+    public void onBackPressed() {
+        if (isAdminHome) {
+            startActivity(new Intent(this, LoginActivity.class));
+        }
+        else if(isCategoryLayout || isUserLayout) {
+            adminHomeLayout();
+        } else if (isAddCategoryLayout){
+            manageCategoryLayout();
         }
     }
 

@@ -18,7 +18,6 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toEndOf="parent">
 
-    <!-- App Icon or Logo -->
     <ImageView
       android:id="@+id/image_admin_logo"
       android:layout_width="100dp"
@@ -27,7 +26,6 @@
       android:contentDescription="Admin Icon"
       android:layout_marginBottom="16dp" />
 
-    <!-- Title -->
     <TextView
       android:id="@+id/text_admin_welcome"
       android:layout_width="wrap_content"
@@ -39,7 +37,6 @@
       android:gravity="center"
       android:layout_marginBottom="4dp" />
 
-    <!-- Subtitle -->
     <TextView
       android:id="@+id/text_admin_subtitle"
       android:layout_width="wrap_content"
@@ -50,7 +47,6 @@
       android:gravity="center"
       android:layout_marginBottom="32dp" />
 
-    <!-- Buttons Container with Card -->
     <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -82,46 +78,3 @@
   </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-<!-- <?xml version="1.0" encoding="utf-8"?> -->
-<!-- <androidx.constraintlayout.widget.ConstraintLayout -->
-<!--   xmlns:android="http://schemas.android.com/apk/res/android" -->
-<!--   xmlns:app="http://schemas.android.com/apk/res-auto" -->
-<!--   android:layout_width="match_parent" -->
-<!--   android:fitsSystemWindows="true" -->
-<!--   android:layout_height="match_parent"> -->
-<!---->
-<!--   <LinearLayout -->
-<!--     android:layout_width="match_parent" -->
-<!--     android:layout_height="match_parent" -->
-<!--     android:orientation="vertical" -->
-<!--     android:padding="16dp" -->
-<!--     android:gravity="center_vertical"> -->
-<!---->
-<!--     <TextView -->
-<!--       android:id="@+id/text_admin_welcome" -->
-<!--       android:layout_width="match_parent" -->
-<!--       android:layout_height="wrap_content" -->
-<!--       android:text="Welcome, Admin" -->
-<!--       android:textSize="24sp" -->
-<!--       android:textStyle="bold" -->
-<!--       android:gravity="center" -->
-<!--       android:layout_marginBottom="32dp" -->
-<!--       android:textColor="?android:attr/textColorPrimary" /> -->
-<!---->
-<!--     <com.google.android.material.button.MaterialButton -->
-<!--       android:id="@+id/btn_admin_manageCategory" -->
-<!--       style="?attr/materialButtonStyle" -->
-<!--       android:layout_width="match_parent" -->
-<!--       android:layout_height="wrap_content" -->
-<!--       android:text="Manage Category" /> -->
-<!---->
-<!--     <com.google.android.material.button.MaterialButton -->
-<!--       android:id="@+id/btn_admin_manageUsers" -->
-<!--       style="?attr/materialButtonStyle" -->
-<!--       android:layout_width="match_parent" -->
-<!--       android:layout_height="wrap_content" -->
-<!--       android:text="Manage Users" -->
-<!--       android:layout_marginTop="16dp" /> -->
-<!--   </LinearLayout> -->
-<!-- </androidx.constraintlayout.widget.ConstraintLayout> -->

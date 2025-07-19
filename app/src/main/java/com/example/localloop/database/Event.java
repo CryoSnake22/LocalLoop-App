@@ -1,5 +1,7 @@
 package com.example.localloop.database;
 
+import android.util.Log;
+
 import com.example.localloop.usertype.OrganizerUser;
 import com.example.localloop.usertype.ParticipantUser;
 
@@ -35,10 +37,13 @@ public class Event {
         this.eventTime = eventTime;
         this.eventOwner = eventOwner;
         eventId++;
+        if (eventOwner !=null){
+            this.uniqueId = eventOwner.getUid() + "." + String.valueOf(System.currentTimeMillis());
+            eventOwner.createEvent(this);
+        } else{
+            Log.e("Event", "NULL eventOwner problem");
+        }
 
-        this.uniqueId = eventOwner.getUid() + "." + String.valueOf(System.currentTimeMillis());
-
-        eventOwner.createEvent(this);
     }
 
     public Event(String eventName, String description, String associatedCategory, float eventFee, String eventDate, String eventTime, OrganizerUser eventOwner, String uniqueId) {
