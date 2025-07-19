@@ -122,6 +122,12 @@ public class ParticipantActivity extends AppCompatActivity {
             }
         });
 
+        // initial load: show all events on startup
+        Database.getAllEvents(events -> runOnUiThread(() ->
+                recycler.setAdapter(new EventAdaptor(events))
+        ));
+
+
     }
 
 

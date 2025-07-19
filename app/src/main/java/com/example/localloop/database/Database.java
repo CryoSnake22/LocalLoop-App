@@ -379,44 +379,29 @@ public class Database {
     }
 
     public static void getAllEvents(Consumer<List<Event>> callback) {
-        List<Event> eventsList = new ArrayList<>();
-
         Database.get("events", data -> {
-            for (String docId : data.keySet()) {
-                Map<String, Object> eventData = data.get(docId);
+            if (data == null || data.isEmpty()) {
+                callback.accept(Collections.emptyList());
+                return;
+            }
+            AtomicInteger remaining = new AtomicInteger(data.size());
+            List<Event> eventsList = Collections.synchronizedList(new ArrayList<>());
 
-                String uniqueId = (String) eventData.get("unique_id");
-                String name = (String) eventData.get("event_name");
-                String description = (String) eventData.get("event_description");
-                String category = (String) eventData.get("associated_category");
-                String feeStr = String.valueOf(eventData.get("event_fee"));
-                String date = (String) eventData.get("event_date");
-                String time = (String) eventData.get("event_time");
-                String ownerEmail = (String) eventData.get("event_owner_email");
+            for (Map.Entry<String, Map<String, Object>> entry : data.entrySet()) {
+                Map<String, Object> eventData = entry.getValue();
                 String ownerUid = (String) eventData.get("event_owner_uid");
 
-                float fee = 0;
-                try {
-                    fee = Float.parseFloat(feeStr);
-                } catch (Exception ignored) {}
-
-                // Lookup owner
-                OrganizerUser owner = null;
-                for (OrganizerUser organizer : getOrganizers()) {
-                    if (organizer.getUid().equals(ownerUid)) {
-                        owner = organizer;
-                        break;
+                getUserByUid(ownerUid, user -> {
+                    OrganizerUser owner = (user instanceof OrganizerUser) ? (OrganizerUser) user : null;
+                    Event ev = parseEventFromMap(eventData, owner);
+                    if (ev != null) {
+                        eventsList.add(ev);
                     }
-                }
-
-                Event event = new Event(name, description, category, fee, date, time, owner, uniqueId);
-                eventsList.add(event);
-
-                Log.d("Database", "Loaded ALL event: " + name + " by " + ownerEmail);
+                    if (remaining.decrementAndGet() == 0) {
+                        callback.accept(eventsList);
+                    }
+                });
             }
-
-            Log.d("Database", "Total ALL events loaded: " + eventsList.size());
-            callback.accept(eventsList);
         });
     }
 
