@@ -178,6 +178,7 @@ public class ParticipantActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(VH holder, int position) {
             Event e = items.get(position);
+
             holder.owner.setText("Owner: " + e.getEventOwnerEmail());
             holder.name.setText(e.eventName);
             holder.description.setText(e.description);
@@ -190,7 +191,8 @@ public class ParticipantActivity extends AppCompatActivity {
 
             Database.get("requests", eventId, data -> {
                 if (data != null && data.containsKey("requestStatus")) {
-                    int status = ((Long) data.get("requestStatus")).intValue();
+                    Object rawStatus = data.get("requestStatus");
+                    int status = rawStatus instanceof Long ? ((Long) rawStatus).intValue() : -99;
                     String statusText;
 
                     switch (status) {
@@ -210,7 +212,6 @@ public class ParticipantActivity extends AppCompatActivity {
                     holder.btnJoin.setText(statusText);
                     holder.btnJoin.setEnabled(false);
                 } else {
-                    // No previous request — allow joining
                     holder.btnJoin.setText("Join");
                     holder.btnJoin.setEnabled(true);
                     holder.btnJoin.setOnClickListener(v -> {
@@ -222,8 +223,8 @@ public class ParticipantActivity extends AppCompatActivity {
                     });
                 }
             });
-
         }
+
 
         @Override
         public int getItemCount() {
