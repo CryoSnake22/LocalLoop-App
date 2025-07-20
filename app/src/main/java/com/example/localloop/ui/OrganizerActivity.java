@@ -426,7 +426,7 @@ public class OrganizerActivity extends AppCompatActivity {
             });
 
             holder.btnViewParticipants.setOnClickListener(v -> {
-                String eventId = e.getEventOwnerEmail() + "," + UserOperation.currentUser.getEmail() + "," + e.eventName;
+                String eventId = e.getUniqueId();
 
                 Database.get("requests", requestsMap -> {
                     List<String> acceptedUsers = new ArrayList<>();

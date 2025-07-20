@@ -187,7 +187,7 @@ public class ParticipantActivity extends AppCompatActivity {
             holder.date.setText("Date: " + e.eventDate);
             holder.time.setText("Time: " + e.eventTime);
 
-            String eventId = e.getEventOwnerEmail() + "," + UserOperation.currentUser.getEmail() + "," + e.eventName;
+            String eventId = e.getUniqueId();
 
             Database.get("requests", eventId, data -> {
                 if (data != null && data.containsKey("requestStatus")) {
