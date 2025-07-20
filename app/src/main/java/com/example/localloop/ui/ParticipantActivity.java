@@ -186,11 +186,43 @@ public class ParticipantActivity extends AppCompatActivity {
             holder.date.setText("Date: " + e.eventDate);
             holder.time.setText("Time: " + e.eventTime);
 
-            holder.btnJoin.setOnClickListener(v -> {
-                Request request = new Request((ParticipantUser) UserOperation.currentUser, e);
-                RequestOperation.addRequest(request);
-                Toast.makeText(v.getContext(), "Join request sent", Toast.LENGTH_SHORT).show();
+            String eventId = e.getEventOwnerEmail() + "," + UserOperation.currentUser.getEmail() + "," + e.eventName;
+
+            Database.get("requests", eventId, data -> {
+                if (data != null && data.containsKey("requestStatus")) {
+                    int status = ((Long) data.get("requestStatus")).intValue();
+                    String statusText;
+
+                    switch (status) {
+                        case 0:
+                            statusText = "Pending";
+                            break;
+                        case 1:
+                            statusText = "Accepted";
+                            break;
+                        case -1:
+                            statusText = "Declined";
+                            break;
+                        default:
+                            statusText = "Requested";
+                    }
+
+                    holder.btnJoin.setText(statusText);
+                    holder.btnJoin.setEnabled(false);
+                } else {
+                    // No previous request — allow joining
+                    holder.btnJoin.setText("Join");
+                    holder.btnJoin.setEnabled(true);
+                    holder.btnJoin.setOnClickListener(v -> {
+                        Request request = new Request((ParticipantUser) UserOperation.currentUser, e);
+                        RequestOperation.addRequest(request);
+                        Toast.makeText(v.getContext(), "Join request sent", Toast.LENGTH_SHORT).show();
+                        holder.btnJoin.setText("Pending");
+                        holder.btnJoin.setEnabled(false);
+                    });
+                }
             });
+
         }
 
         @Override
