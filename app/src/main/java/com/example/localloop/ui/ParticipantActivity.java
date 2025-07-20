@@ -42,7 +42,7 @@ public class ParticipantActivity extends AppCompatActivity {
 
     private void participantHomeLayout() {
         setContentView(R.layout.participant_home_activity);
-
+        TextView welcomeMessage = findViewById(R.id.text_participant_welcome);
         Button btnSearch = findViewById(R.id.btn_participant_searchevents_submit);
         EditText searchBar = findViewById(R.id.text_participant_searchbar);
         RadioGroup categoryRadio = findViewById(R.id.radio_group_category_filter);
@@ -57,7 +57,7 @@ public class ParticipantActivity extends AppCompatActivity {
         allButton.setId(View.generateViewId());
         categoryRadio.addView(allButton);
         allButton.setChecked(true);  // default selection
-
+        welcomeMessage.setText("Welcome, "+UserOperation.currentUser.getFirstName()+" "+UserOperation.currentUser.getLastName());
         // Load categories
         Database.getCategory(categories -> {
             runOnUiThread(() -> {

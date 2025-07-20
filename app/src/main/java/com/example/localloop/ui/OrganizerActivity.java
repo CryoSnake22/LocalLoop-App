@@ -62,7 +62,8 @@ public class OrganizerActivity extends AppCompatActivity {
 
         Button btnPendingRequests = findViewById(R.id.btn_organizer_pending_request);
         btnPendingRequests.setOnClickListener(v -> manageRequestLayout());
-
+        TextView welcomeMessage = findViewById(R.id.text_organizer_welcome);
+        welcomeMessage.setText("Welcome, "+UserOperation.currentUser.getFirstName()+" "+UserOperation.currentUser.getLastName());
         Button btnLogout = findViewById(R.id.btn_logout);
         btnLogout.setOnClickListener(v -> logout());
         currentScreen = "home";
