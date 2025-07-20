@@ -2,18 +2,23 @@ package com.example.localloop.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,6 +32,9 @@ import com.example.localloop.database.EventOperation;
 import com.example.localloop.database.Request;
 import com.example.localloop.database.UserOperation;
 import com.example.localloop.usertype.OrganizerUser;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +54,12 @@ public class OrganizerActivity extends AppCompatActivity {
         organizerHomeLayout();
     }
     private String currentScreen = "home"; // default
+    private Spinner spinnerCategory;
+    private List<String> categoryList = new ArrayList<>();
+
+    private static final int PICK_IMAGE_REQUEST = 1;
+    private Uri selectedImageUri;
+
 
 
     private void organizerHomeLayout() {
@@ -200,9 +214,17 @@ public class OrganizerActivity extends AppCompatActivity {
         isOrgHome = false;
         isRequestPage = false;
         isEventPage = false;
-        isEditEventPage=true;
+        isEditEventPage = true;
         Log.d("LAYOUT", "THIS IS organizer_add_event_activity PAGE");
         setContentView(R.layout.organizer_add_event_activity);
+
+        ImageView imageEvent = findViewById(R.id.image_event);
+        imageEvent.setOnClickListener(v -> {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+        });
 
         Button btnSubmit = findViewById(R.id.btn_organizer_add_event_submit);
         EditText nameField = findViewById(R.id.text_organizer_add_event_name);
@@ -210,8 +232,9 @@ public class OrganizerActivity extends AppCompatActivity {
         EditText feeField = findViewById(R.id.text_organizer_add_event_fee);
         EditText dateField = findViewById(R.id.text_organizer_add_event_date);
         EditText timeField = findViewById(R.id.text_organizer_add_event_time);
-        RadioGroup categoryGroup = findViewById(R.id.radio_group_event_categories);
+        Spinner categorySpinner = findViewById(R.id.spinner_event_category);
 
+        // Set date picker
         dateField.setOnClickListener(v -> {
             final Calendar calendar = Calendar.getInstance();
             int year = calendar.get(Calendar.YEAR);
@@ -219,32 +242,38 @@ public class OrganizerActivity extends AppCompatActivity {
             int day = calendar.get(Calendar.DAY_OF_MONTH);
 
             DatePickerDialog datePickerDialog = new DatePickerDialog(this,
-                (view, selectedYear, selectedMonth, selectedDay) -> {
-                    String date = String.format("%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear);
-                    dateField.setText(date);
-                }, year, month, day);
+                    (view, selectedYear, selectedMonth, selectedDay) -> {
+                        String date = String.format("%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear);
+                        dateField.setText(date);
+                    }, year, month, day);
             datePickerDialog.show();
         });
 
+        // Set time picker
         timeField.setOnClickListener(v -> {
             final Calendar calendar = Calendar.getInstance();
             int hour = calendar.get(Calendar.HOUR_OF_DAY);
             int minute = calendar.get(Calendar.MINUTE);
 
             TimePickerDialog timePickerDialog = new TimePickerDialog(this,
-                (view, selectedHour, selectedMinute) -> {
-                    String time = String.format("%02d:%02d", selectedHour, selectedMinute);
-                    timeField.setText(time);
-                }, hour, minute, true);
+                    (view, selectedHour, selectedMinute) -> {
+                        String time = String.format("%02d:%02d", selectedHour, selectedMinute);
+                        timeField.setText(time);
+                    }, hour, minute, true);
             timePickerDialog.show();
         });
 
+        // Fetch categories and populate spinner
+        List<String> categoryList = new ArrayList<>();
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categoryList);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categorySpinner.setAdapter(adapter);
+
         Database.getCategory(categories -> runOnUiThread(() -> {
             for (Category c : categories) {
-                RadioButton rb = new RadioButton(this);
-                rb.setText(c.getCategory_name());
-                categoryGroup.addView(rb);
+                categoryList.add(c.getCategory_name());
             }
+            adapter.notifyDataSetChanged();
         }));
 
         btnSubmit.setOnClickListener(v -> {
@@ -266,27 +295,52 @@ public class OrganizerActivity extends AppCompatActivity {
                 return;
             }
 
-            int selectedId = categoryGroup.getCheckedRadioButtonId();
-            if (selectedId == -1) {
+            if (categorySpinner.getSelectedItem() == null) {
                 Toast.makeText(this, "Select a category", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            String category = ((RadioButton) findViewById(selectedId)).getText().toString();
-            Event event = new Event(name, desc, category, fee, date, time, (OrganizerUser) UserOperation.currentUser);
-            EventOperation.addEvent(event);
+            String selectedCategory = categorySpinner.getSelectedItem().toString();
+            Event event = new Event(name, desc, selectedCategory, fee, date, time, (OrganizerUser) UserOperation.currentUser);
+            if (selectedImageUri != null) {
+                uploadImageToFirebase(selectedImageUri, event.getUniqueId(), downloadUrl -> {
+                    event.setImageUrl(downloadUrl);
+                    EventOperation.addEvent(event);
+                    Toast.makeText(this, "Event Created", Toast.LENGTH_SHORT).show();
+                    manageEventsLayout();
+                });
+            } else {
+                EventOperation.addEvent(event);
+                Toast.makeText(this, "Event Created", Toast.LENGTH_SHORT).show();
+                manageEventsLayout();
+            }
+
             Toast.makeText(this, "Event Created", Toast.LENGTH_SHORT).show();
             manageEventsLayout();
         });
-        currentScreen = "addEvent";
 
+        currentScreen = "addEvent";
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            selectedImageUri = data.getData();
+
+            ImageView imageEvent = findViewById(R.id.image_event);
+            imageEvent.setImageURI(selectedImageUri); // show preview
+        }
+    }
+
+
 
     private void editEventLayout(Event event) {
         isOrgHome = false;
         isRequestPage = false;
         isEventPage = false;
-        isEditEventPage=true;
+        isEditEventPage = true;
         setContentView(R.layout.organizer_add_event_activity);
 
         EditText nameField = findViewById(R.id.text_organizer_add_event_name);
@@ -294,7 +348,7 @@ public class OrganizerActivity extends AppCompatActivity {
         EditText feeField = findViewById(R.id.text_organizer_add_event_fee);
         EditText dateField = findViewById(R.id.text_organizer_add_event_date);
         EditText timeField = findViewById(R.id.text_organizer_add_event_time);
-        RadioGroup categoryGroup = findViewById(R.id.radio_group_event_categories);
+        Spinner categorySpinner = findViewById(R.id.spinner_event_category);
         Button btnSubmit = findViewById(R.id.btn_organizer_add_event_submit);
 
         nameField.setText(event.eventName);
@@ -310,10 +364,10 @@ public class OrganizerActivity extends AppCompatActivity {
             int day = calendar.get(Calendar.DAY_OF_MONTH);
 
             DatePickerDialog datePickerDialog = new DatePickerDialog(this,
-                (view, selectedYear, selectedMonth, selectedDay) -> {
-                    String date = String.format("%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear);
-                    dateField.setText(date);
-                }, year, month, day);
+                    (view, selectedYear, selectedMonth, selectedDay) -> {
+                        String date = String.format("%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear);
+                        dateField.setText(date);
+                    }, year, month, day);
             datePickerDialog.show();
         });
 
@@ -323,22 +377,28 @@ public class OrganizerActivity extends AppCompatActivity {
             int minute = calendar.get(Calendar.MINUTE);
 
             TimePickerDialog timePickerDialog = new TimePickerDialog(this,
-                (view, selectedHour, selectedMinute) -> {
-                    String time = String.format("%02d:%02d", selectedHour, selectedMinute);
-                    timeField.setText(time);
-                }, hour, minute, true);
+                    (view, selectedHour, selectedMinute) -> {
+                        String time = String.format("%02d:%02d", selectedHour, selectedMinute);
+                        timeField.setText(time);
+                    }, hour, minute, true);
             timePickerDialog.show();
         });
 
+        // Load categories into Spinner
+        List<String> categoryList = new ArrayList<>();
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categoryList);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categorySpinner.setAdapter(adapter);
+
         Database.getCategory(categories -> runOnUiThread(() -> {
             for (Category c : categories) {
-                RadioButton rb = new RadioButton(this);
-                rb.setText(c.getCategory_name());
-                categoryGroup.addView(rb);
-                if (c.getCategory_name().equals(event.associatedCategory)) {
-                    rb.setChecked(true);
-                }
+                categoryList.add(c.getCategory_name());
             }
+            adapter.notifyDataSetChanged();
+
+            // Set selected category after spinner is populated
+            int index = categoryList.indexOf(event.associatedCategory);
+            if (index != -1) categorySpinner.setSelection(index);
         }));
 
         btnSubmit.setOnClickListener(v -> {
@@ -350,13 +410,7 @@ public class OrganizerActivity extends AppCompatActivity {
                 return;
             }
 
-            int selectedId = categoryGroup.getCheckedRadioButtonId();
-            if (selectedId == -1) {
-                Toast.makeText(this, "Select a category", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            String newCategory = ((RadioButton) findViewById(selectedId)).getText().toString();
+            String newCategory = categorySpinner.getSelectedItem().toString();
 
             Event update = new Event(
                     nameField.getText().toString().trim(),
@@ -369,11 +423,26 @@ public class OrganizerActivity extends AppCompatActivity {
             );
 
             EventOperation.updateEvent(event, update);
-
             Toast.makeText(this, "Event updated", Toast.LENGTH_SHORT).show();
             manageEventsLayout();
         });
     }
+    private void uploadImageToFirebase(Uri imageUri, String eventId, OnSuccessListener<String> onSuccess) {
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference("event_images/" + eventId + ".jpg");
+
+        storageRef.putFile(imageUri)
+                .addOnSuccessListener(taskSnapshot ->
+                        storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                            onSuccess.onSuccess(uri.toString());
+                        })
+                )
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Image upload failed", Toast.LENGTH_SHORT).show();
+                    Log.e("ImageUpload", "Failed", e);
+                });
+    }
+
+
 
     private class EventAdapter extends RecyclerView.Adapter<EventAdapter.VH> {
 
