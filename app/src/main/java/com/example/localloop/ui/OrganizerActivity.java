@@ -27,6 +27,7 @@ import com.example.localloop.database.EventOperation;
 import com.example.localloop.database.Request;
 import com.example.localloop.database.UserOperation;
 import com.example.localloop.usertype.OrganizerUser;
+import com.example.localloop.usertype.ParticipantUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +62,8 @@ public class OrganizerActivity extends AppCompatActivity {
 
         Button btnPendingRequests = findViewById(R.id.btn_organizer_pending_request);
         btnPendingRequests.setOnClickListener(v -> manageRequestLayout());
-
+        TextView welcomeMessage = findViewById(R.id.text_organizer_welcome);
+        welcomeMessage.setText("Welcome, "+UserOperation.currentUser.getFirstName()+" "+UserOperation.currentUser.getLastName());
         Button btnLogout = findViewById(R.id.btn_logout);
         btnLogout.setOnClickListener(v -> logout());
         currentScreen = "home";
@@ -428,39 +430,12 @@ public class OrganizerActivity extends AppCompatActivity {
             });
 
             holder.btnViewParticipants.setOnClickListener(v -> {
-                String eventId = e.getEventOwnerEmail() + "," + UserOperation.currentUser.getEmail() + "," + e.eventName;
-
-                Database.get("requests", requestsMap -> {
+                e.getAttendees(attendees -> {
                     List<String> acceptedUsers = new ArrayList<>();
 
-                    for (Map.Entry<String, Map<String, Object>> entry : requestsMap.entrySet()) {
-                        Map<String, Object> requestData = entry.getValue();
-
-                        // Null-safety checks
-                        if (requestData == null) continue;
-                        if (!requestData.containsKey("event") || !requestData.containsKey("attendee") || !requestData.containsKey("requestStatus"))
-                            continue;
-
-                        Object eventObj = requestData.get("event");
-                        Object userObj = requestData.get("attendee");
-
-                        if (!(eventObj instanceof Map) || !(userObj instanceof Map))
-                            continue;
-
-                        Map<String, Object> eventMap = (Map<String, Object>) eventObj;
-                        Map<String, Object> userMap = (Map<String, Object>) userObj;
-
-                        if (!eventMap.containsKey("eventName") || !eventMap.containsKey("eventOwnerEmail"))
-                            continue;
-
-                        String eventName = (String) eventMap.get("eventName");
-                        String organizerEmail = (String) eventMap.get("eventOwnerEmail");
-                        int status = ((Long) requestData.get("requestStatus")).intValue();
-
-                        if (eventName.equals(e.eventName) && organizerEmail.equals(e.getEventOwnerEmail()) && status == 1) {
-                            String fullName = userMap.get("first_name") + " " + userMap.get("last_name") +
-                                    " (" + userMap.get("user_email") + ")";
-                            acceptedUsers.add(fullName);
+                    for (ParticipantUser attendee : attendees) {
+                        if (attendee.getFirstName() != null && attendee.getLastName() != null) {
+                            acceptedUsers.add(attendee.getFirstName() + " " + attendee.getLastName());
                         }
                     }
 
@@ -475,7 +450,6 @@ public class OrganizerActivity extends AppCompatActivity {
                             .show();
                 });
             });
-
         }
 
         @Override

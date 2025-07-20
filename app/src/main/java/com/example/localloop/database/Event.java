@@ -5,8 +5,10 @@ import android.util.Log;
 import com.example.localloop.usertype.OrganizerUser;
 import com.example.localloop.usertype.ParticipantUser;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class Event {
 
@@ -89,6 +91,23 @@ public class Event {
 
     public String getUniqueId() {
         return uniqueId;
+    }
+
+    public void getAttendees(Consumer<List<ParticipantUser>> callback) {
+        List<ParticipantUser> attendees = new ArrayList<>();
+
+        Database.getAllRequests(requests -> {
+            if (requests != null) {
+                for (Request request : requests) {
+                    if (request == null) continue;
+                    if (request.getAttendee() == null || request.getEvent() == null) continue;
+                    if (request.getEvent().getUniqueId().equals(this.uniqueId) && request.getRequestStatus() == 1) {
+                        attendees.add(request.getAttendee());
+                    }
+                }
+            }
+            callback.accept(attendees);
+        });
     }
 
     public void update(Event update) {
