@@ -44,6 +44,12 @@ public class Request {
 
     public String getRequestId() { return this.requestId; }
 
+    public ParticipantUser getAttendee() { return this.attendee; }
+
+    public Event getEvent() { return this.event; }
+
+    public int getRequestStatus() { return this.requestStatus; }
+
     public String getAttendeeEmail() {
         return this.attendee.user_email;
     }

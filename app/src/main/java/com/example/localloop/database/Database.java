@@ -289,44 +289,6 @@ public class Database {
         return participantList;
     }
 
-
-
-
-
-/*    public static List<Event> getEvents() {
-        List<Event> eventsList = new ArrayList<>();
-
-        Database.get("users", data -> {
-            for (String docId : data.keySet()) {
-                Map<String, Object> eventData = data.get(docId);
-
-                String name = (String) eventData.get("event_name");
-                String description = (String) eventData.get("event_description");
-                String category = (String) eventData.get("associated_category");
-                String fee = (String) eventData.get("event_fee");
-                String date = (String) eventData.get("event_date");
-                String time = (String) eventData.get("event_time");
-                String ownerEmail = (String) eventData.get("event_owner_email");
-
-                List<OrganizerUser> organizerList = new ArrayList<>();
-
-                for (OrganizerUser user : organizerList) {
-                    if (user.getEmail().equals(ownerEmail)) {
-                        Event event = new Event(name, description, category, Float.valueOf(fee), date, time, user);
-                        eventsList.add(event);
-                        break;
-                    }
-                }
-
-
-            }
-        });
-
-        return eventsList;
-    }*/
-
-
-
     public static void getEvents(Consumer<List<Event>> callback) {
         List<Event> eventsList = new ArrayList<>();
 
