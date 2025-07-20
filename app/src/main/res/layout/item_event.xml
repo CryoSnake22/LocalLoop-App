@@ -100,6 +100,14 @@
         android:minHeight="0dp"
         android:paddingLeft="12dp"
         android:paddingRight="12dp" />
+
+      <Button
+          android:id="@+id/btn_item_event_view_participants"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="View Participants"
+          android:layout_marginTop="8dp"/>
+
     </LinearLayout>
   </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

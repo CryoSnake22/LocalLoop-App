@@ -14,6 +14,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,6 +33,7 @@ import java.util.List;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import java.util.Calendar;
+import java.util.Map;
 
 public class OrganizerActivity extends AppCompatActivity {
     private boolean isOrgHome = false;
@@ -373,7 +375,7 @@ public class OrganizerActivity extends AppCompatActivity {
 
         class VH extends RecyclerView.ViewHolder {
             TextView name, description, fee, category, date, time;
-            Button btnEdit, btnDelete;
+            Button btnEdit, btnDelete, btnViewParticipants;
 
             VH(View itemView) {
                 super(itemView);
@@ -385,6 +387,8 @@ public class OrganizerActivity extends AppCompatActivity {
                 time = itemView.findViewById(R.id.text_item_event_time);
                 btnEdit = itemView.findViewById(R.id.btn_item_event_edit);
                 btnDelete = itemView.findViewById(R.id.btn_item_event_delete);
+                btnViewParticipants = itemView.findViewById(R.id.btn_item_event_view_participants);
+
             }
         }
 
@@ -412,6 +416,56 @@ public class OrganizerActivity extends AppCompatActivity {
                 notifyItemRemoved(pos);
                 Toast.makeText(v.getContext(), "Event deleted", Toast.LENGTH_SHORT).show();
             });
+
+            holder.btnViewParticipants.setOnClickListener(v -> {
+                String eventId = e.getEventOwnerEmail() + "," + UserOperation.currentUser.getEmail() + "," + e.eventName;
+
+                Database.get("requests", requestsMap -> {
+                    List<String> acceptedUsers = new ArrayList<>();
+
+                    for (Map.Entry<String, Map<String, Object>> entry : requestsMap.entrySet()) {
+                        Map<String, Object> requestData = entry.getValue();
+
+                        // Null-safety checks
+                        if (requestData == null) continue;
+                        if (!requestData.containsKey("event") || !requestData.containsKey("attendee") || !requestData.containsKey("requestStatus"))
+                            continue;
+
+                        Object eventObj = requestData.get("event");
+                        Object userObj = requestData.get("attendee");
+
+                        if (!(eventObj instanceof Map) || !(userObj instanceof Map))
+                            continue;
+
+                        Map<String, Object> eventMap = (Map<String, Object>) eventObj;
+                        Map<String, Object> userMap = (Map<String, Object>) userObj;
+
+                        if (!eventMap.containsKey("eventName") || !eventMap.containsKey("eventOwnerEmail"))
+                            continue;
+
+                        String eventName = (String) eventMap.get("eventName");
+                        String organizerEmail = (String) eventMap.get("eventOwnerEmail");
+                        int status = ((Long) requestData.get("requestStatus")).intValue();
+
+                        if (eventName.equals(e.eventName) && organizerEmail.equals(e.getEventOwnerEmail()) && status == 1) {
+                            String fullName = userMap.get("first_name") + " " + userMap.get("last_name") +
+                                    " (" + userMap.get("user_email") + ")";
+                            acceptedUsers.add(fullName);
+                        }
+                    }
+
+                    if (acceptedUsers.isEmpty()) {
+                        acceptedUsers.add("No accepted participants yet.");
+                    }
+
+                    new AlertDialog.Builder(v.getContext())
+                            .setTitle("Accepted Participants")
+                            .setItems(acceptedUsers.toArray(new String[0]), null)
+                            .setPositiveButton("OK", null)
+                            .show();
+                });
+            });
+
         }
 
         @Override
