@@ -104,6 +104,8 @@ public class OrganizerActivity extends AppCompatActivity {
                 recyclerView.setAdapter(new RequestAdapter(pending));
             });
         });
+        currentScreen = "viewRequests";
+
     }
 
     private class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.VH> {
@@ -489,14 +491,16 @@ public class OrganizerActivity extends AppCompatActivity {
             case "manageEvents":
             case "addEvent":
             case "editEvent":
-                organizerHomeLayout(); // go back to home
+            case "viewRequests":  // 👈 add this line or the correct tag
+                organizerHomeLayout(); // go back to home layout
                 break;
             case "home":
             default:
-                super.onBackPressed(); // exit activity normally
+                super.onBackPressed(); // exit activity
                 break;
         }
     }
+
 
 
 
