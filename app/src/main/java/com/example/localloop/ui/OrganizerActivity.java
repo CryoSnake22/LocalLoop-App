@@ -45,6 +45,8 @@ public class OrganizerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         organizerHomeLayout();
     }
+    private String currentScreen = "home"; // default
+
 
     private void organizerHomeLayout() {
         isOrgHome = true;
@@ -62,6 +64,8 @@ public class OrganizerActivity extends AppCompatActivity {
 
         Button btnLogout = findViewById(R.id.btn_logout);
         btnLogout.setOnClickListener(v -> logout());
+        currentScreen = "home";
+
 
     }
 
@@ -186,6 +190,8 @@ public class OrganizerActivity extends AppCompatActivity {
         Database.getEvents(events -> runOnUiThread(() -> {
             rv.setAdapter(new EventAdapter(events));
         }));
+        currentScreen = "manageEvents";
+
     }
 
     private void createEventLayout() {
@@ -270,6 +276,8 @@ public class OrganizerActivity extends AppCompatActivity {
             Toast.makeText(this, "Event Created", Toast.LENGTH_SHORT).show();
             manageEventsLayout();
         });
+        currentScreen = "addEvent";
+
     }
 
     private void editEventLayout(Event event) {
@@ -474,17 +482,22 @@ public class OrganizerActivity extends AppCompatActivity {
         }
     }
     @SuppressLint("MissingSuperCall")
+
     @Override
     public void onBackPressed() {
-        if (isOrgHome) {
-            startActivity(new Intent(this, LoginActivity.class));
-        }
-        else if(isEditEventPage || isRequestPage) {
-            organizerHomeLayout();
-        } else if (isEditEventPage){
-            manageEventsLayout();
+        switch (currentScreen) {
+            case "manageEvents":
+            case "addEvent":
+            case "editEvent":
+                organizerHomeLayout(); // go back to home
+                break;
+            case "home":
+            default:
+                super.onBackPressed(); // exit activity normally
+                break;
         }
     }
+
 
 
 }
