@@ -56,12 +56,12 @@
         android:layout_marginBottom="2dp" />
 
       <TextView
-        android:id="@+id/text_item_event_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Event Date"
-        android:textSize="14sp"
-        android:layout_marginBottom="2dp" />
+          android:id="@+id/text_item_event_date"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="2dp"
+          android:text="Event Date"
+          android:textSize="14sp" />
 
       <TextView
         android:id="@+id/text_item_event_time"
