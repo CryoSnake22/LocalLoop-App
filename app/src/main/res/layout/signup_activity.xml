@@ -17,7 +17,7 @@
     android:textStyle="bold"
     android:gravity="center"
     android:layout_marginBottom="16dp"
-    android:textColor="?android:attr/textColorPrimary" />
+    android:textColor="@android:color/black" />
 
   <com.google.android.material.textfield.TextInputLayout
     android:id="@+id/text_signup_email_layout"
@@ -141,10 +141,10 @@
     android:layout_marginTop="16dp" />
 
   <com.google.android.material.button.MaterialButton
-      android:id="@+id/btn_signup_back"
-      style="?attr/materialButtonOutlinedStyle"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:text="Back" />
+    android:id="@+id/btn_signup_back"
+    style="?attr/materialButtonOutlinedStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Back" />
 
 </LinearLayout>

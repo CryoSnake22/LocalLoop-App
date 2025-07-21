@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.example.localloop.ui.AdminActivity;
 import com.example.localloop.ui.LoginActivity;
@@ -21,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
         Intent admin = new Intent(this, AdminActivity.class);
         Intent organizer = new Intent(this, OrganizerActivity.class);
         Intent participant = new Intent(this, ParticipantActivity.class);
-
 
 
         startActivity(login);
