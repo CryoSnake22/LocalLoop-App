@@ -1,5 +1,7 @@
 package com.example.localloop.database;
 
+
+
 import android.util.Log;
 
 import com.example.localloop.usertype.OrganizerUser;
@@ -22,6 +24,9 @@ public class Event {
     private OrganizerUser eventOwner;
     private String uniqueId;
 
+    private String imageUrl;  // Firebase download URL of the image
+
+
 
 
     public List<ParticipantUser> eventRequest;
@@ -29,6 +34,16 @@ public class Event {
 
 
     private static int eventId = 1;
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+
 
     public Event(String eventName, String description, String associatedCategory, float eventFee, String eventDate, String eventTime, OrganizerUser eventOwner) {
         this.eventName = eventName;
@@ -53,6 +68,14 @@ public class Event {
         this.uniqueId = uniqueId;
     }
 
+    public Event(String eventName, String description, String associatedCategory, float eventFee, String eventDate, String eventTime, OrganizerUser eventOwner, String uniqueId, String imageUrl) {
+        this(eventName, description, associatedCategory, eventFee, eventDate, eventTime, eventOwner, uniqueId);
+        this.imageUrl = imageUrl;
+    }
+
+
+
+
     public HashMap<String, Object> toMap() {
         HashMap<String, Object> fields = new HashMap<>();
         fields.put("unique_id", this.uniqueId);
@@ -66,6 +89,9 @@ public class Event {
 
         fields.put("event_owner_email", eventOwner.getEmail());
         fields.put("event_owner_uid", eventOwner.getUid());
+
+        fields.put("imageUrl", this.imageUrl);
+
 
         return fields;
     }

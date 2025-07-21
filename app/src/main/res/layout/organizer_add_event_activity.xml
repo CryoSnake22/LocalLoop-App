@@ -1,112 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:orientation="vertical"
-  android:padding="16dp"
-  android:fitsSystemWindows="true">
 
-  <ImageView
-    android:layout_width="100dp"
-    android:layout_height="100dp"
-    android:src="@drawable/ic_event"
-    android:layout_gravity="center_horizontal"
-    android:layout_marginBottom="24dp" />
-
-  <TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Add Event"
-    android:textSize="24sp"
-    android:textStyle="bold"
-    android:layout_gravity="center_horizontal"
-    android:layout_marginBottom="24dp" />
-
-  <com.google.android.material.textfield.TextInputLayout
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:hint="Event Name"
-    style="?attr/textInputStyle">
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/white">
 
-    <com.google.android.material.textfield.TextInputEditText
-      android:id="@+id/text_organizer_add_event_name"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:inputType="text" />
-  </com.google.android.material.textfield.TextInputLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-  <com.google.android.material.textfield.TextInputLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:hint="Event Description"
-    style="?attr/textInputStyle"
-    android:layout_marginTop="12dp">
+        <!-- Smaller Header Icon -->
+        <ImageView
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:src="@drawable/ic_event"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="12dp" />
 
-    <com.google.android.material.textfield.TextInputEditText
-      android:id="@+id/text_organizer_add_event_description"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:inputType="text" />
-  </com.google.android.material.textfield.TextInputLayout>
+        <!-- Smaller Header Text -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Event"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="16dp" />
 
-  <com.google.android.material.textfield.TextInputLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:hint="Event Fee"
-    style="?attr/textInputStyle"
-    android:layout_marginTop="12dp">
+        <!-- Clickable Image Selection -->
+        <ImageView
+            android:id="@+id/image_event"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_event"
+            android:contentDescription="Tap to select image"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"
+            android:layout_marginBottom="12dp" />
 
-    <com.google.android.material.textfield.TextInputEditText
-      android:id="@+id/text_organizer_add_event_fee"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:inputType="number|numberDecimal"
-      android:text="0" />
-  </com.google.android.material.textfield.TextInputLayout>
+        <!-- Input Fields -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Event Name">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_organizer_add_event_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-  <com.google.android.material.textfield.TextInputLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:hint="Event Date"
-    style="?attr/textInputStyle"
-    android:layout_marginTop="12dp">
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Event Description"
+            android:layout_marginTop="8dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_organizer_add_event_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputEditText
-      android:id="@+id/text_organizer_add_event_date"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:inputType="none"
-      android:focusable="false"
-      android:clickable="true" />
-  </com.google.android.material.textfield.TextInputLayout>
+        <Spinner
+            android:id="@+id/spinner_event_category"
+            android:layout_width="match_parent"
+            android:layout_height="57dp"
+            android:layout_marginTop="16dp" />
 
-  <com.google.android.material.textfield.TextInputLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:hint="Event Time"
-    style="?attr/textInputStyle"
-    android:layout_marginTop="12dp">
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Event Fee"
+            android:layout_marginTop="8dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_organizer_add_event_fee"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number|numberDecimal"
+                android:text="" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputEditText
-      android:id="@+id/text_organizer_add_event_time"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:inputType="none"
-      android:focusable="false"
-      android:clickable="true" />
-  </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Event Date"
+            android:layout_marginTop="8dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_organizer_add_event_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:clickable="true" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-  <RadioGroup
-    android:id="@+id/radio_group_event_categories"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="16dp" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Event Time"
+            android:layout_marginTop="8dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_organizer_add_event_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:clickable="true" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-  <com.google.android.material.button.MaterialButton
-    android:id="@+id/btn_organizer_add_event_submit"
-    style="?attr/materialButtonStyle"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="Save Event"
-    android:layout_marginTop="24dp" />
-</LinearLayout>
+        <!-- Category -->
+
+
+        <!-- Location -->
+        <EditText
+            android:id="@+id/edit_event_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="Event Location (please enter a ZIP code)"
+            android:inputType="textPostalAddress" />
+
+        <!-- Submit -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_organizer_add_event_submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save Event"
+            android:layout_marginTop="20dp" />
+
+    </LinearLayout>
+</ScrollView>
+

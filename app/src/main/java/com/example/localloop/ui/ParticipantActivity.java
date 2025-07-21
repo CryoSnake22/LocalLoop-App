@@ -144,6 +144,8 @@ public class ParticipantActivity extends AppCompatActivity {
 
 
 
+
+
     private class EventAdaptor extends RecyclerView.Adapter<EventAdaptor.VH> {
 
         private final List<Event> items;
