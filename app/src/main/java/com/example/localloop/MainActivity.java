@@ -16,12 +16,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        /*
-        OPTIONAL
-        Auto login if user has already logged in, with cookie or something
-         */
-
-
         // Redirects
         Intent login = new Intent(this, LoginActivity.class);
         Intent admin = new Intent(this, AdminActivity.class);
@@ -31,8 +25,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         startActivity(login);
-
-
     }
 }
 
